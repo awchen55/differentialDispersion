@@ -7,4 +7,4 @@ editor_options:
   chunk_output_type: console
 ---
 
-Describe your project.
+The goal of this project is to identify differential dispersion in scRNA-seq data between human and chimp cell lines in both *cis* and *trans* contexts. The data consists of 3 human and 3 chimp cell lines and 3 hybrid cell lines with approximately 65,000 cells per line.
