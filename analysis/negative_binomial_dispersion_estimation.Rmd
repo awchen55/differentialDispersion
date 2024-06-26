@@ -1,0 +1,28 @@
+---
+title: "Dispersion Estimation with Negative Binomial Model"
+output: html_document
+date: '2024-06-26'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load data
+
+```{r}
+chimp_sub <- read.csv("/project2/gilad/awchen55/differentialDispersion/data/chimp_ASE_subset.csv")
+human_sub <- read.csv("/project2/gilad/awchen55/differentialDispersion/data/human_ASE_subset.csv")
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+library(EnvStats)
+```
+
+```{r}
+chimp_sub
+```
+
+
+
