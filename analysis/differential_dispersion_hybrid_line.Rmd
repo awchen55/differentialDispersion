@@ -1,0 +1,107 @@
+---
+title: "differential_dispersion_hybrid_line"
+output: html_document
+date: '2024-06-06'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load the data.
+```{r}
+require(Seurat)
+require(SeuratDisk)
+require(SeuratData)
+HC <- LoadH5Seurat("/project2/gilad/kenneth/HC/GSE201516_DataS4.h5Seurat")
+```
+
+Look at the dimensions of the data.
+```{r}
+dim(HC)
+sum(HC$alignment=="combined")/2
+```
+
+Split the data by human vs chimp.
+```{r}
+human.ASE <- subset(HC, subset = (alignment == "combined" & species == "human"))
+chimp.ASE <- subset(HC, subset = (alignment == "combined" & species == "chimp"))
+```
+
+Look at a snippet of the data.
+```{r}
+dim(human.ASE)
+dim(chimp.ASE)
+
+human.ASE[['RNA']]$counts[1:5,1:5]
+chimp.ASE[['RNA']]$counts[1:5,1:5]
+```
+
+Create a subset of data to work with.
+
+```{r}
+# library(MASS)
+# human_sub <- human.ASE[['RNA']]$counts[1:1000,1:1000]
+# chimp_sub <- chimp.ASE[['RNA']]$counts[1:1000,1:1000]
+# write.csv(human_sub, '/project2/gilad/awchen55/differentialDispersion/data/human_ASE_subset.csv')
+# write.csv(chimp_sub, '/project2/gilad/awchen55/differentialDispersion/data/chimp_ASE_subset.csv')
+```
+
+Check the mean variance relationship.
+```{r}
+library(sparseMatrixStats)
+library(tidyverse)
+library(ggplot2)
+gene_means_tetraploid_human <- sparseMatrixStats::rowMeans2(human.ASE[['RNA']]$counts)
+gene_vars_tetraploid_human <- sparseMatrixStats::rowVars(human.ASE[['RNA']]$counts)
+
+gene_means_tetraploid_chimp <- sparseMatrixStats::rowMeans2(chimp.ASE[['RNA']]$counts)
+gene_vars_tetraploid_chimp <- sparseMatrixStats::rowVars(chimp.ASE[['RNA']]$counts)
+
+df_human <- bind_cols(gene_means = gene_means_tetraploid_human, gene_vars = gene_vars_tetraploid_human)
+df_chimp <- bind_cols(gene_means = gene_means_tetraploid_chimp, gene_vars = gene_vars_tetraploid_chimp)
+ 
+df_human %>% ggplot(aes(x = log10(gene_means_tetraploid_human), y = log10(gene_vars_tetraploid_human))) +
+        geom_point() +
+        theme_classic(base_size = 14) +
+        ggtitle("Human - Tetraploid")
+
+df_chimp %>% ggplot(aes(x = log10(gene_means_tetraploid_chimp), y = log10(gene_vars_tetraploid_chimp))) +
+        geom_point() +
+        theme_classic(base_size = 14) +
+        ggtitle("Chimp - Tetraploid")
+```
+
+Fitting across genes on negative binomial model
+```{r}
+model<- lm(gene_vars_tetraploid_human ~  1* gene_means_tetraploid_human + I(gene_means_tetraploid_human^2) + 0, data =df_human )
+summary(model)
+```
+
+Predicting with NB and estimated dispersion parameter
+```{r}
+predicted_df<- data.frame(mean = df_human$gene_means, var_predict = 
+                            df_human$gene_means + summary(model)$coefficients[1] * (df_human$gene_means)^2 )
+
+df_human %>%  ggplot(aes(x = log10(gene_means_tetraploid_human), y = log10(gene_vars))) +
+        geom_point() +
+        geom_line(color = "red", data = predicted_df, aes(x = log10(gene_means_tetraploid_human), y =log10(var_predict))) + 
+        theme_classic(base_size = 14) +
+        ggtitle("human - tetraploid")
+```
+
+Observed zeros vs theoretical zeros
+```{r}
+phi <- 1/summary(model)$coefficients[1]
+
+zeros_nb<- (phi/(gene_means_tetraploid_human + phi))^phi
+zeros_observed<- apply(human.ASE[['RNA']]$counts, 1, function(x) mean(x ==0))
+
+data.frame(zeros_nb = zeros_nb, zeros_observed = zeros_observed, 
+           gene_means = gene_means_tetraploid_human) %>%
+  ggplot(aes(x =log10(gene_means_tetraploid_human), y = zeros_observed)) +
+  geom_point() +
+  geom_line(aes(x = log10(gene_means_tetraploid_human), y = zeros_nb), color = "red") +
+  theme_classic(base_size = 14) +
+  ggtitle("Observed vs theoretical")
+```
