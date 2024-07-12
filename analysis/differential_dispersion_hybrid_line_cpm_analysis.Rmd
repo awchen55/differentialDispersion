@@ -1,0 +1,148 @@
+---
+title: "Comparing Hybrid Lines with CPM Normalization"
+output: html_document
+date: '2024-07-09'
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We first compare human and chimp genes that show significant dispersion for two cell types: "Cardiomyocytes" and "Undifferentiated 1". We perform a separate analysis based on the replicate (1, 2, or 3).
+```{r}
+replicate = 'Rep3'
+cell_type = "Undifferentiated1"
+setwd("/project2/gilad/awchen55/differentialDispersion/")
+path = '/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_cpm_normalized/'
+#input_name = paste0(path,'chimp_ase_cpm_', replicate)
+#output_name_c = paste0(path,'chimp_ase_cpm_', replicate,'_',cell_type)
+#output_name_h = paste0(path, 'human_ase_cpm_', replicate, '_', cell_type)
+reps <- c("Rep1","Rep2","Rep3")
+cell_type <- c()
+replicate <- c()
+cell_count <- c()
+
+for (rep in reps){
+  input_name = paste0(path, 'chimp_ase_cpm_', rep)
+  data_h <- read.csv(paste0(input_name,"_cell_type_counts.csv"))
+  cell_count <- c(cell_count,max(data_h$Undifferentiated.1_total))
+  cell_type <-c(cell_type, "Undifferentiated 1")
+  replicate <- c(replicate,rep)
+  cell_count <- c(cell_count,max(data_h$Cardiomyocytes_total))
+  cell_type <-c(cell_type, "Cardiomyocytes")
+  replicate <- c(replicate,rep)
+  
+}
+
+
+```
+
+We look at summary of cell counts for each replicate and cell type.
+```{r}
+
+cbind(cell_type,replicate,cell_count)
+```
+
+We identify the number of significantly dispersed genes for "Undifferentiated 1".
+```{r}
+cell_type = "Undifferentiated1"
+underdispersed <- c()
+overdispersed <- c()
+for (rep in reps){
+  output_name_c = paste0(path,'chimp_ase_cpm_', rep,'_',cell_type)
+  output_name_h = paste0(path, 'human_ase_cpm_', rep, '_', cell_type)
+  data_c <- read.csv(paste0(output_name_c,"_dispersion.csv"))
+  data_h <- read.csv(paste0(output_name_h,"_dispersion.csv"))
+  
+  underdispersed <- c(underdispersed,nrow(data_c[(data_c$z_score<0) & (data_c$p_value_adj<0.05) & (data_c$cell_count>10) & (data_c$est>0),]))
+  overdispersed <- c(overdispersed,nrow(data_c[(data_c$z_score>0) & (data_c$p_value_adj<0.05) & (data_c$cell_count>10) & (data_c$est>0),]))
+  
+  underdispersed <- c(underdispersed,nrow(data_h[(data_h$z_score<0) & (data_h$p_value_adj<0.05) & (data_h$cell_count>10) & (data_h$est>0),]))
+  overdispersed <- c(overdispersed,nrow(data_h[(data_h$z_score>0) & (data_h$p_value_adj<0.05) & (data_h$cell_count>10) & (data_h$est>0),]))
+  
+}
+
+species <- c("chimp","human","chimp","human","chimp","human")
+replicate <- c("Rep1","Rep1","Rep2","Rep2","Rep3","Rep3")
+
+
+cbind(species,replicate,underdispersed,overdispersed)
+```
+
+
+We identify the number of significantly dispersed genes for "Cardiomyocytes".
+```{r}
+cell_type = "Cardiomyocytes"
+underdispersed <- c()
+overdispersed <- c()
+overlap_underdispersed <-c()
+overlap_overdispersed <-c()
+for (rep in reps){
+  output_name_c = paste0(path,'chimp_ase_cpm_', rep,'_',cell_type)
+  output_name_h = paste0(path, 'human_ase_cpm_', rep, '_', cell_type)
+  data_c <- read.csv(paste0(output_name_c,"_dispersion.csv"))
+  data_h <- read.csv(paste0(output_name_h,"_dispersion.csv"))
+  
+  # number of significant genes in chimp
+  underdispersed <- c(underdispersed,nrow(data_c[(data_c$z_score<0) & (data_c$p_value_adj<0.05) & (data_c$cell_count>10) & (data_c$est>0),]))
+  overdispersed <- c(overdispersed,nrow(data_c[(data_c$z_score>0) & (data_c$p_value_adj<0.05) & (data_c$cell_count>10) & (data_c$est>0),]))
+  
+  # list of genes in chimp
+  under_c_list <- data_c[(data_c$z_score<0) & (data_c$p_value_adj<0.05) & (data_c$cell_count>10) & (data_c$est>0),]$X
+  over_c_list <- data_c[(data_c$z_score>0) & (data_c$p_value_adj<0.05) & (data_c$cell_count>10) & (data_c$est>0),]$X
+  
+  # number of significant genes in human
+  underdispersed <- c(underdispersed,nrow(data_h[(data_h$z_score<0) & (data_h$p_value_adj<0.05) & (data_h$cell_count>10) & (data_h$est>0),]))
+  overdispersed <- c(overdispersed,nrow(data_h[(data_h$z_score>0) & (data_h$p_value_adj<0.05) & (data_h$cell_count>10) & (data_h$est>0),]))
+  
+  # list of genes in human
+  under_h_list <- data_h[(data_h$z_score<0) & (data_h$p_value_adj<0.05) & (data_h$cell_count>10) & (data_h$est>0),]$X
+  over_h_list <- data_h[(data_h$z_score>0) & (data_h$p_value_adj<0.05) & (data_h$cell_count>10) & (data_h$est>0),]$X
+  
+  overlap_underdispersed <-c(overlap_underdispersed,length(intersect(under_c_list,under_h_list)))
+}
+
+species <- c("chimp","human","chimp","human","chimp","human")
+replicate <- c("Rep1","Rep1","Rep2","Rep2","Rep3","Rep3")
+
+
+cbind(species,replicate,underdispersed,overdispersed)
+```
+
+We count the overlap of significant genes within each replicate across species.
+```{r}
+overlap_underdispersed <-c()
+overlap_overdispersed <-c()
+cell_types <-c("Cardiomyocytes","Undifferentiated1")
+for (cell in cell_types){
+  for (rep in reps){
+    output_name_c = paste0(path,'chimp_ase_cpm_', rep,'_',cell)
+    output_name_h = paste0(path, 'human_ase_cpm_', rep, '_', cell)
+    data_c <- read.csv(paste0(output_name_c,"_dispersion.csv"))
+    data_h <- read.csv(paste0(output_name_h,"_dispersion.csv"))
+    
+    
+    # list of genes in chimp
+    under_c_list <- data_c[(data_c$z_score<0) & (data_c$p_value_adj<0.05) & (data_c$cell_count>10) & (data_c$est>0),]$X
+    over_c_list <- data_c[(data_c$z_score>0) & (data_c$p_value_adj<0.05) & (data_c$cell_count>10) & (data_c$est>0),]$X
+    
+    
+    # list of genes in human
+    under_h_list <- data_h[(data_h$z_score<0) & (data_h$p_value_adj<0.05) & (data_h$cell_count>10) & (data_h$est>0),]$X
+    over_h_list <- data_h[(data_h$z_score>0) & (data_h$p_value_adj<0.05) & (data_h$cell_count>10) & (data_h$est>0),]$X
+    
+    overlap_underdispersed <-c(overlap_underdispersed,length(intersect(under_c_list,under_h_list)))
+    overlap_overdispersed <-c(overlap_overdispersed,length(intersect(over_c_list,over_h_list)))
+  }
+}
+
+replicate <- c(reps,reps)
+cell_type <- c("Cardiomyocytes","Cardiomyocytes","Cardiomyocytes","Undifferentiated 1","Undifferentiated 1","Undifferentiated 1")
+
+cbind(cell_type,replicate,overlap_underdispersed,overlap_overdispersed)
+
+```
+
+
+

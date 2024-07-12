@@ -11,3 +11,6 @@ editor_options:
 Welcome to my research website.
 
 Click on this [link](differential_dispersion_hybrid_line.html) to see high-level look at data.
+
+
+Click on this [link](differential_dispersion_hybrid_line_cpm_analysis.html) to find initial dispersion comparisons using the LOWESS method.

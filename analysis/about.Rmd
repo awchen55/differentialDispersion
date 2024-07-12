@@ -7,4 +7,13 @@ editor_options:
   chunk_output_type: console
 ---
 
+# Objective
 The goal of this project is to identify differential dispersion in scRNA-seq data between human and chimp cell lines in both *cis* and *trans* contexts. The data consists of 3 human and 3 chimp cell lines and 3 hybrid cell lines with approximately 65,000 cells per line.
+
+
+# Procedure
+
+This is applied to each cell type and replicate across all single cells in the data.
+
+A LOWESS (Locally Weighted Scatterplot Smoothing) regression is applied to the coefficient of variation (CV) and the log(UMI). The CV is calculated as the standard deviation divided by the mean: $CV = \frac{\sigma}{\mu}$. The residuals from this regression represent a mean-corrected measurement of dispersion. Lowly expressed genes tend to have greater dispersion compared to highly expressed genes. To identify genes that exhibit significant dispersion with respect to its expression level, bootstrapping is applied estimate CV as the test statistic. For each gene within a cell type, CV is calculated for randomly selected cells with replacement for 5,000 iterations. The average of these estimates yields the parameter estimate, where standard error and confidence intervals are also calculated from this resampling distribution.
+
