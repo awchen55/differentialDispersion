@@ -9,52 +9,64 @@ setwd("/project2/gilad/awchen55/differentialDispersion/analysis")
 
 # LOAD PACKAGES
 library(reticulate)                # for loading python
+Sys.setenv(RETICULATE_PYTHON = "/project2/gilad/kenneth/miniconda3/envs/scvi_pytorch/bin/python") # set python environment
 reticulate::py_config()            # load python 3.7
 library(SingleCellExperiment)      # dimension reduciton and size factors for cells
-library(scran)                     # normalization 
+library(scran)                     # normalization
 library(tictoc)                    # timing
 pd <- import('pandas')             # import pandas from python
 np <- import('numpy')              # import numpy from python
+anndata <- import('anndata')       # import anndata from python
 
 # LOAD DATA
+replicate <- "Rep1"
 
-# # random sample of 10,000 individuals data
-# obs_data <- pd$read_pickle("/project2/gilad/awchen55/ebqtl/simulated_null_analysis/adata_obs_sim_data.pkl")
+# load human hybrid data
+human_path <- paste("r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/human.ASE.", replicate, ".h5ad'", sep = "")
+adata_human_ase <- anndata$read_h5ad(human_path)
 
-# # genes with labels
-# var_data_1 <- pd$read_pickle("/project2/gilad/awchen55/ebqtl/simulated_null_analysis/adata_var_sim_data.pkl")
-# var_data <- head(var_data_1,10000)
-
-
-# subset_test
-sim_data <- pd$read_csv('/project2/gilad/awchen55/differentialDispersion/data/human_ASE_subset.csv', index_col=0).T
-
+# load chimp hybrid data
+chimp_path <- paste("r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/chimp.ASE.", replicate, ".h5ad'", sep = "")
+adata_chimp_ase <- anndata$read_h5ad(chimp_path)
 
 
 # CREATE SCE OBJECT
-sce <- SingleCellExperiment(
-    assays      = list(counts = t(sim_data)) )#,
-#     colData     = obs_data,
-#     rowData     = var_data
-#)
+sce_human <- SingleCellExperiment(
+    assays      = list(counts = t(adata_human_ase$X$toarray())) ,
+     colData     = adata_human_ase$obs,
+     rowData     = adata_human_ase$var
+)
+
+sce_chimp <- SingleCellExperiment(
+    assays      = list(counts = t(adata_chimp_ase$X$toarray())) ,
+     colData     = adata_chimp_ase$obs,
+     rowData     = adata_chimp_ase$var
+)
+
 print("SCE object made")
 # SCRAN NORMALIZATION
 #     tic('running scran')
 #     tic('clustering with quickCluster')
-clusters <- quickCluster(sce)
+clusters_human <- quickCluster(sce_human)
+clusters_chimp <- quickCluster(sce_chimp)
+
 print("quickcluster")
 
-sce$normalization_clusters <- clusters
+sce_human$normalization_clusters <- clusters_human
+sce_chimp$normalization_clusters <- clusters_chimp
+
 print("norm_cluster")
 #     toc()
 #     tic('computing size factors')
-sce <- computeSumFactors(sce, clusters=clusters)
+sce_human <- computeSumFactors(sce_human, clusters=clusters_human)
+sce_chimp <- computeSumFactors(sce_chimp, clusters=clusters_chimp)
 print("compute sum factor")
 #     toc()
 #     toc()
 #     summary(sizeFactors(sce))
-save_output <- paste("/project2/gilad/awchen55/differentialDispersion/data/human_ASE_subset_scran_size_factors".Rds", sep = "")
-saveRDS(sce, save_output)
+save_output_human <- paste("/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_scran_normalized_data/human_ASE_", replicate, "_scran_size_factors.Rds", sep = "")
+save_output_chimp <- paste("/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_scran_normalized_data/chimp_ASE_", replicate, "_scran_size_factors.Rds", sep = "")
+saveRDS(sce_chimp, save_output)
 
 
 

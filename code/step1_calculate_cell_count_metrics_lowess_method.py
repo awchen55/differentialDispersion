@@ -2,17 +2,9 @@
 ######### PACKAGES
 import numpy as np
 import pandas as pd
-import scanpy as sc
 import anndata
+import scanpy as sc
 import scipy.sparse as ss
-import scipy.special as sp
-import scipy.stats as st
-from scipy import stats
-import scipy.stats.mstats as mstats
-from statsmodels.nonparametric.smoothers_lowess import lowess
-import scipy
-import pickle
-import random
 
 ######### FUNCTIONS
 def mean_func(array):
@@ -129,18 +121,28 @@ def var_mean_of_expression(adata, annotation_title):
 
 ######## LOAD DATA
 
-# cell data
-adata_human_ase = anndata.read_h5ad(r'/project2/gilad/awchen55/differentialDispersion/analysis/human.ASE.h5ad')
+# paths and names
+replicate = 'Rep1'
+cell_label_name = 'labels'
+path = r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_cpm_normalized/'
+input_name = r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/' + 'human.ASE.' + replicate 
+output_name = path + 'human_ase_cpm_' + replicate 
 
+
+# cell data
+adata_human_ase = anndata.read_h5ad(input_name + '.h5ad')
+
+# CPM normalization
+sc.pp.normalize_total(adata_human_ase, target_sum=1e6)
 
 ######## RUN CODE
-results = var_mean_of_expression(adata_human_ase,"labels")
+results = var_mean_of_expression(adata_human_ase,cell_label_name)
 
 ######## OUTPUT
-results['var_data'].to_pickle(r'/project2/gilad/awchen55/differentialDispersion/analysis/cell_count_metrics_by_cell_type/human_ase_variance.pkl')
-results['std_data'].to_pickle(r'/project2/gilad/awchen55/differentialDispersion/analysis/cell_count_metrics_by_cell_type/human_ase_std.pkl')
-results['mean_data'].to_pickle(r'/project2/gilad/awchen55/differentialDispersion/analysis/cell_count_metrics_by_cell_type/human_ase_mean.pkl')
-results['cv_data'].to_pickle(r'/project2/gilad/awchen55/differentialDispersion/analysis/cell_count_metrics_by_cell_type/human_ase_cv.pkl')
-results['cell_type_counts'].to_pickle(r'/project2/gilad/awchen55/differentialDispersion/analysis/cell_count_metrics_by_cell_type/human_ase_cell_type_counts.pkl')
-results['umi_data'].to_pickle(r'/project2/gilad/awchen55/differentialDispersion/analysis/cell_count_metrics_by_cell_type/human_ase_umi_data.pkl')
+results['var_data'].to_csv(output_name + '_variance.csv')
+results['std_data'].to_csv(output_name + '_std.csv')
+results['mean_data'].to_csv(output_name +'_mean.csv')
+results['cv_data'].to_csv(output_name + '_cv.csv')
+results['cell_type_counts'].to_csv(output_name + '_cell_type_counts.csv')
+results['umi_data'].to_csv(output_name + '_umi_data.csv')
 
