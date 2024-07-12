@@ -8,7 +8,7 @@ editor_options:
 ---
 
 # Objective
-The goal of this project is to identify differential dispersion in scRNA-seq data between human and chimp cell lines in both *cis* and *trans* contexts. The data consists of 3 human and 3 chimp cell lines and 3 hybrid cell lines with approximately 65,000 cells per line.
+The goal of this project is to identify differential dispersion in scRNA-seq data between human and chimp cell lines in both *cis* and *trans* contexts. The data consists of 3 human and 3 chimp cell lines with about 20,000 cell/line. There is 1 hybrid cell line  with 3 replicates at approximately 20,000 cells/replicate.
 
 
 # Procedure
