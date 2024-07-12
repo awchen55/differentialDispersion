@@ -10,9 +10,9 @@
 
 
 
-<meta name="date" content="2024-06-26" />
+<meta name="date" content="2024-07-09" />
 
-<title>Dispersion Estimation with Negative Binomial Model</title>
+<title>Comparing Hybrid Lines with CPM Normalization</title>
 
 <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -361,9 +361,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Dispersion Estimation with Negative
-Binomial Model</h1>
-<h4 class="date">2024-06-26</h4>
+<h1 class="title toc-ignore">Comparing Hybrid Lines with CPM
+Normalization</h1>
+<h4 class="date">2024-07-09</h4>
 
 </div>
 
@@ -392,13 +392,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-06-28
+<strong>Last updated:</strong> 2024-07-10
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 2
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>differentialDispersion/</code>
@@ -421,21 +421,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -538,18 +535,18 @@ relative
 <tbody>
 <tr>
 <td style="text-align:left;">
-/project2/gilad/awchen55/differentialDispersion/data/chimp_ASE_subset.csv
+/project2/gilad/awchen55/differentialDispersion/
 </td>
 <td style="text-align:left;">
-data/chimp_ASE_subset.csv
+.
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-/project2/gilad/awchen55/differentialDispersion/data/human_ASE_subset.csv
+/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_cpm_normalized/
 </td>
 <td style="text-align:left;">
-data/human_ASE_subset.csv
+data/hybrid_lines_cpm_normalized
 </td>
 </tr>
 </tbody>
@@ -560,15 +557,15 @@ data/human_ASE_subset.csv
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreedd3944adfeebfd5319833c8d9129417887d89655targetblankdd3944aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeac6c1d089a35795bea1e20c6594551cce187c8c0targetblankac6c1d0a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/dd3944adfeebfd5319833c8d9129417887d89655" target="_blank">dd3944a</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/ac6c1d089a35795bea1e20c6594551cce187c8c0" target="_blank">ac6c1d0</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreedd3944adfeebfd5319833c8d9129417887d89655targetblankdd3944aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeac6c1d089a35795bea1e20c6594551cce187c8c0targetblankac6c1d0a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -578,7 +575,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/dd3944adfeebfd5319833c8d9129417887d89655" target="_blank">dd3944a</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/ac6c1d089a35795bea1e20c6594551cce187c8c0" target="_blank">ac6c1d0</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -595,10 +592,30 @@ were generated:
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/cell_count_metrics_by_cell_type/
+    Ignored:    analysis/scran_size_factors_debugging.nb.html
+    Ignored:    code/.ipynb_checkpoints/
+    Ignored:    data/.ipynb_checkpoints/
+    Ignored:    data/hybrid_lines_scran_normalized_data/
+
+Untracked files:
+    Untracked:  analysis/.ipynb_checkpoints/
+    Untracked:  analysis/differential_dispersion_lowess_method.ipynb
+    Untracked:  analysis/scran_size_factors_debugging.Rmd
+    Untracked:  code/scran_log_normalization_hybrid_lines.R
+    Untracked:  code/step2_residual_calculations_lowess_values.py
+    Untracked:  code/step3_bootstrapping_cell_types_lowess_method.py
+    Untracked:  data/hybrid_lines_cpm_normalized/
+    Untracked:  data/hybrid_lines_raw_data/human.ASE.Rep1.counts.csv
 
 Unstaged changes:
     Modified:   .Rprofile
+    Modified:   analysis/differential_dispersion_hybrid_line.Rmd
     Modified:   analysis/negative_binomial_dispersion_estimation.Rmd
+    Modified:   code/scran_size_factors_hybrid_lines.R
+    Modified:   code/step1_calculate_cell_count_metrics_lowess_method.py
+    Deleted:    data/chimp_ASE_subset.csv
+    Deleted:    data/human_ASE_subset.csv
 
 </code></pre>
 <p>
@@ -617,8 +634,9 @@ have uncommitted changes.
 <p>
 These are the previous versions of the repository in which changes were
 made to the R Markdown
-(<code>analysis/negative_binomial_dispersion_estimation.Rmd</code>) and
-HTML (<code>docs/negative_binomial_dispersion_estimation.html</code>)
+(<code>analysis/differential_dispersion_hybrid_line_cpm_analysis.Rmd</code>)
+and HTML
+(<code>docs/differential_dispersion_hybrid_line_cpm_analysis.html</code>)
 files. If you’ve configured a remote Git repository (see
 <code>?wflow_git_remote</code>), click on the hyperlinks in the table
 below to view the files as they were in that past version.
@@ -647,16 +665,67 @@ Message
 <tbody>
 <tr>
 <td>
-html
+Rmd
 </td>
 <td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/6ec0551c8ae3e18fc2a68525483beac812466ce9/docs/negative_binomial_dispersion_estimation.html" target="_blank">6ec0551</a>
+<a href="https://github.com/awchen55/differentialDispersion/blob/ac6c1d089a35795bea1e20c6594551cce187c8c0/analysis/differential_dispersion_hybrid_line_cpm_analysis.Rmd" target="_blank">ac6c1d0</a>
 </td>
 <td>
 awchen55
 </td>
 <td>
-2024-06-26
+2024-07-10
+</td>
+<td>
+update initial dispersion analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/6183499a9dc7edc6fa2b8354fb12dfd4dca23b51/docs/differential_dispersion_hybrid_line_cpm_analysis.html" target="_blank">6183499</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-07-10
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/8e1b15b105a8fd76312525d346544e84b5e466ba/docs/differential_dispersion_hybrid_line_cpm_analysis.html" target="_blank">8e1b15b</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-07-10
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/07cd67abb1c648cf4ebff843e16b288049a18e91/docs/differential_dispersion_hybrid_line_cpm_analysis.html" target="_blank">07cd67a</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-07-10
 </td>
 <td>
 Build site.
@@ -667,16 +736,16 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/d8831b448ecb2154661d7b15bdbeb864d2e6cdda/analysis/negative_binomial_dispersion_estimation.Rmd" target="_blank">d8831b4</a>
+<a href="https://github.com/awchen55/differentialDispersion/blob/7cbc5944cb208e8cff8216a0ff9cf041d51e49f1/analysis/differential_dispersion_hybrid_line_cpm_analysis.Rmd" target="_blank">7cbc594</a>
 </td>
 <td>
 awchen55
 </td>
 <td>
-2024-06-26
+2024-07-10
 </td>
 <td>
-update
+significant genes analysis
 </td>
 </tr>
 </tbody>
@@ -686,105 +755,163 @@ update
 </div>
 </div>
 </div>
-<div id="load-data" class="section level2">
-<h2>Load data</h2>
-<pre class="r"><code>chimp_sub &lt;- read.csv(&quot;/project2/gilad/awchen55/differentialDispersion/data/chimp_ASE_subset.csv&quot;)
-human_sub &lt;- read.csv(&quot;/project2/gilad/awchen55/differentialDispersion/data/human_ASE_subset.csv&quot;)</code></pre>
-<pre class="r"><code>library(EnvStats)
-library(MASS)
-library(glmmTMB)
-library(mixlm)</code></pre>
-<p>We fit a NB model with the following equations:</p>
-<p><span class="math display">\[
-E[y] = \mu
-\]</span></p>
-<pre class="r"><code>data &lt;- data.frame(cnt = as.numeric(unlist(chimp_sub[2,2:1001])))
-glmmTMB_nb &lt;-glmmTMB(cnt ~ 1, family = nbinom2,data=data)
-glm_nb &lt;- glm.nb(cnt~1,data=data)
-summary(glm_nb)</code></pre>
-<pre><code>
-Call:
-glm.nb(formula = cnt ~ 1, data = data, init.theta = 0.0007829977975, 
-    link = log)
+<p>We first compare human and chimp genes that show significant
+dispersion for two cell types: “Cardiomyocytes” and “Undifferentiated
+1”. We perform a separate analysis based on the replicate (1, 2, or
+3).</p>
+<pre class="r"><code>replicate = &#39;Rep3&#39;
+cell_type = &quot;Undifferentiated1&quot;
+setwd(&quot;/project2/gilad/awchen55/differentialDispersion/&quot;)
+path = &#39;/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_cpm_normalized/&#39;
+#input_name = paste0(path,&#39;chimp_ase_cpm_&#39;, replicate)
+#output_name_c = paste0(path,&#39;chimp_ase_cpm_&#39;, replicate,&#39;_&#39;,cell_type)
+#output_name_h = paste0(path, &#39;human_ase_cpm_&#39;, replicate, &#39;_&#39;, cell_type)
+reps &lt;- c(&quot;Rep1&quot;,&quot;Rep2&quot;,&quot;Rep3&quot;)
+cell_type &lt;- c()
+replicate &lt;- c()
+cell_count &lt;- c()
 
-Deviance Residuals: 
-     Min        1Q    Median        3Q       Max  
--0.04456  -0.04456  -0.04456  -0.04456   1.14440  
-
-Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)   -6.215      1.333  -4.662 3.13e-06 ***
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-(Dispersion parameter for Negative Binomial(8e-04) family taken to be 1)
-
-    Null deviance: 3.2936  on 999  degrees of freedom
-Residual deviance: 3.2936  on 999  degrees of freedom
-AIC: 22.997
-
-Number of Fisher Scoring iterations: 1
-
-              Theta:  0.00078 
-          Std. Err.:  0.00102 
-
- 2 x log-likelihood:  -18.99700 </code></pre>
-<pre class="r"><code>summary(glmmTMB_nb)</code></pre>
-<pre><code> Family: nbinom2  ( log )
-Formula:          cnt ~ 1
-Data: data
-
-     AIC      BIC   logLik deviance df.resid 
-    23.0     32.8     -9.5     19.0      998 
-
-
-Dispersion parameter for nbinom2 family (): 0.000797 
-
-Conditional model:
-            Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)   -6.215      1.324  -4.692  2.7e-06 ***
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>mean(as.numeric(unlist(chimp_sub[2,2:1001])))</code></pre>
-<pre><code>[1] 0.002</code></pre>
-<pre class="r"><code>var(as.numeric(unlist(chimp_sub[2,2:1001])))</code></pre>
-<pre><code>[1] 0.004</code></pre>
-<p>glmmTMB assumes that the shape <span
-class="math inline">\(\theta=1\)</span></p>
-<pre class="r"><code>#glm_nb &lt;-glm(cnt ~ 1, family = nbinom2,data=data)
-
-# Compute the dispersion statistic
-dispersion &lt;- function(m) {
-  sum(residuals(m, type = &quot;pearson&quot;)^2) / df.residual(m)
+for (rep in reps){
+  input_name = paste0(path, &#39;chimp_ase_cpm_&#39;, rep)
+  data_h &lt;- read.csv(paste0(input_name,&quot;_cell_type_counts.csv&quot;))
+  cell_count &lt;- c(cell_count,max(data_h$Undifferentiated.1_total))
+  cell_type &lt;-c(cell_type, &quot;Undifferentiated 1&quot;)
+  replicate &lt;- c(replicate,rep)
+  cell_count &lt;- c(cell_count,max(data_h$Cardiomyocytes_total))
+  cell_type &lt;-c(cell_type, &quot;Cardiomyocytes&quot;)
+  replicate &lt;- c(replicate,rep)
+  
+}</code></pre>
+<p>We look at summary of cell counts for each replicate and cell
+type.</p>
+<pre class="r"><code>cbind(cell_type,replicate,cell_count)</code></pre>
+<pre><code>     cell_type            replicate cell_count
+[1,] &quot;Undifferentiated 1&quot; &quot;Rep1&quot;    &quot;2275&quot;    
+[2,] &quot;Cardiomyocytes&quot;     &quot;Rep1&quot;    &quot;216&quot;     
+[3,] &quot;Undifferentiated 1&quot; &quot;Rep2&quot;    &quot;1170&quot;    
+[4,] &quot;Cardiomyocytes&quot;     &quot;Rep2&quot;    &quot;233&quot;     
+[5,] &quot;Undifferentiated 1&quot; &quot;Rep3&quot;    &quot;876&quot;     
+[6,] &quot;Cardiomyocytes&quot;     &quot;Rep3&quot;    &quot;546&quot;     </code></pre>
+<p>We identify the number of significantly dispersed genes for
+“Undifferentiated 1”.</p>
+<pre class="r"><code>cell_type = &quot;Undifferentiated1&quot;
+underdispersed &lt;- c()
+overdispersed &lt;- c()
+for (rep in reps){
+  output_name_c = paste0(path,&#39;chimp_ase_cpm_&#39;, rep,&#39;_&#39;,cell_type)
+  output_name_h = paste0(path, &#39;human_ase_cpm_&#39;, rep, &#39;_&#39;, cell_type)
+  data_c &lt;- read.csv(paste0(output_name_c,&quot;_dispersion.csv&quot;))
+  data_h &lt;- read.csv(paste0(output_name_h,&quot;_dispersion.csv&quot;))
+  
+  underdispersed &lt;- c(underdispersed,nrow(data_c[(data_c$z_score&lt;0) &amp; (data_c$p_value_adj&lt;0.05) &amp; (data_c$cell_count&gt;10) &amp; (data_c$est&gt;0),]))
+  overdispersed &lt;- c(overdispersed,nrow(data_c[(data_c$z_score&gt;0) &amp; (data_c$p_value_adj&lt;0.05) &amp; (data_c$cell_count&gt;10) &amp; (data_c$est&gt;0),]))
+  
+  underdispersed &lt;- c(underdispersed,nrow(data_h[(data_h$z_score&lt;0) &amp; (data_h$p_value_adj&lt;0.05) &amp; (data_h$cell_count&gt;10) &amp; (data_h$est&gt;0),]))
+  overdispersed &lt;- c(overdispersed,nrow(data_h[(data_h$z_score&gt;0) &amp; (data_h$p_value_adj&lt;0.05) &amp; (data_h$cell_count&gt;10) &amp; (data_h$est&gt;0),]))
+  
 }
-dispersion(glm_nb)</code></pre>
-<pre><code>[1] 0.562701</code></pre>
-<pre class="r"><code>dispersion(glm_nb)</code></pre>
-<pre><code>[1] 0.562701</code></pre>
-<pre class="r"><code>a=2
-b=5
-n=100000
-set.seed(123)
-cnt=rpois(n,rgamma(n,a,scale=b))
-n &lt;- 1000; 
-data &lt;- data.frame(cnt = cnt[1:n])
 
-m.negbin &lt;- glm.nb(cnt ~ 1, data = data)
-glmmTMB(cnt ~ 1, family = nbinom2, data = data)</code></pre>
-<pre><code>Formula:          cnt ~ 1
-Data: data
-      AIC       BIC    logLik  df.resid 
- 6438.951  6448.766 -3217.475       998 
+species &lt;- c(&quot;chimp&quot;,&quot;human&quot;,&quot;chimp&quot;,&quot;human&quot;,&quot;chimp&quot;,&quot;human&quot;)
+replicate &lt;- c(&quot;Rep1&quot;,&quot;Rep1&quot;,&quot;Rep2&quot;,&quot;Rep2&quot;,&quot;Rep3&quot;,&quot;Rep3&quot;)
 
-Number of obs: 1000
 
-Dispersion parameter for nbinom2 family (): 2.04 
+cbind(species,replicate,underdispersed,overdispersed)</code></pre>
+<pre><code>     species replicate underdispersed overdispersed
+[1,] &quot;chimp&quot; &quot;Rep1&quot;    &quot;1290&quot;         &quot;8294&quot;       
+[2,] &quot;human&quot; &quot;Rep1&quot;    &quot;44&quot;           &quot;9910&quot;       
+[3,] &quot;chimp&quot; &quot;Rep2&quot;    &quot;878&quot;          &quot;7094&quot;       
+[4,] &quot;human&quot; &quot;Rep2&quot;    &quot;30&quot;           &quot;8240&quot;       
+[5,] &quot;chimp&quot; &quot;Rep3&quot;    &quot;1531&quot;         &quot;6123&quot;       
+[6,] &quot;human&quot; &quot;Rep3&quot;    &quot;161&quot;          &quot;6756&quot;       </code></pre>
+<p>We identify the number of significantly dispersed genes for
+“Cardiomyocytes”.</p>
+<pre class="r"><code>cell_type = &quot;Cardiomyocytes&quot;
+underdispersed &lt;- c()
+overdispersed &lt;- c()
+overlap_underdispersed &lt;-c()
+overlap_overdispersed &lt;-c()
+for (rep in reps){
+  output_name_c = paste0(path,&#39;chimp_ase_cpm_&#39;, rep,&#39;_&#39;,cell_type)
+  output_name_h = paste0(path, &#39;human_ase_cpm_&#39;, rep, &#39;_&#39;, cell_type)
+  data_c &lt;- read.csv(paste0(output_name_c,&quot;_dispersion.csv&quot;))
+  data_h &lt;- read.csv(paste0(output_name_h,&quot;_dispersion.csv&quot;))
+  
+  # number of significant genes in chimp
+  underdispersed &lt;- c(underdispersed,nrow(data_c[(data_c$z_score&lt;0) &amp; (data_c$p_value_adj&lt;0.05) &amp; (data_c$cell_count&gt;10) &amp; (data_c$est&gt;0),]))
+  overdispersed &lt;- c(overdispersed,nrow(data_c[(data_c$z_score&gt;0) &amp; (data_c$p_value_adj&lt;0.05) &amp; (data_c$cell_count&gt;10) &amp; (data_c$est&gt;0),]))
+  
+  # list of genes in chimp
+  under_c_list &lt;- data_c[(data_c$z_score&lt;0) &amp; (data_c$p_value_adj&lt;0.05) &amp; (data_c$cell_count&gt;10) &amp; (data_c$est&gt;0),]$X
+  over_c_list &lt;- data_c[(data_c$z_score&gt;0) &amp; (data_c$p_value_adj&lt;0.05) &amp; (data_c$cell_count&gt;10) &amp; (data_c$est&gt;0),]$X
+  
+  # number of significant genes in human
+  underdispersed &lt;- c(underdispersed,nrow(data_h[(data_h$z_score&lt;0) &amp; (data_h$p_value_adj&lt;0.05) &amp; (data_h$cell_count&gt;10) &amp; (data_h$est&gt;0),]))
+  overdispersed &lt;- c(overdispersed,nrow(data_h[(data_h$z_score&gt;0) &amp; (data_h$p_value_adj&lt;0.05) &amp; (data_h$cell_count&gt;10) &amp; (data_h$est&gt;0),]))
+  
+  # list of genes in human
+  under_h_list &lt;- data_h[(data_h$z_score&lt;0) &amp; (data_h$p_value_adj&lt;0.05) &amp; (data_h$cell_count&gt;10) &amp; (data_h$est&gt;0),]$X
+  over_h_list &lt;- data_h[(data_h$z_score&gt;0) &amp; (data_h$p_value_adj&lt;0.05) &amp; (data_h$cell_count&gt;10) &amp; (data_h$est&gt;0),]$X
+  
+  overlap_underdispersed &lt;-c(overlap_underdispersed,length(intersect(under_c_list,under_h_list)))
+}
 
-Fixed Effects:
+species &lt;- c(&quot;chimp&quot;,&quot;human&quot;,&quot;chimp&quot;,&quot;human&quot;,&quot;chimp&quot;,&quot;human&quot;)
+replicate &lt;- c(&quot;Rep1&quot;,&quot;Rep1&quot;,&quot;Rep2&quot;,&quot;Rep2&quot;,&quot;Rep3&quot;,&quot;Rep3&quot;)
 
-Conditional model:
-(Intercept)  
-      2.248  </code></pre>
+
+cbind(species,replicate,underdispersed,overdispersed)</code></pre>
+<pre><code>     species replicate underdispersed overdispersed
+[1,] &quot;chimp&quot; &quot;Rep1&quot;    &quot;311&quot;          &quot;4265&quot;       
+[2,] &quot;human&quot; &quot;Rep1&quot;    &quot;5&quot;            &quot;4116&quot;       
+[3,] &quot;chimp&quot; &quot;Rep2&quot;    &quot;268&quot;          &quot;5610&quot;       
+[4,] &quot;human&quot; &quot;Rep2&quot;    &quot;17&quot;           &quot;5884&quot;       
+[5,] &quot;chimp&quot; &quot;Rep3&quot;    &quot;2564&quot;         &quot;4931&quot;       
+[6,] &quot;human&quot; &quot;Rep3&quot;    &quot;129&quot;          &quot;2965&quot;       </code></pre>
+<p>We count the overlap of significant genes within each replicate
+across species.</p>
+<pre class="r"><code>overlap_underdispersed &lt;-c()
+overlap_overdispersed &lt;-c()
+cell_types &lt;-c(&quot;Cardiomyocytes&quot;,&quot;Undifferentiated1&quot;)
+for (cell in cell_types){
+  for (rep in reps){
+    output_name_c = paste0(path,&#39;chimp_ase_cpm_&#39;, rep,&#39;_&#39;,cell)
+    output_name_h = paste0(path, &#39;human_ase_cpm_&#39;, rep, &#39;_&#39;, cell)
+    data_c &lt;- read.csv(paste0(output_name_c,&quot;_dispersion.csv&quot;))
+    data_h &lt;- read.csv(paste0(output_name_h,&quot;_dispersion.csv&quot;))
+    
+    
+    # list of genes in chimp
+    under_c_list &lt;- data_c[(data_c$z_score&lt;0) &amp; (data_c$p_value_adj&lt;0.05) &amp; (data_c$cell_count&gt;10) &amp; (data_c$est&gt;0),]$X
+    over_c_list &lt;- data_c[(data_c$z_score&gt;0) &amp; (data_c$p_value_adj&lt;0.05) &amp; (data_c$cell_count&gt;10) &amp; (data_c$est&gt;0),]$X
+    
+    
+    # list of genes in human
+    under_h_list &lt;- data_h[(data_h$z_score&lt;0) &amp; (data_h$p_value_adj&lt;0.05) &amp; (data_h$cell_count&gt;10) &amp; (data_h$est&gt;0),]$X
+    over_h_list &lt;- data_h[(data_h$z_score&gt;0) &amp; (data_h$p_value_adj&lt;0.05) &amp; (data_h$cell_count&gt;10) &amp; (data_h$est&gt;0),]$X
+    
+    overlap_underdispersed &lt;-c(overlap_underdispersed,length(intersect(under_c_list,under_h_list)))
+    overlap_overdispersed &lt;-c(overlap_overdispersed,length(intersect(over_c_list,over_h_list)))
+  }
+}
+
+replicate &lt;- c(reps,reps)
+cell_type &lt;- c(&quot;Cardiomyocytes&quot;,&quot;Cardiomyocytes&quot;,&quot;Cardiomyocytes&quot;,&quot;Undifferentiated 1&quot;,&quot;Undifferentiated 1&quot;,&quot;Undifferentiated 1&quot;)
+
+cbind(cell_type,replicate,overlap_underdispersed,overlap_overdispersed)</code></pre>
+<pre><code>     cell_type            replicate overlap_underdispersed
+[1,] &quot;Cardiomyocytes&quot;     &quot;Rep1&quot;    &quot;0&quot;                   
+[2,] &quot;Cardiomyocytes&quot;     &quot;Rep2&quot;    &quot;2&quot;                   
+[3,] &quot;Cardiomyocytes&quot;     &quot;Rep3&quot;    &quot;67&quot;                  
+[4,] &quot;Undifferentiated 1&quot; &quot;Rep1&quot;    &quot;25&quot;                  
+[5,] &quot;Undifferentiated 1&quot; &quot;Rep2&quot;    &quot;22&quot;                  
+[6,] &quot;Undifferentiated 1&quot; &quot;Rep3&quot;    &quot;88&quot;                  
+     overlap_overdispersed
+[1,] &quot;2933&quot;               
+[2,] &quot;4615&quot;               
+[3,] &quot;2054&quot;               
+[4,] &quot;7235&quot;               
+[5,] &quot;5885&quot;               
+[6,] &quot;4580&quot;               </code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -810,35 +937,18 @@ locale:
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
-other attached packages:
-[1] mixlm_1.3.0    glmmTMB_1.1.9  MASS_7.3-56    EnvStats_2.8.1
-
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.12         mvtnorm_1.1-3       lattice_0.20-45    
- [4] zoo_1.8-10          rprojroot_2.0.3     digest_0.6.29      
- [7] utf8_1.2.2          R6_2.5.1            evaluate_0.15      
-[10] coda_0.19-4         pracma_2.3.8        highr_0.9          
-[13] pillar_1.7.0        rlang_1.0.2         multcomp_1.4-19    
-[16] rstudioapi_0.13     minqa_1.2.4         whisker_0.4        
-[19] car_3.1-1           nloptr_2.0.3        jquerylib_0.1.4    
-[22] Matrix_1.7-0        rmarkdown_2.14      splines_4.2.0      
-[25] lme4_1.1-30         stringr_1.4.0       TMB_1.9.12         
-[28] compiler_4.2.0      numDeriv_2016.8-1.1 httpuv_1.6.5       
-[31] xfun_0.30           pkgconfig_2.0.3     mgcv_1.8-40        
-[34] htmltools_0.5.2     tibble_3.1.7        workflowr_1.7.1    
-[37] codetools_0.2-18    fansi_1.0.3         crayon_1.5.1       
-[40] later_1.3.0         leaps_3.2           grid_4.2.0         
-[43] nlme_3.1-157        jsonlite_1.8.0      xtable_1.8-4       
-[46] lifecycle_1.0.1     git2r_0.30.1        magrittr_2.0.3     
-[49] estimability_1.3    cli_3.3.0           stringi_1.7.6      
-[52] carData_3.0-5       fs_1.5.2            promises_1.2.0.1   
-[55] bslib_0.3.1         ellipsis_0.3.2      pls_2.8-3          
-[58] vctrs_0.4.1         boot_1.3-28         sandwich_3.0-1     
-[61] TH.data_1.1-1       tools_4.2.0         glue_1.6.2         
-[64] emmeans_1.7.3       abind_1.4-5         fastmap_1.1.0      
-[67] survival_3.3-1      yaml_2.3.5          knitr_1.39         
-[70] sass_0.4.1         </code></pre>
-</div>
+ [1] Rcpp_1.0.12      rstudioapi_0.13  whisker_0.4      knitr_1.39      
+ [5] magrittr_2.0.3   workflowr_1.7.1  R6_2.5.1         rlang_1.0.2     
+ [9] fastmap_1.1.0    fansi_1.0.3      highr_0.9        stringr_1.4.0   
+[13] tools_4.2.0      xfun_0.30        utf8_1.2.2       cli_3.3.0       
+[17] git2r_0.30.1     jquerylib_0.1.4  htmltools_0.5.2  ellipsis_0.3.2  
+[21] rprojroot_2.0.3  yaml_2.3.5       digest_0.6.29    tibble_3.1.7    
+[25] lifecycle_1.0.1  crayon_1.5.1     later_1.3.0      sass_0.4.1      
+[29] vctrs_0.4.1      fs_1.5.2         promises_1.2.0.1 glue_1.6.2      
+[33] evaluate_0.15    rmarkdown_2.14   stringi_1.7.6    bslib_0.3.1     
+[37] compiler_4.2.0   pillar_1.7.0     jsonlite_1.8.0   httpuv_1.6.5    
+[41] pkgconfig_2.0.3 </code></pre>
 </div>
 
 
