@@ -1,0 +1,16 @@
+---
+title: "Progress Reports"
+output:
+  workflowr::wflow_html:
+    toc: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is to keep track of bi-weekly to-do items.
+
+
