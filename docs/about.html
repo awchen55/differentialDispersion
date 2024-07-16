@@ -264,6 +264,9 @@ $(document).ready(function () {
   <a href="about.html">About</a>
 </li>
 <li>
+  <a href="progress.html">Progress</a>
+</li>
+<li>
   <a href="license.html">License</a>
 </li>
       </ul>
@@ -313,7 +316,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-07-10
+<strong>Last updated:</strong> 2024-07-16
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -360,15 +363,15 @@ results.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeac6c1d089a35795bea1e20c6594551cce187c8c0targetblankac6c1d0a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreef446588bdaeee3db474ee630d1bd343cdc5a5215targetblankf446588a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/ac6c1d089a35795bea1e20c6594551cce187c8c0" target="_blank">ac6c1d0</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/f446588bdaeee3db474ee630d1bd343cdc5a5215" target="_blank">f446588</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeac6c1d089a35795bea1e20c6594551cce187c8c0targetblankac6c1d0a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreef446588bdaeee3db474ee630d1bd343cdc5a5215targetblankf446588a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -378,7 +381,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/ac6c1d089a35795bea1e20c6594551cce187c8c0" target="_blank">ac6c1d0</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/f446588bdaeee3db474ee630d1bd343cdc5a5215" target="_blank">f446588</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -405,18 +408,16 @@ Untracked files:
     Untracked:  analysis/.ipynb_checkpoints/
     Untracked:  analysis/differential_dispersion_lowess_method.ipynb
     Untracked:  analysis/scran_size_factors_debugging.Rmd
-    Untracked:  code/scran_log_normalization_hybrid_lines.R
-    Untracked:  code/step2_residual_calculations_lowess_values.py
-    Untracked:  code/step3_bootstrapping_cell_types_lowess_method.py
     Untracked:  data/hybrid_lines_cpm_normalized/
-    Untracked:  data/hybrid_lines_raw_data/human.ASE.Rep1.counts.csv
+    Untracked:  data/hybrid_lines_raw_data/
 
 Unstaged changes:
     Modified:   .Rprofile
     Modified:   analysis/differential_dispersion_hybrid_line.Rmd
     Modified:   analysis/negative_binomial_dispersion_estimation.Rmd
-    Modified:   code/scran_size_factors_hybrid_lines.R
     Modified:   code/step1_calculate_cell_count_metrics_lowess_method.py
+    Modified:   code/step2_residual_calculations_lowess_values.py
+    Modified:   code/step3_bootstrapping_cell_types_lowess_method.py
     Deleted:    data/chimp_ASE_subset.csv
     Deleted:    data/human_ASE_subset.csv
 
@@ -465,19 +466,36 @@ Message
 <tbody>
 <tr>
 <td>
-html
+Rmd
 </td>
 <td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/212629c2686d4c4278f544ba82f5ee2fa39e6359/docs/about.html" target="_blank">212629c</a>
+<a href="https://github.com/awchen55/differentialDispersion/blob/d6931655e6966133f41f73a2eb240aeb153f7dc0/analysis/about.Rmd" target="_blank">d693165</a>
 </td>
 <td>
 awchen55
 </td>
 <td>
-2024-07-10
+2024-07-12
 </td>
 <td>
-Build site.
+update data info
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/c672a3cd92bc73d930dde1c1932089a5c32f2751/docs/about.html" target="_blank">c672a3c</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-07-12
+</td>
+<td>
+update website files
 </td>
 </tr>
 <tr>
@@ -485,16 +503,16 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/14c565854925f012fd8d72fa0c8446f9301af0cb/analysis/about.Rmd" target="_blank">14c5658</a>
+<a href="https://github.com/awchen55/differentialDispersion/blob/b06fc530ed83aec7abd0b62db88b34c4b9bd15d6/analysis/about.Rmd" target="_blank">b06fc53</a>
 </td>
 <td>
 awchen55
 </td>
 <td>
-2024-07-10
+2024-07-12
 </td>
 <td>
-include procedure info
+add initial dispersion analysis
 </td>
 </tr>
 <tr>
@@ -577,8 +595,8 @@ Start workflowr project.
 <p>The goal of this project is to identify differential dispersion in
 scRNA-seq data between human and chimp cell lines in both <em>cis</em>
 and <em>trans</em> contexts. The data consists of 3 human and 3 chimp
-cell lines and 3 hybrid cell lines with approximately 65,000 cells per
-line.</p>
+cell lines with about 20,000 cell/line. There is 1 hybrid cell line with
+3 replicates at approximately 20,000 cells/replicate.</p>
 </div>
 <div id="procedure" class="section level1">
 <h1>Procedure</h1>
