@@ -10,10 +10,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 We first compare human and chimp genes that show significant dispersion for two cell types: "Cardiomyocytes" and "Undifferentiated 1". We perform a separate analysis based on the replicate (1, 2, or 3).
-```{r}
+```{r,warning=FALSE}
+require(stringr)
 replicate = 'Rep3'
 cell_type = "Undifferentiated1"
-setwd("/project2/gilad/awchen55/differentialDispersion/")
+#setwd("/project2/gilad/awchen55/differentialDispersion/")
 path = '/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_cpm_normalized/'
 #input_name = paste0(path,'chimp_ase_cpm_', replicate)
 #output_name_c = paste0(path,'chimp_ase_cpm_', replicate,'_',cell_type)
@@ -25,7 +26,11 @@ cell_count <- c()
 
 for (rep in reps){
   input_name = paste0(path, 'chimp_ase_cpm_', rep)
-  data_h <- read.csv(paste0(input_name,"_cell_type_counts.csv"))
+  data_h <- read.csv(paste0(input_name,"_cell_type_counts.csv"),row.names="X")
+  rownames(data_h) <- data_h$labels
+  rownames(data_h)<-str_replace_all(rownames(data_h), c(" " = "."))
+  data_h <- as.data.frame(t(data_h))
+  data_h = data_h[-1,]
   cell_count <- c(cell_count,max(data_h$Undifferentiated.1_total))
   cell_type <-c(cell_type, "Undifferentiated 1")
   replicate <- c(replicate,rep)
@@ -109,6 +114,47 @@ replicate <- c("Rep1","Rep1","Rep2","Rep2","Rep3","Rep3")
 
 cbind(species,replicate,underdispersed,overdispersed)
 ```
+
+Overlap of significant gene across replicates.
+```{r}
+overlap_underdispersed <-c()
+overlap_overdispersed <-c()
+species <- c("human","chimp")
+cell_types <-c("Cardiomyocytes","Undifferentiated1")
+for (sp in species){
+  for (cell in cell_types){
+    output_name_1 = paste0(path, sp ,'_ase_cpm_', 'Rep1_',cell)
+    output_name_2 = paste0(path, sp,'_ase_cpm_', 'Rep2_', cell)
+    output_name_3 = paste0(path, sp,'_ase_cpm_', 'Rep3_', cell)
+    data_1 <- read.csv(paste0(output_name_1,"_dispersion.csv"))
+    data_2 <- read.csv(paste0(output_name_2,"_dispersion.csv"))
+    data_3 <- read.csv(paste0(output_name_3,"_dispersion.csv"))
+    
+    # list of genes in Rep1
+    under_1_list <- data_1[(data_1$z_score<0) & (data_1$p_value_adj<0.05) & (data_1$cell_count>10) & (data_1$est>0),]$X
+    over_1_list <- data_1[(data_1$z_score>0) & (data_1$p_value_adj<0.05) & (data_1$cell_count>10) & (data_1$est>0),]$X
+    
+    # list of genes in Rep2
+    under_2_list <- data_2[(data_2$z_score<0) & (data_2$p_value_adj<0.05) & (data_2$cell_count>10) & (data_2$est>0),]$X
+    over_2_list <- data_2[(data_2$z_score>0) & (data_2$p_value_adj<0.05) & (data_2$cell_count>10) & (data_2$est>0),]$X
+    
+    # list of genes in Rep3
+    under_3_list <- data_3[(data_3$z_score<0) & (data_3$p_value_adj<0.05) & (data_3$cell_count>10) & (data_3$est>0),]$X
+    over_3_list <- data_3[(data_3$z_score>0) & (data_3$p_value_adj<0.05) & (data_3$cell_count>10) & (data_3$est>0),]$X
+    
+    overlap_underdispersed <-c(overlap_underdispersed, length(Reduce(intersect, list(under_1_list, under_2_list, under_3_list))))
+                               
+                          
+    overlap_overdispersed <-c(overlap_overdispersed, length(Reduce(intersect, list(over_1_list, over_2_list, over_3_list))))
+  }
+}
+
+species <- c("human","human","chimp","chimp")
+cell_type <- c(cell_types,cell_types)
+
+cbind(species,cell_type,overlap_underdispersed,overlap_overdispersed)
+```
+
 
 We count the overlap of significant genes within each replicate across species.
 ```{r}
