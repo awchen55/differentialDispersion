@@ -1,0 +1,16 @@
+---
+title: "Progress Report"
+output: html_document
+date: '2024-07-15'
+---
+
+```{r,include=F,eval=F}
+rmarkdown::render("progress_report_2024_07_15.Rmd",output_file = '../../docs/progress_report_2024_07_15.html')
+```
+
+## To-Do Items
+1. Look at overlap of significant genes across replicates compared replicates compared to overlap expected due to chance
+2. Test regressing out % of zeros, % mitochondrial reads in normalization 
+3. Quantify effect size of dispersion (histogram of genes with high dispersion)
+4. Organize workflowr and add more description on data, procedure, papers, etc.
+5. Look into estimating dispersion using NB distribution 

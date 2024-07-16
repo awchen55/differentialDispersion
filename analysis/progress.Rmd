@@ -9,4 +9,6 @@ editor_options:
 
 This is to keep track of bi-weekly to-do items.
 
+### Dates (Start of Week)
 
+[July 15, 2024](progress_report_2024_07_15.html)
