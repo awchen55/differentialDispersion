@@ -8,7 +8,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
 
 Click on this [link](differential_dispersion_hybrid_line.html) to see high-level look at data.
 
