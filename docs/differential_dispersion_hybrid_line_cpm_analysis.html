@@ -395,13 +395,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-07-16
+<strong>Last updated:</strong> 2024-07-18
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 2
 </p>
 <p>
 <strong>Knit directory:</strong> <code>differentialDispersion/</code>
@@ -424,18 +424,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -552,6 +555,14 @@ relative
 data/hybrid_lines_cpm_normalized
 </td>
 </tr>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/human.ASE.Rep1.h5Seurat
+</td>
+<td style="text-align:left;">
+data/hybrid_lines_raw_data/human.ASE.Rep1.h5Seurat
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -560,15 +571,15 @@ data/hybrid_lines_cpm_normalized
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreee1fae24432eff4a6d20ccced7b2347d820ef3a89targetblanke1fae24a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree5c2aee0285ede4335819af3aba1f984ee44d5863targetblank5c2aee0a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/e1fae24432eff4a6d20ccced7b2347d820ef3a89" target="_blank">e1fae24</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/5c2aee0285ede4335819af3aba1f984ee44d5863" target="_blank">5c2aee0</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreee1fae24432eff4a6d20ccced7b2347d820ef3a89targetblanke1fae24a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree5c2aee0285ede4335819af3aba1f984ee44d5863targetblank5c2aee0a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -578,7 +589,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/e1fae24432eff4a6d20ccced7b2347d820ef3a89" target="_blank">e1fae24</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/5c2aee0285ede4335819af3aba1f984ee44d5863" target="_blank">5c2aee0</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -611,6 +622,7 @@ Untracked files:
 Unstaged changes:
     Modified:   .Rprofile
     Modified:   analysis/differential_dispersion_hybrid_line.Rmd
+    Modified:   analysis/differential_dispersion_hybrid_line_cpm_analysis.Rmd
     Modified:   analysis/negative_binomial_dispersion_estimation.Rmd
     Modified:   code/step1_calculate_cell_count_metrics_lowess_method.py
     Modified:   code/step2_residual_calculations_lowess_values.py
@@ -664,6 +676,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/b5b40ffc24f16680e42c50f55e75e445d5f7a8fe/docs/differential_dispersion_hybrid_line_cpm_analysis.html" target="_blank">b5b40ff</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-07-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -843,6 +872,8 @@ cbind(species,replicate,underdispersed,overdispersed)</code></pre>
 <p>Overlap of significant gene across replicates.</p>
 <pre class="r"><code>overlap_underdispersed &lt;-c()
 overlap_overdispersed &lt;-c()
+overlap_total &lt;- c()
+overlap_expected &lt;- c()
 species &lt;- c(&quot;human&quot;,&quot;chimp&quot;)
 cell_types &lt;-c(&quot;Cardiomyocytes&quot;,&quot;Undifferentiated1&quot;)
 for (sp in species){
@@ -870,18 +901,65 @@ for (sp in species){
                                
                           
     overlap_overdispersed &lt;-c(overlap_overdispersed, length(Reduce(intersect, list(over_1_list, over_2_list, over_3_list))))
+    
+    overlap_expected &lt;- c(overlap_expected,0.05^3*length(Reduce(intersect, list(data_1$X, data_2$X, data_3$X))))
+    
+    overlap_total &lt;- c(overlap_total,length(Reduce(intersect, list(data_1$X, data_2$X, data_3$X))))
   }
 }
 
 species &lt;- c(&quot;human&quot;,&quot;human&quot;,&quot;chimp&quot;,&quot;chimp&quot;)
 cell_type &lt;- c(cell_types,cell_types)
 
-cbind(species,cell_type,overlap_underdispersed,overlap_overdispersed)</code></pre>
+overlap_res &lt;- cbind(species,cell_type,overlap_underdispersed,overlap_overdispersed,overlap_expected,overlap_total)
+overlap_res</code></pre>
 <pre><code>     species cell_type           overlap_underdispersed overlap_overdispersed
 [1,] &quot;human&quot; &quot;Cardiomyocytes&quot;    &quot;4&quot;                    &quot;2427&quot;               
 [2,] &quot;human&quot; &quot;Undifferentiated1&quot; &quot;14&quot;                   &quot;5332&quot;               
 [3,] &quot;chimp&quot; &quot;Cardiomyocytes&quot;    &quot;149&quot;                  &quot;2950&quot;               
-[4,] &quot;chimp&quot; &quot;Undifferentiated1&quot; &quot;573&quot;                  &quot;4696&quot;               </code></pre>
+[4,] &quot;chimp&quot; &quot;Undifferentiated1&quot; &quot;573&quot;                  &quot;4696&quot;               
+     overlap_expected overlap_total
+[1,] &quot;1.67025&quot;        &quot;13362&quot;      
+[2,] &quot;1.81725&quot;        &quot;14538&quot;      
+[3,] &quot;1.679875&quot;       &quot;13439&quot;      
+[4,] &quot;1.82375&quot;        &quot;14590&quot;      </code></pre>
+<p>We calculate the expected number of significant genes overlapped by
+first finding the total number of genes that overlap between the 3
+replicates. We assume that 5% of genes will be significant due to random
+chance within each replicate set. We perform Fisher’s exact test to
+compare the observed number of significant genes to the expected.</p>
+<pre class="r"><code>fisher_underdisp &lt;- c()
+fisher_overdisp &lt;- c()
+for (i in 1:nrow(overlap_res)){
+  dat_under &lt;- data.frame(
+  &quot;observed&quot; = c(as.numeric(overlap_res[i,&quot;overlap_underdispersed&quot;]), as.numeric(overlap_res[i,&quot;overlap_total&quot;]) - as.numeric(overlap_res[i,&quot;overlap_underdispersed&quot;])),
+  &quot;expected&quot; = c(as.numeric(overlap_res[i,&quot;overlap_expected&quot;]), as.numeric(overlap_res[i,&quot;overlap_total&quot;]) - as.numeric(overlap_res[i,&quot;overlap_expected&quot;])),
+  row.names = c(&quot;overlap&quot;, &quot;no overlap&quot;),
+  stringsAsFactors = FALSE
+)
+  
+   dat_over &lt;- data.frame(
+  &quot;observed&quot; = c(as.numeric(overlap_res[i,&quot;overlap_overdispersed&quot;]), as.numeric(overlap_res[i,&quot;overlap_total&quot;]) - as.numeric(overlap_res[i,&quot;overlap_overdispersed&quot;])),
+  &quot;expected&quot; = c(as.numeric(overlap_res[i,&quot;overlap_expected&quot;]), as.numeric(overlap_res[i,&quot;overlap_total&quot;]) - as.numeric(overlap_res[i,&quot;overlap_expected&quot;])),
+  row.names = c(&quot;overlap&quot;, &quot;no overlap&quot;),
+  stringsAsFactors = FALSE
+)
+  fisher_underdisp &lt;- c(fisher_underdisp,fisher.test(dat_under)$p.value)
+  
+  fisher_overdisp &lt;- c(fisher_overdisp,fisher.test(dat_over)$p.value)
+}
+
+cbind(overlap_res,fisher_underdisp,fisher_overdisp)</code></pre>
+<pre><code>     species cell_type           overlap_underdispersed overlap_overdispersed
+[1,] &quot;human&quot; &quot;Cardiomyocytes&quot;    &quot;4&quot;                    &quot;2427&quot;               
+[2,] &quot;human&quot; &quot;Undifferentiated1&quot; &quot;14&quot;                   &quot;5332&quot;               
+[3,] &quot;chimp&quot; &quot;Cardiomyocytes&quot;    &quot;149&quot;                  &quot;2950&quot;               
+[4,] &quot;chimp&quot; &quot;Undifferentiated1&quot; &quot;573&quot;                  &quot;4696&quot;               
+     overlap_expected overlap_total fisher_underdisp        fisher_overdisp
+[1,] &quot;1.67025&quot;        &quot;13362&quot;       &quot;0.687464913922058&quot;     &quot;0&quot;            
+[2,] &quot;1.81725&quot;        &quot;14538&quot;       &quot;0.00417121625778378&quot;   &quot;0&quot;            
+[3,] &quot;1.679875&quot;       &quot;13439&quot;       &quot;5.3818173636225e-42&quot;   &quot;0&quot;            
+[4,] &quot;1.82375&quot;        &quot;14590&quot;       &quot;9.05683413352494e-171&quot; &quot;0&quot;            </code></pre>
 <p>We count the overlap of significant genes within each replicate
 across species.</p>
 <pre class="r"><code>overlap_underdispersed &lt;-c()
@@ -953,20 +1031,19 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] stringr_1.4.0   workflowr_1.7.1
+[1] stringr_1.5.1
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.12      highr_0.9        bslib_0.3.1      compiler_4.2.0  
- [5] pillar_1.7.0     later_1.3.0      git2r_0.30.1     jquerylib_0.1.4 
- [9] tools_4.2.0      getPass_0.2-2    digest_0.6.29    jsonlite_1.8.0  
-[13] evaluate_0.15    tibble_3.1.7     lifecycle_1.0.1  pkgconfig_2.0.3 
-[17] rlang_1.0.2      cli_3.3.0        rstudioapi_0.13  yaml_2.3.5      
-[21] xfun_0.30        fastmap_1.1.0    httr_1.4.3       knitr_1.39      
-[25] sass_0.4.1       fs_1.5.2         vctrs_0.4.1      rprojroot_2.0.3 
-[29] glue_1.6.2       R6_2.5.1         processx_3.8.0   fansi_1.0.3     
-[33] rmarkdown_2.14   callr_3.7.3      magrittr_2.0.3   whisker_0.4     
-[37] ps_1.7.0         promises_1.2.0.1 htmltools_0.5.2  ellipsis_0.3.2  
-[41] httpuv_1.6.5     utf8_1.2.2       stringi_1.7.6    crayon_1.5.1    </code></pre>
+ [1] Rcpp_1.0.12      rstudioapi_0.13  whisker_0.4      knitr_1.39      
+ [5] magrittr_2.0.3   workflowr_1.7.1  R6_2.5.1         rlang_1.1.4     
+ [9] fastmap_1.1.0    fansi_1.0.3      highr_0.9        tools_4.2.0     
+[13] xfun_0.30        utf8_1.2.2       cli_3.6.3        git2r_0.30.1    
+[17] jquerylib_0.1.4  htmltools_0.5.2  rprojroot_2.0.3  yaml_2.3.5      
+[21] digest_0.6.29    tibble_3.2.1     lifecycle_1.0.4  later_1.3.0     
+[25] sass_0.4.1       vctrs_0.6.5      promises_1.2.0.1 fs_1.5.2        
+[29] glue_1.7.0       evaluate_0.15    rmarkdown_2.14   stringi_1.7.6   
+[33] bslib_0.3.1      compiler_4.2.0   pillar_1.9.0     jsonlite_1.8.0  
+[37] httpuv_1.6.5     pkgconfig_2.0.3 </code></pre>
 </div>
 
 

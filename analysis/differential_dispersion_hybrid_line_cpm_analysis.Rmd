@@ -119,6 +119,8 @@ Overlap of significant gene across replicates.
 ```{r}
 overlap_underdispersed <-c()
 overlap_overdispersed <-c()
+overlap_total <- c()
+overlap_expected <- c()
 species <- c("human","chimp")
 cell_types <-c("Cardiomyocytes","Undifferentiated1")
 for (sp in species){
@@ -146,13 +148,44 @@ for (sp in species){
                                
                           
     overlap_overdispersed <-c(overlap_overdispersed, length(Reduce(intersect, list(over_1_list, over_2_list, over_3_list))))
+    
+    overlap_expected <- c(overlap_expected,0.05^3*length(Reduce(intersect, list(data_1$X, data_2$X, data_3$X))))
+    
+    overlap_total <- c(overlap_total,length(Reduce(intersect, list(data_1$X, data_2$X, data_3$X))))
   }
 }
 
 species <- c("human","human","chimp","chimp")
 cell_type <- c(cell_types,cell_types)
 
-cbind(species,cell_type,overlap_underdispersed,overlap_overdispersed)
+overlap_res <- cbind(species,cell_type,overlap_underdispersed,overlap_overdispersed,overlap_expected,overlap_total)
+overlap_res
+```
+We calculate the expected number of significant genes overlapped by first finding the total number of genes that overlap between the 3 replicates. We assume that 5% of genes will be significant due to random chance within each replicate set. We perform Fisher's exact test to compare the observed number of significant genes to the expected.
+```{r,warning=F}
+fisher_underdisp <- c()
+fisher_overdisp <- c()
+for (i in 1:nrow(overlap_res)){
+  dat_under <- data.frame(
+  "observed" = c(as.numeric(overlap_res[i,"overlap_underdispersed"]), as.numeric(overlap_res[i,"overlap_total"]) - as.numeric(overlap_res[i,"overlap_underdispersed"])),
+  "expected" = c(as.numeric(overlap_res[i,"overlap_expected"]), as.numeric(overlap_res[i,"overlap_total"]) - as.numeric(overlap_res[i,"overlap_expected"])),
+  row.names = c("overlap", "no overlap"),
+  stringsAsFactors = FALSE
+)
+  
+   dat_over <- data.frame(
+  "observed" = c(as.numeric(overlap_res[i,"overlap_overdispersed"]), as.numeric(overlap_res[i,"overlap_total"]) - as.numeric(overlap_res[i,"overlap_overdispersed"])),
+  "expected" = c(as.numeric(overlap_res[i,"overlap_expected"]), as.numeric(overlap_res[i,"overlap_total"]) - as.numeric(overlap_res[i,"overlap_expected"])),
+  row.names = c("overlap", "no overlap"),
+  stringsAsFactors = FALSE
+)
+  fisher_underdisp <- c(fisher_underdisp,fisher.test(dat_under)$p.value)
+  
+  fisher_overdisp <- c(fisher_overdisp,fisher.test(dat_over)$p.value)
+}
+
+cbind(overlap_res,fisher_underdisp,fisher_overdisp)
+
 ```
 
 
@@ -192,3 +225,10 @@ cbind(cell_type,replicate,overlap_underdispersed,overlap_overdispersed)
 
 
 
+
+```{r,eval=F,include=F}
+require(Seurat)
+require(SeuratDisk)
+require(SeuratData)
+HC <- LoadH5Seurat("/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/human.ASE.Rep1.h5Seurat")
+```
