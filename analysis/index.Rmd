@@ -8,8 +8,15 @@ editor_options:
   chunk_output_type: console
 ---
 
+# Objective
+To develop a way to quantifiably measure gene dispersion and compare levels of dispersion across different contexts such as species, cell types, and individuals. 
 
-Click on this [link](differential_dispersion_hybrid_line.html) to see high-level look at data.
+# Simulations
 
+> [Poisson and Negative Binomial Analysis](simulation_null_analysis.html)
 
-Click on this [link](differential_dispersion_hybrid_line_cpm_analysis.html) to find initial dispersion comparisons using the LOWESS method.
+# Applications
+
+## Human-Chimp Hybrid Data Set
+
+> Click on this [link](differential_dispersion_hybrid_line_cpm_analysis.html) to find initial dispersion comparisons using the LOWESS method.

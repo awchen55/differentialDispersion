@@ -1,0 +1,29 @@
+---
+title: "Poisson and Negative Binomial Simulations"
+output: html_document
+date: '2024-07-24'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Simulation Details
+
+## Poisson Distribution
+
+We first simulate a Poisson distribution as our null model for each gene, where there is no dispersion parameter. The density function is:
+
+$$
+f(x;\lambda) = \frac{\lambda^x e^{-\lambda}}{x!}
+$$ where $x =0,1,2,...$ and $E[X] = Var[X] = \lambda$. We use the **numpy** package in python to simulate the Poisson distribution.
+
+```{python, eval=F}
+import numpy as np
+
+np.random.poisson(lambda, size)
+```
+
+We set $\lambda$ equal to the mean gene expression using raw counts from the hybrid data set. This mean gene expression is calculated across cells from the same species, replicate, and cell type.
+
+## Negative Binomial Distribution

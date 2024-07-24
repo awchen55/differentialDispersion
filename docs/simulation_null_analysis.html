@@ -10,8 +10,9 @@
 
 
 
+<meta name="date" content="2024-07-24" />
 
-<title>Home</title>
+<title>Poisson and Negative Binomial Simulations</title>
 
 <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,6 +30,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -234,6 +238,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -241,6 +308,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -287,7 +364,9 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Home</h1>
+<h1 class="title toc-ignore">Poisson and Negative Binomial
+Simulations</h1>
+<h4 class="date">2024-07-24</h4>
 
 </div>
 
@@ -320,7 +399,7 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span> 1
 </p>
@@ -354,12 +433,96 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240625code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240625)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240625code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240625)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
@@ -441,218 +604,75 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
-These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
-(<code>docs/index.html</code>) files. If you’ve configured a remote Git
-repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
-in the table below to view the files as they were in that past version.
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/1209e3d4581f1b9465ccea7195a6beb093ca4486/docs/index.html" target="_blank">1209e3d</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-16
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/a48d565df9e7924bce3207097223450bc34cfa51/analysis/index.Rmd" target="_blank">a48d565</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-16
-</td>
-<td>
-website fixes
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/c672a3cd92bc73d930dde1c1932089a5c32f2751/docs/index.html" target="_blank">c672a3c</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-12
-</td>
-<td>
-update website files
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/b06fc530ed83aec7abd0b62db88b34c4b9bd15d6/analysis/index.Rmd" target="_blank">b06fc53</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-12
-</td>
-<td>
-add initial dispersion analysis
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/dd3944adfeebfd5319833c8d9129417887d89655/docs/index.html" target="_blank">dd3944a</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-27
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/1017d08b195cd1ad6b89a6d13ef283e051808070/analysis/index.Rmd" target="_blank">1017d08</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-27
-</td>
-<td>
-Add my first analysis
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/6ec0551c8ae3e18fc2a68525483beac812466ce9/docs/index.html" target="_blank">6ec0551</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-26
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/6a2982a2c645bc784a1fb140d110416f664b45e3/docs/index.html" target="_blank">6a2982a</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-26
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/33a835c93d1815fa14f779f573a8615a75cb4e2e/analysis/index.Rmd" target="_blank">33a835c</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-25
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
-<div id="objective" class="section level1">
-<h1>Objective</h1>
-<p>To develop a way to quantifiably measure gene dispersion and compare
-levels of dispersion across different contexts such as species, cell
-types, and individuals.</p>
+<div id="simulation-details" class="section level1">
+<h1>Simulation Details</h1>
+<div id="poisson-distribution" class="section level2">
+<h2>Poisson Distribution</h2>
+<p>We first simulate a Poisson distribution as our null model for each
+gene, where there is no dispersion parameter. The density function
+is:</p>
+<p><span class="math display">\[
+f(x;\lambda) = \frac{\lambda^x e^{-\lambda}}{x!}
+\]</span> where <span class="math inline">\(x =0,1,2,...\)</span> and
+<span class="math inline">\(E[X] = Var[X] = \lambda\)</span>. We use the
+<strong>numpy</strong> package in python to simulate the Poisson
+distribution.</p>
+<pre class="python"><code>import numpy as np
+
+np.random.poisson(lambda, size)</code></pre>
+<p>We set <span class="math inline">\(\lambda\)</span> equal to the mean
+gene expression using raw counts from the hybrid data set. This mean
+gene expression is calculated across cells from the same species,
+replicate, and cell type.</p>
 </div>
-<div id="simulations" class="section level1">
-<h1>Simulations</h1>
-<blockquote>
-<p><a href="simulation_null_analysis.html">Poisson and Negative Binomial
-Analysis</a></p>
-</blockquote>
+<div id="negative-binomial-distribution" class="section level2">
+<h2>Negative Binomial Distribution</h2>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.0 (2022-04-22)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /software/openblas-0.3.13-el7-x86_64/lib/libopenblas_haswellp-r0.3.13.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8 LC_NUMERIC=C         LC_TIME=C           
+ [4] LC_COLLATE=C         LC_MONETARY=C        LC_MESSAGES=C       
+ [7] LC_PAPER=C           LC_NAME=C            LC_ADDRESS=C        
+[10] LC_TELEPHONE=C       LC_MEASUREMENT=C     LC_IDENTIFICATION=C 
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.12      pillar_1.9.0     compiler_4.2.0   bslib_0.3.1     
+ [5] later_1.3.0      jquerylib_0.1.4  git2r_0.30.1     workflowr_1.7.1 
+ [9] tools_4.2.0      digest_0.6.29    jsonlite_1.8.0   evaluate_0.15   
+[13] lifecycle_1.0.4  tibble_3.2.1     lattice_0.20-45  png_0.1-7       
+[17] pkgconfig_2.0.3  rlang_1.1.4      Matrix_1.6-4     cli_3.6.3       
+[21] rstudioapi_0.13  yaml_2.3.5       xfun_0.30        fastmap_1.1.0   
+[25] stringr_1.5.1    knitr_1.39       fs_1.5.2         vctrs_0.6.5     
+[29] sass_0.4.1       rprojroot_2.0.3  grid_4.2.0       reticulate_1.24 
+[33] glue_1.7.0       R6_2.5.1         fansi_1.0.3      rmarkdown_2.14  
+[37] magrittr_2.0.3   promises_1.2.0.1 htmltools_0.5.2  httpuv_1.6.5    
+[41] utf8_1.2.2       stringi_1.7.6   </code></pre>
 </div>
-<div id="applications" class="section level1">
-<h1>Applications</h1>
-<div id="human-chimp-hybrid-data-set" class="section level2">
-<h2>Human-Chimp Hybrid Data Set</h2>
-<blockquote>
-<p>Click on this <a
-href="differential_dispersion_hybrid_line_cpm_analysis.html">link</a> to
-find initial dispersion comparisons using the LOWESS method.</p>
-</blockquote>
 </div>
 </div>
 
@@ -672,6 +692,8 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -704,6 +726,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
