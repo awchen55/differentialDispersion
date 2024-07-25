@@ -1,5 +1,5 @@
 ---
-title: "Poisson and Negative Binomial Simulations"
+title: "**Poisson and Negative Binomial Simulations**"
 output: html_document
 date: '2024-07-24'
 ---
@@ -8,22 +8,38 @@ date: '2024-07-24'
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Simulation Details
+# **Simulation Details**
 
-## Poisson Distribution
+We simulate a matrix $Y \in \mathbb{R}^{n\times p}$ that contains raw expression values (scRNA-seq counts) for $p$ genes and $n$ single cells. We test several conditions. The first is to test a null model that assumes no dispersion using the Poisson distribution. We also test scenarios with different levels of dispersion using the Negative Binomial model.
+
+## **Poisson Distribution**
 
 We first simulate a Poisson distribution as our null model for each gene, where there is no dispersion parameter. The density function is:
 
 $$
-f(x;\lambda) = \frac{\lambda^x e^{-\lambda}}{x!}
-$$ where $x =0,1,2,...$ and $E[X] = Var[X] = \lambda$. We use the **numpy** package in python to simulate the Poisson distribution.
+f(y;\lambda) = \frac{\lambda^y e^{-\lambda}}{y!}
+$$
 
-```{python, eval=F}
-import numpy as np
+where for $y =0,1,2,...$ the $E[Y] = Var[Y] = \lambda$. We use the **rpois($n$, $\lambda$)** function in R to simulate the Poisson distribution. 
+$$
+y_j \sim Pois(\lambda_j) \text{ ,    where } j = 1,\cdots,p
+$$
 
-np.random.poisson(lambda, size)
-```
+We set $\lambda_j$ equal to the mean gene expression using raw counts from the hybrid data set. Mean gene expression is calculated across cells from the same species, replicate, and cell type. We simulate for $n=500$ cells.
 
-We set $\lambda$ equal to the mean gene expression using raw counts from the hybrid data set. This mean gene expression is calculated across cells from the same species, replicate, and cell type.
+## **Negative Binomial Distribution**
 
-## Negative Binomial Distribution
+We simulate the Negative Binomial distribution as the the alternative model for each gene. The density function is:
+
+$$
+f(y;\mu, \theta) = {y+\theta-1 \choose y} \left(\frac{\mu}{\mu+\theta}\right)^y \left(\frac{\theta}{\mu+\theta}\right)^\theta 
+$$
+where for $y =0,1,2,...$ the $E[Y] = \mu$ and $Var[Y] = \mu + \frac{\mu^2}{\theta}$. Note that the *dispersion* parameter is $\phi=1/\theta$. We use the **rnegbin($n$, $\mu$, $\theta$)** function from the *MASS* R package to simulate the Negative Binomial distribution.
+
+$$
+y_j \sim NB(\mu_j,\theta_j) \text{ ,    where } j = 1,\cdots,p
+$$
+
+We set $\mu_j$ equal to the mean gene expression using raw counts from the hybrid data set. Mean gene expression is calculated across cells from the same species, replicate, and cell type. We introduce and test varying dispersion levels for $\phi_j = 1/\theta_j$ and simulate for $n=500$ cells.
+
+
