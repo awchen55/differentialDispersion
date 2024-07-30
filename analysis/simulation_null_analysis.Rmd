@@ -14,18 +14,75 @@ We simulate a matrix $Y \in \mathbb{R}^{n\times p}$ that contains raw expression
 
 ## **Poisson Distribution**
 
-We first simulate a Poisson distribution as our null model for each gene, where there is no dispersion parameter. The density function is:
+### ***Model***
+
+We first simulate a Poisson distribution as our null model for each gene, where there is no dispersion parameter.
+
+$$
+y_{ij} \sim Pois(L_i\lambda_j) 
+$$
+
+Where the variables for cell $i$ and gene $j$ are:
+
+-   $y_{ij}$ is the number of unique molecular identifier (UMI) for cell $i$ and gene $j$
+
+-   $L_i$ is the library size of cell $i$
+
+-   $\lambda_j$ is the relative expression value of gene $j$
+
+### ***Density Function***
+
+The density function for the Poisson distribution is:
 
 $$
 f(y;\lambda) = \frac{\lambda^y e^{-\lambda}}{y!}
 $$
 
-where for $y =0,1,2,...$ the $E[Y] = Var[Y] = \lambda$. We use the **rpois($n$, $\lambda$)** function in R to simulate the Poisson distribution. 
+Where for $y =0,1,2,...$ the $E[Y] = Var[Y] = \lambda$.
+
+### ***Simulation Parameters***
+
+We use the **rpois(**$n$, $\lambda$) function in R to simulate the Poisson distribution. The library size and relative expression values are calculated from a real data set (human-chimp hybrid data). Each $Y$ is calculated for cells from the same species, cell type, and replicate. We simulate for $n=500$ cells.
+
+## **Gamma-Poisson (NB) Distribution**
+
+### ***Model***
+
+We simulate the Negative Binomial distribution using the Gamma-Poisson distribution, since the Gamma distribution is a conjugate prior of the Poisson distribution. Under this model,
+
 $$
-y_j \sim Pois(\lambda_j) \text{ ,    where } j = 1,\cdots,p
+y_{ij} \sim Pois(L_i \lambda_j)
 $$
 
-We set $\lambda_j$ equal to the mean gene expression using raw counts from the hybrid data set. Mean gene expression is calculated across cells from the same species, replicate, and cell type. We simulate for $n=500$ cells.
+$$
+\lambda_j \sim Gamma(\mu_j,\phi_j)
+$$
+
+Where the variables for cell $i$ and gene $j$ are:
+
+-   $y_{ij}$ is the number of unique molecular identifier (UMI) for cell $i$ and gene $j$
+
+-   $L_i$ is the library size of cell $i$
+
+-   $\lambda_j$ is the latent expression value of gene $j$
+
+-   $\mu_j$ is the mean relative expression value of $\lambda_j$ for gene $j$
+
+-   $\phi_j$ is the dispersion value of $\lambda_j$ for gene $j$
+
+### ***Density Function***
+
+The density function for the Gamma distribution is:
+
+$$
+f(y; \mu,\phi) = \frac{(\phi^{-1}\mu^{-1})^{\phi^{-1}}}{\Gamma(\phi^{-1})} y^{\phi^{-1}-1} e^{\phi^{-1}\mu^{-1}y}
+$$
+
+Where for $y =0,1,2,...$ the $E[Y] = \mu$ and $Var[Y] = \mu^2 \phi$.
+
+### ***Simulation Parameters***
+
+We will first simulate $\lambda_j$ using the **rgamma(**$n$,$\alpha$,$\sigma$) function in R with mean $\alpha\sigma$ and variance $\alpha\sigma^2$. Thus, $\mu=\alpha\sigma$ and $\phi = 1/\alpha$. We calculate $\mu_j$ for each gene $j$ and $L_i$ for each cell $i$ from the hybrid data set. The dispersion parameter can be set at varying values to test different levels of dispersion. We next simulate the Poisson distribution using the **rpois(**$n$, $\lambda$) function in R. We simulate for $n=500$ cells.
 
 ## **Negative Binomial Distribution**
 
@@ -33,13 +90,42 @@ We simulate the Negative Binomial distribution as the the alternative model for 
 
 $$
 f(y;\mu, \theta) = {y+\theta-1 \choose y} \left(\frac{\mu}{\mu+\theta}\right)^y \left(\frac{\theta}{\mu+\theta}\right)^\theta 
-$$
-where for $y =0,1,2,...$ the $E[Y] = \mu$ and $Var[Y] = \mu + \frac{\mu^2}{\theta}$. Note that the *dispersion* parameter is $\phi=1/\theta$. We use the **rnegbin($n$, $\mu$, $\theta$)** function from the *MASS* R package to simulate the Negative Binomial distribution.
+$$ where for $y =0,1,2,...$ the $E[Y] = \mu$ and $Var[Y] = \mu + \frac{\mu^2}{\theta}$. Note that the *dispersion* parameter is $\phi=1/\theta$. We use the **rnegbin(**$n$, $\mu$, $\theta$) function from the *MASS* R package to simulate the Negative Binomial distribution.
 
 $$
-y_j \sim NB(\mu_j,\theta_j) \text{ ,    where } j = 1,\cdots,p
+y_{ij} \sim NB(\mu_j,\theta_j) \text{ ,    where } j = 1,\cdots,p
 $$
 
 We set $\mu_j$ equal to the mean gene expression using raw counts from the hybrid data set. Mean gene expression is calculated across cells from the same species, replicate, and cell type. We introduce and test varying dispersion levels for $\phi_j = 1/\theta_j$ and simulate for $n=500$ cells.
 
+# **Simulations**
 
+## **Null Model**
+
+We first calculate the mean gene expression for in the hybrid dataset using Human Cardiomyocytes from Replicate 3. Replicate 3 was chosen since there are 546 cells, which is similar to the 500 cells we will simulate.
+
+```{r, eval=F}
+require(Seurat)
+require(SeuratDisk)
+require(SeuratData)
+HC <- LoadH5Seurat("/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat")
+cardiomyocytes_data <- subset(HC, subset = (labels == "Cardiomyocytes"))
+cardiomyocytes_expression_data <- t(cardiomyocytes_data[['RNA']]$counts)
+```
+
+```{r, eval=F}
+# calculate mean expression and remove genes with zero expression
+mean_expression <- colMeans(cardiomyocytes_expression_data)
+mean_expression_genes <- mean_expression[mean_expression!=0]
+```
+
+```{r, eval=F}
+n=500
+p = 10#length(mean_expression_genes)
+
+null_model_expression_data <- matrix(, nrow = 500, ncol = p)
+
+for(i in 1:p){
+  null_model_expression_data[,i] <- rpois(500,mean_expression_genes[i])
+}
+```
