@@ -55,7 +55,7 @@ y_{ij} \sim Pois(L_i \lambda_j)
 $$
 
 $$
-\lambda_j \sim Gamma(\mu_j,\phi_j)
+\lambda_j \sim (1-\pi_j)Gamma(\mu_0,\phi_0)  + \pi_jGamma(\mu_j,\phi_j)
 $$
 
 Where the variables for cell $i$ and gene $j$ are:
@@ -66,9 +66,15 @@ Where the variables for cell $i$ and gene $j$ are:
 
 -   $\lambda_j$ is the latent expression value of gene $j$
 
+-   $\pi_j$ is the probability that a gene is overdispersed
+
 -   $\mu_j$ is the mean relative expression value of $\lambda_j$ for gene $j$
 
+-   $\mu_0$ is the null relative expression value for a gene that has no dispersion
+
 -   $\phi_j$ is the dispersion value of $\lambda_j$ for gene $j$
+
+-   $\phi_0$ is the null relative dispersion value for a gene that has no dispersion
 
 ### ***Density Function***
 
@@ -82,7 +88,7 @@ Where for $y =0,1,2,...$ the $E[Y] = \mu$ and $Var[Y] = \mu^2 \phi$.
 
 ### ***Simulation Parameters***
 
-We will first simulate $\lambda_j$ using the **rgamma(**$n$,$\alpha$,$\sigma$) function in R with mean $\alpha\sigma$ and variance $\alpha\sigma^2$. Thus, $\mu=\alpha\sigma$ and $\phi = 1/\alpha$. We calculate $\mu_j$ for each gene $j$ and $L_i$ for each cell $i$ from the hybrid data set. The dispersion parameter can be set at varying values to test different levels of dispersion. We next simulate the Poisson distribution using the **rpois(**$n$, $\lambda$) function in R. We simulate for $n=500$ cells.
+We will first simulate $\lambda_j$ using the **rgamma(**$n$,$\alpha$,$\sigma$) function in R with mean $\alpha\sigma$ and variance $\alpha\sigma^2$. Thus, $\mu=\alpha\sigma$ and $\phi = 1/\alpha$. We calculate $\mu_j$ for each gene $j$ and $L_i$ for each cell $i$ from the hybrid data set. For genes with dispersion, the $E[f] = \mu_0$. We next simulate the Poisson distribution using the **rpois(**$n$, $\lambda$) function in R. We simulate for $n=500$ cells.
 
 ## **Negative Binomial Distribution**
 

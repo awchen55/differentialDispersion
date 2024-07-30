@@ -8,15 +8,23 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Objective
-To develop a way to quantifiably measure gene dispersion and compare levels of dispersion across different contexts such as species, cell types, and individuals. 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-# Simulations
+# **Objective**
+The goal of this project is to develop a way to compare variance across different contexts such as species, cell types, and individuals. A property of single cell data is the direct mean-variance relationship in gene expression. Thus, a procedure to capture variance independent of the mean may be biologically informative. Specifically, we aim to measure dispersion as a quantifiable metric that drives these differences in variance. Technically, dispersion may be measured as the mean-independent variance. Theoretically, dispersion is the biological variation associated with transcriptional and translational events.
+
+# **Procedure**
+1. Estimate mean and variance using an underlying distribution such as NB or ASHR. Use the pooled data across all cell types and replicates for each bin of mean gene expression. Then graph the mean variance relationship to estimate the null variance.
+2. Use bootstrapping to estimate variance within specific cell types and compare estimate to null variance. This tests the hypothesis $H_0: \hat{V}=V_0$. For each gene within a cell type, variance is estimated using the ASHR distribution from randomly selected cells with replacement for 5,000 iterations. The resampling distribution is used to calculate the standard errors and confidence intervals, which can be compared to $V_0$.
+
+# **Simulations**
 
 > [Poisson and Negative Binomial Analysis](simulation_null_analysis.html)
 
-# Applications
+# **Applications**
 
-## Human-Chimp Hybrid Data Set
+## **Human-Chimp Hybrid Data Set**
 
 > Click on this [link](differential_dispersion_hybrid_line_cpm_analysis.html) to find initial dispersion comparisons using the LOWESS method.

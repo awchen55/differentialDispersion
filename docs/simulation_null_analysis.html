@@ -555,15 +555,15 @@ data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree5eda9a3727cff50da05da8e4bca48f254b492fedtargetblank5eda9a3a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeaf01093ad7886b2157bbfdabe33ac53401483a09targetblankaf01093a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/5eda9a3727cff50da05da8e4bca48f254b492fed" target="_blank">5eda9a3</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/af01093ad7886b2157bbfdabe33ac53401483a09" target="_blank">af01093</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree5eda9a3727cff50da05da8e4bca48f254b492fedtargetblank5eda9a3a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeaf01093ad7886b2157bbfdabe33ac53401483a09targetblankaf01093a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -573,7 +573,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/5eda9a3727cff50da05da8e4bca48f254b492fed" target="_blank">5eda9a3</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/af01093ad7886b2157bbfdabe33ac53401483a09" target="_blank">af01093</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -591,6 +591,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/cell_count_metrics_by_cell_type/
+    Ignored:    analysis/procedure_outline.nb.html
     Ignored:    analysis/scran_size_factors_debugging.nb.html
     Ignored:    code/.ipynb_checkpoints/
     Ignored:    data/.ipynb_checkpoints/
@@ -599,6 +600,7 @@ Ignored files:
 Untracked files:
     Untracked:  analysis/.ipynb_checkpoints/
     Untracked:  analysis/differential_dispersion_lowess_method.ipynb
+    Untracked:  analysis/procedure_outline.Rmd
     Untracked:  analysis/scran_size_factors_debugging.Rmd
     Untracked:  data/hybrid_lines_cpm_normalized/
     Untracked:  data/hybrid_lines_log_cpm_regressed_out_data/
@@ -662,6 +664,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/af01093ad7886b2157bbfdabe33ac53401483a09/analysis/simulation_null_analysis.Rmd" target="_blank">af01093</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-07-30
+</td>
+<td>
+update simulation details
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/af01093ad7886b2157bbfdabe33ac53401483a09/docs/simulation_null_analysis.html" target="_blank">af01093</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-07-30
+</td>
+<td>
+update simulation details
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -800,7 +836,7 @@ prior of the Poisson distribution. Under this model,</p>
 y_{ij} \sim Pois(L_i \lambda_j)
 \]</span></p>
 <p><span class="math display">\[
-\lambda_j \sim Gamma(\mu_j,\phi_j)
+\lambda_j \sim (1-\pi_j)Gamma(\mu_0,\phi_0)  + \pi_jGamma(\mu_j,\phi_j)
 \]</span></p>
 <p>Where the variables for cell <span class="math inline">\(i\)</span>
 and gene <span class="math inline">\(j\)</span> are:</p>
@@ -813,12 +849,18 @@ class="math inline">\(j\)</span></p></li>
 cell <span class="math inline">\(i\)</span></p></li>
 <li><p><span class="math inline">\(\lambda_j\)</span> is the latent
 expression value of gene <span class="math inline">\(j\)</span></p></li>
+<li><p><span class="math inline">\(\pi_j\)</span> is the probability
+that a gene is overdispersed</p></li>
 <li><p><span class="math inline">\(\mu_j\)</span> is the mean relative
 expression value of <span class="math inline">\(\lambda_j\)</span> for
 gene <span class="math inline">\(j\)</span></p></li>
+<li><p><span class="math inline">\(\mu_0\)</span> is the null relative
+expression value for a gene that has no dispersion</p></li>
 <li><p><span class="math inline">\(\phi_j\)</span> is the dispersion
 value of <span class="math inline">\(\lambda_j\)</span> for gene <span
 class="math inline">\(j\)</span></p></li>
+<li><p><span class="math inline">\(\phi_0\)</span> is the null relative
+dispersion value for a gene that has no dispersion</p></li>
 </ul>
 </div>
 <div id="density-function-1" class="section level3">
@@ -847,10 +889,10 @@ class="math inline">\(\phi = 1/\alpha\)</span>. We calculate <span
 class="math inline">\(\mu_j\)</span> for each gene <span
 class="math inline">\(j\)</span> and <span
 class="math inline">\(L_i\)</span> for each cell <span
-class="math inline">\(i\)</span> from the hybrid data set. The
-dispersion parameter can be set at varying values to test different
-levels of dispersion. We next simulate the Poisson distribution using
-the <strong>rpois(</strong><span class="math inline">\(n\)</span>, <span
+class="math inline">\(i\)</span> from the hybrid data set. For genes
+with dispersion, the <span class="math inline">\(E[f] = \mu_0\)</span>.
+We next simulate the Poisson distribution using the
+<strong>rpois(</strong><span class="math inline">\(n\)</span>, <span
 class="math inline">\(\lambda\)</span>) function in R. We simulate for
 <span class="math inline">\(n=500\)</span> cells.</p>
 </div>
