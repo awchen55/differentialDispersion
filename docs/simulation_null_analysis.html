@@ -395,7 +395,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-07-30
+<strong>Last updated:</strong> 2024-08-06
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -555,15 +555,15 @@ data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeaf01093ad7886b2157bbfdabe33ac53401483a09targetblankaf01093a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree446eae9ff72ceb6b91efa2d5ed7025be761d7518targetblank446eae9a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/af01093ad7886b2157bbfdabe33ac53401483a09" target="_blank">af01093</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/446eae9ff72ceb6b91efa2d5ed7025be761d7518" target="_blank">446eae9</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeaf01093ad7886b2157bbfdabe33ac53401483a09targetblankaf01093a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree446eae9ff72ceb6b91efa2d5ed7025be761d7518targetblank446eae9a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -573,7 +573,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/af01093ad7886b2157bbfdabe33ac53401483a09" target="_blank">af01093</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/446eae9ff72ceb6b91efa2d5ed7025be761d7518" target="_blank">446eae9</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -591,7 +591,6 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/cell_count_metrics_by_cell_type/
-    Ignored:    analysis/procedure_outline.nb.html
     Ignored:    analysis/scran_size_factors_debugging.nb.html
     Ignored:    code/.ipynb_checkpoints/
     Ignored:    data/.ipynb_checkpoints/
@@ -600,7 +599,7 @@ Ignored files:
 Untracked files:
     Untracked:  analysis/.ipynb_checkpoints/
     Untracked:  analysis/differential_dispersion_lowess_method.ipynb
-    Untracked:  analysis/procedure_outline.Rmd
+    Untracked:  analysis/fitting_ash_hybrid_data.Rmd
     Untracked:  analysis/scran_size_factors_debugging.Rmd
     Untracked:  data/hybrid_lines_cpm_normalized/
     Untracked:  data/hybrid_lines_log_cpm_regressed_out_data/
@@ -610,7 +609,6 @@ Unstaged changes:
     Modified:   .Rprofile
     Modified:   analysis/differential_dispersion_hybrid_line.Rmd
     Modified:   analysis/differential_dispersion_hybrid_line_cpm_analysis.Rmd
-    Modified:   analysis/index.Rmd
     Modified:   analysis/negative_binomial_dispersion_estimation.Rmd
     Modified:   analysis/simulation_null_analysis.Rmd
     Modified:   code/step1_calculate_cell_count_metrics_lowess_method.py
@@ -664,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/e89b6f835e3619ad650d0de07a22085ff5c2a3ef/analysis/simulation_null_analysis.Rmd" target="_blank">e89b6f8</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-07-30
+</td>
+<td>
+outline procedure using ash
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/e89b6f835e3619ad650d0de07a22085ff5c2a3ef/docs/simulation_null_analysis.html" target="_blank">e89b6f8</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-07-30
+</td>
+<td>
+outline procedure using ash
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -778,56 +810,13 @@ add simulation details
 <p>We simulate a matrix <span class="math inline">\(Y \in
 \mathbb{R}^{n\times p}\)</span> that contains raw expression values
 (scRNA-seq counts) for <span class="math inline">\(p\)</span> genes and
-<span class="math inline">\(n\)</span> single cells. We test several
-conditions. The first is to test a null model that assumes no dispersion
-using the Poisson distribution. We also test scenarios with different
-levels of dispersion using the Negative Binomial model.</p>
-<div id="poisson-distribution" class="section level2">
-<h2><strong>Poisson Distribution</strong></h2>
-<div id="model" class="section level3">
-<h3><strong><em>Model</em></strong></h3>
-<p>We first simulate a Poisson distribution as our null model for each
-gene, where there is no dispersion parameter.</p>
-<p><span class="math display">\[
-y_{ij} \sim Pois(L_i\lambda_j)
-\]</span></p>
-<p>Where the variables for cell <span class="math inline">\(i\)</span>
-and gene <span class="math inline">\(j\)</span> are:</p>
-<ul>
-<li><p><span class="math inline">\(y_{ij}\)</span> is the number of
-unique molecular identifier (UMI) for cell <span
-class="math inline">\(i\)</span> and gene <span
-class="math inline">\(j\)</span></p></li>
-<li><p><span class="math inline">\(L_i\)</span> is the library size of
-cell <span class="math inline">\(i\)</span></p></li>
-<li><p><span class="math inline">\(\lambda_j\)</span> is the relative
-expression value of gene <span class="math inline">\(j\)</span></p></li>
-</ul>
-</div>
-<div id="density-function" class="section level3">
-<h3><strong><em>Density Function</em></strong></h3>
-<p>The density function for the Poisson distribution is:</p>
-<p><span class="math display">\[
-f(y;\lambda) = \frac{\lambda^y e^{-\lambda}}{y!}
-\]</span></p>
-<p>Where for <span class="math inline">\(y =0,1,2,...\)</span> the <span
-class="math inline">\(E[Y] = Var[Y] = \lambda\)</span>.</p>
-</div>
-<div id="simulation-parameters" class="section level3">
-<h3><strong><em>Simulation Parameters</em></strong></h3>
-<p>We use the <strong>rpois(</strong><span
-class="math inline">\(n\)</span>, <span
-class="math inline">\(\lambda\)</span>) function in R to simulate the
-Poisson distribution. The library size and relative expression values
-are calculated from a real data set (human-chimp hybrid data). Each
-<span class="math inline">\(Y\)</span> is calculated for cells from the
-same species, cell type, and replicate. We simulate for <span
-class="math inline">\(n=500\)</span> cells.</p>
-</div>
-</div>
+<span class="math inline">\(n\)</span> single cells. We set <span
+class="math inline">\(\pi\)</span> as the percent of genes that are
+overdispersed. We use a Poisson-Gamma model for each gene and can set
+the dispersion level for each simulated gene.</p>
 <div id="gamma-poisson-nb-distribution" class="section level2">
 <h2><strong>Gamma-Poisson (NB) Distribution</strong></h2>
-<div id="model-1" class="section level3">
+<div id="model" class="section level3">
 <h3><strong><em>Model</em></strong></h3>
 <p>We simulate the Negative Binomial distribution using the
 Gamma-Poisson distribution, since the Gamma distribution is a conjugate
@@ -863,7 +852,7 @@ class="math inline">\(j\)</span></p></li>
 dispersion value for a gene that has no dispersion</p></li>
 </ul>
 </div>
-<div id="density-function-1" class="section level3">
+<div id="density-function" class="section level3">
 <h3><strong><em>Density Function</em></strong></h3>
 <p>The density function for the Gamma distribution is:</p>
 <p><span class="math display">\[
@@ -875,7 +864,7 @@ y^{\phi^{-1}-1} e^{\phi^{-1}\mu^{-1}y}
 class="math inline">\(E[Y] = \mu\)</span> and <span
 class="math inline">\(Var[Y] = \mu^2 \phi\)</span>.</p>
 </div>
-<div id="simulation-parameters-1" class="section level3">
+<div id="simulation-parameters" class="section level3">
 <h3><strong><em>Simulation Parameters</em></strong></h3>
 <p>We will first simulate <span class="math inline">\(\lambda_j\)</span>
 using the <strong>rgamma(</strong><span
@@ -897,33 +886,6 @@ class="math inline">\(\lambda\)</span>) function in R. We simulate for
 <span class="math inline">\(n=500\)</span> cells.</p>
 </div>
 </div>
-<div id="negative-binomial-distribution" class="section level2">
-<h2><strong>Negative Binomial Distribution</strong></h2>
-<p>We simulate the Negative Binomial distribution as the the alternative
-model for each gene. The density function is:</p>
-<p><span class="math display">\[
-f(y;\mu, \theta) = {y+\theta-1 \choose y}
-\left(\frac{\mu}{\mu+\theta}\right)^y
-\left(\frac{\theta}{\mu+\theta}\right)^\theta
-\]</span> where for <span class="math inline">\(y =0,1,2,...\)</span>
-the <span class="math inline">\(E[Y] = \mu\)</span> and <span
-class="math inline">\(Var[Y] = \mu + \frac{\mu^2}{\theta}\)</span>. Note
-that the <em>dispersion</em> parameter is <span
-class="math inline">\(\phi=1/\theta\)</span>. We use the
-<strong>rnegbin(</strong><span class="math inline">\(n\)</span>, <span
-class="math inline">\(\mu\)</span>, <span
-class="math inline">\(\theta\)</span>) function from the <em>MASS</em> R
-package to simulate the Negative Binomial distribution.</p>
-<p><span class="math display">\[
-y_{ij} \sim NB(\mu_j,\theta_j) \text{ ,    where } j = 1,\cdots,p
-\]</span></p>
-<p>We set <span class="math inline">\(\mu_j\)</span> equal to the mean
-gene expression using raw counts from the hybrid data set. Mean gene
-expression is calculated across cells from the same species, replicate,
-and cell type. We introduce and test varying dispersion levels for <span
-class="math inline">\(\phi_j = 1/\theta_j\)</span> and simulate for
-<span class="math inline">\(n=500\)</span> cells.</p>
-</div>
 </div>
 <div id="simulations" class="section level1">
 <h1><strong>Simulations</strong></h1>
@@ -939,17 +901,56 @@ require(SeuratData)
 HC &lt;- LoadH5Seurat(&quot;/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat&quot;)
 cardiomyocytes_data &lt;- subset(HC, subset = (labels == &quot;Cardiomyocytes&quot;))
 cardiomyocytes_expression_data &lt;- t(cardiomyocytes_data[[&#39;RNA&#39;]]$counts)</code></pre>
-<pre class="r"><code># calculate mean expression and remove genes with zero expression
-mean_expression &lt;- colMeans(cardiomyocytes_expression_data)
-mean_expression_genes &lt;- mean_expression[mean_expression!=0]</code></pre>
-<pre class="r"><code>n=500
-p = 10#length(mean_expression_genes)
+<p>We filter for low expression genes and calculate the <span
+class="math inline">\(L_i\)</span> and relative expression to get <span
+class="math inline">\(\lambda_j\)</span> values.</p>
+<pre class="r"><code># calculate mean expression and remove genes with low expression
+cardiomyocytes_expression_data_filtered &lt;- cardiomyocytes_expression_data[, colSums(cardiomyocytes_expression_data != 0) &gt; 50]
 
-null_model_expression_data &lt;- matrix(, nrow = 500, ncol = p)
+# calculate library size
+library_sizes &lt;- rowSums(cardiomyocytes_expression_data_filtered)
 
-for(i in 1:p){
-  null_model_expression_data[,i] &lt;- rpois(500,mean_expression_genes[i])
+# calculate the relative expression for each cell (quantity/rowsum)
+relative_expression &lt;- t(apply(cardiomyocytes_expression_data_filtered,1, function(x) x/sum(x)))
+
+# calculate mean relative expression per gene
+mean_relative_expression &lt;- colMeans(relative_expression)
+
+# calculate variance relative expression per gene
+var_relative_expression &lt;-c()
+for(i in 1:length(mean_relative_expression)){
+  var_relative_expression &lt;- c(var_relative_expression,var(relative_expression[,i]))
 }</code></pre>
+<p>We estimate the mean and variance from the relative expression to
+calculate estimates for <span class="math inline">\(\alpha =
+mean^2/variance\)</span> and <span class="math inline">\(\sigma =
+variance/mean\)</span>.</p>
+<pre class="r"><code>alphas &lt;- mean_relative_expression^2/var_relative_expression
+sigmas &lt;- var_relative_expression/mean_relative_expression</code></pre>
+<p>We use the estimates for <span class="math inline">\(\alpha\)</span>
+and <span class="math inline">\(\sigma\)</span> to simulate the <span
+class="math inline">\(\lambda_j \sim Gamma(\alpha,\sigma)\)</span>. The
+simulated <span class="math inline">\(\lambda_j\)</span> and library
+size <span class="math inline">\(L_i\)</span> is used to simulate <span
+class="math inline">\(y_{ij} \sim Pois(L_i\lambda_j)\)</span>. We do
+this first for 1 example gene.</p>
+<pre class="r"><code>set.seed(8626)
+n=500
+gamma_dist &lt;- rgamma(n,shape = alphas[1],scale = sigmas[1])
+library_size_lambda &lt;- library_sizes[1]*gamma_dist
+
+yi &lt;- c()
+for(i in 1:n){
+  yi &lt;- c(yi,rpois(1,library_size_lambda[1]))
+}</code></pre>
+<p>We compare the histograms of UMI in 1 real versus simulated gene.</p>
+<pre class="r"><code>library(ggplot2)
+df1 = rbind(data.frame(grp=&#39;real data&#39;, UMI=cardiomyocytes_expression_data_filtered[,1]), data.frame(grp=&#39;simulated&#39;, UMI=yi))
+group.colors &lt;- c(&quot;red&quot;,&quot;blue&quot;)
+ggplot(df1, aes(UMI, fill=grp)) + 
+  geom_histogram(color=&#39;black&#39;, alpha=1, position=&quot;dodge&quot;,binwidth=0.5) + scale_fill_manual(values=group.colors)</code></pre>
+<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We now simulate for all genes.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -975,17 +976,54 @@ locale:
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
+other attached packages:
+[1] ggplot2_3.5.1         SeuratData_0.2.2.9001 SeuratDisk_0.0.0.9021
+[4] Seurat_5.1.0          SeuratObject_5.0.2    sp_1.6-0             
+
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.12      rstudioapi_0.13  whisker_0.4      knitr_1.39      
- [5] magrittr_2.0.3   workflowr_1.7.1  R6_2.5.1         rlang_1.1.4     
- [9] fastmap_1.1.0    fansi_1.0.3      highr_0.9        stringr_1.5.1   
-[13] tools_4.2.0      xfun_0.30        utf8_1.2.2       cli_3.6.3       
-[17] git2r_0.30.1     jquerylib_0.1.4  htmltools_0.5.2  rprojroot_2.0.3 
-[21] yaml_2.3.5       digest_0.6.29    tibble_3.2.1     lifecycle_1.0.4 
-[25] later_1.3.0      sass_0.4.1       vctrs_0.6.5      promises_1.2.0.1
-[29] fs_1.5.2         glue_1.7.0       evaluate_0.15    rmarkdown_2.14  
-[33] stringi_1.7.6    bslib_0.3.1      compiler_4.2.0   pillar_1.9.0    
-[37] jsonlite_1.8.0   httpuv_1.6.5     pkgconfig_2.0.3 </code></pre>
+  [1] Rtsne_0.16             colorspace_2.0-3       deldir_1.0-6          
+  [4] ellipsis_0.3.2         ggridges_0.5.3         rprojroot_2.0.3       
+  [7] RcppHNSW_0.4.1         fs_1.5.2               spatstat.data_3.0-0   
+ [10] rstudioapi_0.13        farver_2.1.0           leiden_0.4.2          
+ [13] listenv_0.8.0          bit64_4.0.5            ggrepel_0.9.5         
+ [16] RSpectra_0.16-1        fansi_1.0.3            codetools_0.2-18      
+ [19] splines_4.2.0          knitr_1.39             polyclip_1.10-0       
+ [22] spam_2.8-0             jsonlite_1.8.0         workflowr_1.7.1       
+ [25] ica_1.0-2              cluster_2.1.3          png_0.1-7             
+ [28] uwot_0.1.14            spatstat.sparse_3.0-0  shiny_1.7.1           
+ [31] sctransform_0.4.1      compiler_4.2.0         httr_1.4.3            
+ [34] Matrix_1.6-4           fastmap_1.1.0          lazyeval_0.2.2        
+ [37] cli_3.6.3              later_1.3.0            htmltools_0.5.2       
+ [40] tools_4.2.0            igraph_2.0.3           dotCall64_1.0-1       
+ [43] gtable_0.3.0           glue_1.7.0             RANN_2.6.1            
+ [46] reshape2_1.4.4         dplyr_1.1.4            rappdirs_0.3.3        
+ [49] Rcpp_1.0.12            scattermore_1.2        jquerylib_0.1.4       
+ [52] vctrs_0.6.5            nlme_3.1-157           spatstat.explore_3.0-6
+ [55] progressr_0.10.0       lmtest_0.9-40          spatstat.random_3.1-3 
+ [58] xfun_0.30              stringr_1.5.1          globals_0.15.0        
+ [61] mime_0.12              miniUI_0.1.1.1         lifecycle_1.0.4       
+ [64] irlba_2.3.5.1          goftest_1.2-3          future_1.25.0         
+ [67] MASS_7.3-56            zoo_1.8-10             scales_1.3.0          
+ [70] spatstat.utils_3.0-1   promises_1.2.0.1       parallel_4.2.0        
+ [73] RColorBrewer_1.1-3     yaml_2.3.5             reticulate_1.24       
+ [76] pbapply_1.5-0          gridExtra_2.3          sass_0.4.1            
+ [79] stringi_1.7.6          highr_0.9              fastDummies_1.7.3     
+ [82] rlang_1.1.4            pkgconfig_2.0.3        matrixStats_0.62.0    
+ [85] evaluate_0.15          lattice_0.20-45        tensor_1.5            
+ [88] ROCR_1.0-11            purrr_1.0.2            labeling_0.4.2        
+ [91] patchwork_1.2.0        htmlwidgets_1.5.4      bit_4.0.4             
+ [94] cowplot_1.1.1          tidyselect_1.2.1       parallelly_1.31.1     
+ [97] RcppAnnoy_0.0.19       plyr_1.8.7             magrittr_2.0.3        
+[100] R6_2.5.1               generics_0.1.3         DBI_1.1.2             
+[103] withr_3.0.0            pillar_1.9.0           whisker_0.4           
+[106] fitdistrplus_1.1-8     abind_1.4-5            survival_3.3-1        
+[109] tibble_3.2.1           future.apply_1.9.0     hdf5r_1.3.8           
+[112] crayon_1.5.1           KernSmooth_2.23-20     utf8_1.2.2            
+[115] spatstat.geom_3.0-6    plotly_4.10.0          rmarkdown_2.14        
+[118] grid_4.2.0             data.table_1.14.2      git2r_0.30.1          
+[121] digest_0.6.29          xtable_1.8-4           tidyr_1.3.1           
+[124] httpuv_1.6.5           munsell_0.5.0          viridisLite_0.4.0     
+[127] bslib_0.3.1           </code></pre>
 </div>
 </div>
 </div>

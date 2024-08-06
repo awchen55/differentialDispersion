@@ -10,8 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # **Simulation Details**
 
-We simulate a matrix $Y \in \mathbb{R}^{n\times p}$ that contains raw expression values (scRNA-seq counts) for $p$ genes and $n$ single cells. We test several conditions. The first is to test a null model that assumes no dispersion using the Poisson distribution. We also test scenarios with different levels of dispersion using the Negative Binomial model.
+We simulate a matrix $Y \in \mathbb{R}^{n\times p}$ that contains raw expression values (scRNA-seq counts) for $p$ genes and $n$ single cells. We set $\pi$ as the percent of genes that are overdispersed. We use a Poisson-Gamma model for each gene and can set the dispersion level for each simulated gene. 
 
+```{r, eval=F,include=F}
 ## **Poisson Distribution**
 
 ### ***Model***
@@ -43,6 +44,7 @@ Where for $y =0,1,2,...$ the $E[Y] = Var[Y] = \lambda$.
 ### ***Simulation Parameters***
 
 We use the **rpois(**$n$, $\lambda$) function in R to simulate the Poisson distribution. The library size and relative expression values are calculated from a real data set (human-chimp hybrid data). Each $Y$ is calculated for cells from the same species, cell type, and replicate. We simulate for $n=500$ cells.
+```
 
 ## **Gamma-Poisson (NB) Distribution**
 
@@ -90,6 +92,8 @@ Where for $y =0,1,2,...$ the $E[Y] = \mu$ and $Var[Y] = \mu^2 \phi$.
 
 We will first simulate $\lambda_j$ using the **rgamma(**$n$,$\alpha$,$\sigma$) function in R with mean $\alpha\sigma$ and variance $\alpha\sigma^2$. Thus, $\mu=\alpha\sigma$ and $\phi = 1/\alpha$. We calculate $\mu_j$ for each gene $j$ and $L_i$ for each cell $i$ from the hybrid data set. For genes with dispersion, the $E[f] = \mu_0$. We next simulate the Poisson distribution using the **rpois(**$n$, $\lambda$) function in R. We simulate for $n=500$ cells.
 
+
+```{r, eval=F,include=F}
 ## **Negative Binomial Distribution**
 
 We simulate the Negative Binomial distribution as the the alternative model for each gene. The density function is:
@@ -104,13 +108,15 @@ $$
 
 We set $\mu_j$ equal to the mean gene expression using raw counts from the hybrid data set. Mean gene expression is calculated across cells from the same species, replicate, and cell type. We introduce and test varying dispersion levels for $\phi_j = 1/\theta_j$ and simulate for $n=500$ cells.
 
+```
+
 # **Simulations**
 
 ## **Null Model**
 
 We first calculate the mean gene expression for in the hybrid dataset using Human Cardiomyocytes from Replicate 3. Replicate 3 was chosen since there are 546 cells, which is similar to the 500 cells we will simulate.
 
-```{r, eval=F}
+```{r, message=F, warning=F}
 require(Seurat)
 require(SeuratDisk)
 require(SeuratData)
@@ -118,20 +124,65 @@ HC <- LoadH5Seurat("/project2/gilad/awchen55/differentialDispersion/data/hybrid_
 cardiomyocytes_data <- subset(HC, subset = (labels == "Cardiomyocytes"))
 cardiomyocytes_expression_data <- t(cardiomyocytes_data[['RNA']]$counts)
 ```
+We filter for low expression genes and calculate the $L_i$ and relative expression to get $\lambda_j$ values.
+```{r}
+# calculate mean expression and remove genes with low expression
+cardiomyocytes_expression_data_filtered <- cardiomyocytes_expression_data[, colSums(cardiomyocytes_expression_data != 0) > 50]
 
-```{r, eval=F}
-# calculate mean expression and remove genes with zero expression
-mean_expression <- colMeans(cardiomyocytes_expression_data)
-mean_expression_genes <- mean_expression[mean_expression!=0]
-```
+# calculate library size
+library_sizes <- rowSums(cardiomyocytes_expression_data_filtered)
 
-```{r, eval=F}
-n=500
-p = 10#length(mean_expression_genes)
+# calculate the relative expression for each cell (quantity/rowsum)
+relative_expression <- t(apply(cardiomyocytes_expression_data_filtered,1, function(x) x/sum(x)))
 
-null_model_expression_data <- matrix(, nrow = 500, ncol = p)
+# calculate mean relative expression per gene
+mean_relative_expression <- colMeans(relative_expression)
 
-for(i in 1:p){
-  null_model_expression_data[,i] <- rpois(500,mean_expression_genes[i])
+# calculate variance relative expression per gene
+var_relative_expression <-c()
+for(i in 1:length(mean_relative_expression)){
+  var_relative_expression <- c(var_relative_expression,var(relative_expression[,i]))
 }
 ```
+
+We estimate the mean and variance from the relative expression to calculate estimates for $\alpha = mean^2/variance$ and $\sigma = variance/mean$.
+```{r}
+alphas <- mean_relative_expression^2/var_relative_expression
+sigmas <- var_relative_expression/mean_relative_expression
+```
+
+We use the estimates for $\alpha$ and $\sigma$ to simulate the $\lambda_j \sim Gamma(\alpha,\sigma)$. The simulated $\lambda_j$ and library size $L_i$ is used to simulate $y_{ij} \sim Pois(L_i\lambda_j)$. We do this first for 1 example gene.
+```{r}
+set.seed(8626)
+n=500
+gamma_dist <- rgamma(n,shape = alphas[1],scale = sigmas[1])
+library_size_lambda <- library_sizes[1]*gamma_dist
+
+yi <- c()
+for(i in 1:n){
+  yi <- c(yi,rpois(1,library_size_lambda[1]))
+}
+
+```
+
+We compare the histograms of UMI in 1 real versus simulated gene.
+```{r}
+library(ggplot2)
+df1 = rbind(data.frame(grp='real data', UMI=cardiomyocytes_expression_data_filtered[,1]), data.frame(grp='simulated', UMI=yi))
+group.colors <- c("red","blue")
+ggplot(df1, aes(UMI, fill=grp)) + 
+  geom_histogram(color='black', alpha=1, position="dodge",binwidth=0.5) + scale_fill_manual(values=group.colors)
+```
+
+
+We now simulate for all genes.
+
+
+
+
+```{r,eval=F,include=F}
+m2 <- glm(relative_expression[,1]~1, family = Gamma(link = "identity"))
+summary(m2)
+```
+
+
