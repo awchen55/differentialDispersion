@@ -555,15 +555,15 @@ data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree446eae9ff72ceb6b91efa2d5ed7025be761d7518targetblank446eae9a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeb3de4f69ff5d8e6fb9ffc0f78c1406b42db466a7targetblankb3de4f6a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/446eae9ff72ceb6b91efa2d5ed7025be761d7518" target="_blank">446eae9</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/b3de4f69ff5d8e6fb9ffc0f78c1406b42db466a7" target="_blank">b3de4f6</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree446eae9ff72ceb6b91efa2d5ed7025be761d7518targetblank446eae9a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeb3de4f69ff5d8e6fb9ffc0f78c1406b42db466a7targetblankb3de4f6a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -573,7 +573,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/446eae9ff72ceb6b91efa2d5ed7025be761d7518" target="_blank">446eae9</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/b3de4f69ff5d8e6fb9ffc0f78c1406b42db466a7" target="_blank">b3de4f6</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -662,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/b3de4f69ff5d8e6fb9ffc0f78c1406b42db466a7/analysis/simulation_null_analysis.Rmd" target="_blank">b3de4f6</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-06
+</td>
+<td>
+update simulation results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/b3de4f69ff5d8e6fb9ffc0f78c1406b42db466a7/docs/simulation_null_analysis.html" target="_blank">b3de4f6</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-06
+</td>
+<td>
+update simulation results
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -812,7 +846,7 @@ add simulation details
 (scRNA-seq counts) for <span class="math inline">\(p\)</span> genes and
 <span class="math inline">\(n\)</span> single cells. We set <span
 class="math inline">\(\pi\)</span> as the percent of genes that are
-overdispersed. We use a Poisson-Gamma model for each gene and can set
+overdispersed. We use a Gamma-Poisson model for each gene and can set
 the dispersion level for each simulated gene.</p>
 <div id="gamma-poisson-nb-distribution" class="section level2">
 <h2><strong>Gamma-Poisson (NB) Distribution</strong></h2>
@@ -825,7 +859,13 @@ prior of the Poisson distribution. Under this model,</p>
 y_{ij} \sim Pois(L_i \lambda_j)
 \]</span></p>
 <p><span class="math display">\[
-\lambda_j \sim (1-\pi_j)Gamma(\mu_0,\phi_0)  + \pi_jGamma(\mu_j,\phi_j)
+\lambda_j \sim \begin{equation}
+  f(\cdot) =
+    \begin{cases}
+      \pi &amp; Gamma(\mu_j,\phi_j)\\
+      (1-\pi) &amp; Gamma(\mu_0,\phi_0) \\
+    \end{cases}       
+\end{equation}
 \]</span></p>
 <p>Where the variables for cell <span class="math inline">\(i\)</span>
 and gene <span class="math inline">\(j\)</span> are:</p>
@@ -838,8 +878,8 @@ class="math inline">\(j\)</span></p></li>
 cell <span class="math inline">\(i\)</span></p></li>
 <li><p><span class="math inline">\(\lambda_j\)</span> is the latent
 expression value of gene <span class="math inline">\(j\)</span></p></li>
-<li><p><span class="math inline">\(\pi_j\)</span> is the probability
-that a gene is overdispersed</p></li>
+<li><p><span class="math inline">\(\pi\)</span> is the percent of genes
+that are overdispersed</p></li>
 <li><p><span class="math inline">\(\mu_j\)</span> is the mean relative
 expression value of <span class="math inline">\(\lambda_j\)</span> for
 gene <span class="math inline">\(j\)</span></p></li>
@@ -889,8 +929,6 @@ class="math inline">\(\lambda\)</span>) function in R. We simulate for
 </div>
 <div id="simulations" class="section level1">
 <h1><strong>Simulations</strong></h1>
-<div id="null-model" class="section level2">
-<h2><strong>Null Model</strong></h2>
 <p>We first calculate the mean gene expression for in the hybrid dataset
 using Human Cardiomyocytes from Replicate 3. Replicate 3 was chosen
 since there are 546 cells, which is similar to the 500 cells we will
@@ -950,7 +988,36 @@ group.colors &lt;- c(&quot;red&quot;,&quot;blue&quot;)
 ggplot(df1, aes(UMI, fill=grp)) + 
   geom_histogram(color=&#39;black&#39;, alpha=1, position=&quot;dodge&quot;,binwidth=0.5) + scale_fill_manual(values=group.colors)</code></pre>
 <p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>We now simulate for all genes.</p>
+<p>We now simulate for all genes. We set <span
+class="math inline">\(\pi=5%\)</span> of genes to be overdispersed.</p>
+<pre class="r"><code>pi_disp = 0.05
+n=500
+p = 1000#ncol(cardiomyocytes_expression_data_filtered)
+dispersed_idx = sample(p,pi_disp*p)
+Y &lt;- matrix(nrow=n,ncol=p)
+
+mean_sim &lt;- c()
+var_sim &lt;- c()
+
+for(j in 1:p){
+
+  if(i %in% dispersed_idx){
+    lambdaj &lt;- rgamma(n,shape = mean(alphas)/10,scale = means(sigmas))
+  }
+  else{
+    lambdaj &lt;- rgamma(n,shape = mean(alphas),scale = mean(sigmas))
+  }
+
+  for(i in 1:n){
+    Y[i,j] = rpois(1,library_sizes[i]*lambdaj[i])
+  }
+
+  mean_sim &lt;- c(mean_sim,mean(Y[,j]))
+  var_sim &lt;- c(var_sim, var(Y[,j]))
+}</code></pre>
+<pre class="r"><code>plot(mean_sim,var_sim,pch=16,col=&quot;blue&quot;)
+points(mean_sim[dispersed_idx],var_sim[dispersed_idx],pch=16,col=&quot;red&quot;)</code></pre>
+<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1024,7 +1091,6 @@ loaded via a namespace (and not attached):
 [121] digest_0.6.29          xtable_1.8-4           tidyr_1.3.1           
 [124] httpuv_1.6.5           munsell_0.5.0          viridisLite_0.4.0     
 [127] bslib_0.3.1           </code></pre>
-</div>
 </div>
 </div>
 

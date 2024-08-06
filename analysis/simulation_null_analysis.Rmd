@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # **Simulation Details**
 
-We simulate a matrix $Y \in \mathbb{R}^{n\times p}$ that contains raw expression values (scRNA-seq counts) for $p$ genes and $n$ single cells. We set $\pi$ as the percent of genes that are overdispersed. We use a Poisson-Gamma model for each gene and can set the dispersion level for each simulated gene. 
+We simulate a matrix $Y \in \mathbb{R}^{n\times p}$ that contains raw expression values (scRNA-seq counts) for $p$ genes and $n$ single cells. We set $\pi$ as the percent of genes that are overdispersed. We use a Gamma-Poisson model for each gene and can set the dispersion level for each simulated gene.
 
 ```{r, eval=F,include=F}
 ## **Poisson Distribution**
@@ -57,7 +57,13 @@ y_{ij} \sim Pois(L_i \lambda_j)
 $$
 
 $$
-\lambda_j \sim (1-\pi_j)Gamma(\mu_0,\phi_0)  + \pi_jGamma(\mu_j,\phi_j)
+\lambda_j \sim \begin{equation}
+  f(\cdot) =
+    \begin{cases}
+      \pi & Gamma(\mu_j,\phi_j)\\
+      (1-\pi) & Gamma(\mu_0,\phi_0) \\
+    \end{cases}       
+\end{equation}
 $$
 
 Where the variables for cell $i$ and gene $j$ are:
@@ -68,7 +74,7 @@ Where the variables for cell $i$ and gene $j$ are:
 
 -   $\lambda_j$ is the latent expression value of gene $j$
 
--   $\pi_j$ is the probability that a gene is overdispersed
+-   $\pi$ is the percent of genes that are overdispersed
 
 -   $\mu_j$ is the mean relative expression value of $\lambda_j$ for gene $j$
 
@@ -92,7 +98,6 @@ Where for $y =0,1,2,...$ the $E[Y] = \mu$ and $Var[Y] = \mu^2 \phi$.
 
 We will first simulate $\lambda_j$ using the **rgamma(**$n$,$\alpha$,$\sigma$) function in R with mean $\alpha\sigma$ and variance $\alpha\sigma^2$. Thus, $\mu=\alpha\sigma$ and $\phi = 1/\alpha$. We calculate $\mu_j$ for each gene $j$ and $L_i$ for each cell $i$ from the hybrid data set. For genes with dispersion, the $E[f] = \mu_0$. We next simulate the Poisson distribution using the **rpois(**$n$, $\lambda$) function in R. We simulate for $n=500$ cells.
 
-
 ```{r, eval=F,include=F}
 ## **Negative Binomial Distribution**
 
@@ -112,8 +117,6 @@ We set $\mu_j$ equal to the mean gene expression using raw counts from the hybri
 
 # **Simulations**
 
-## **Null Model**
-
 We first calculate the mean gene expression for in the hybrid dataset using Human Cardiomyocytes from Replicate 3. Replicate 3 was chosen since there are 546 cells, which is similar to the 500 cells we will simulate.
 
 ```{r, message=F, warning=F}
@@ -124,7 +127,9 @@ HC <- LoadH5Seurat("/project2/gilad/awchen55/differentialDispersion/data/hybrid_
 cardiomyocytes_data <- subset(HC, subset = (labels == "Cardiomyocytes"))
 cardiomyocytes_expression_data <- t(cardiomyocytes_data[['RNA']]$counts)
 ```
+
 We filter for low expression genes and calculate the $L_i$ and relative expression to get $\lambda_j$ values.
+
 ```{r}
 # calculate mean expression and remove genes with low expression
 cardiomyocytes_expression_data_filtered <- cardiomyocytes_expression_data[, colSums(cardiomyocytes_expression_data != 0) > 50]
@@ -146,12 +151,14 @@ for(i in 1:length(mean_relative_expression)){
 ```
 
 We estimate the mean and variance from the relative expression to calculate estimates for $\alpha = mean^2/variance$ and $\sigma = variance/mean$.
+
 ```{r}
 alphas <- mean_relative_expression^2/var_relative_expression
 sigmas <- var_relative_expression/mean_relative_expression
 ```
 
 We use the estimates for $\alpha$ and $\sigma$ to simulate the $\lambda_j \sim Gamma(\alpha,\sigma)$. The simulated $\lambda_j$ and library size $L_i$ is used to simulate $y_{ij} \sim Pois(L_i\lambda_j)$. We do this first for 1 example gene.
+
 ```{r}
 set.seed(8626)
 n=500
@@ -166,6 +173,7 @@ for(i in 1:n){
 ```
 
 We compare the histograms of UMI in 1 real versus simulated gene.
+
 ```{r}
 library(ggplot2)
 df1 = rbind(data.frame(grp='real data', UMI=cardiomyocytes_expression_data_filtered[,1]), data.frame(grp='simulated', UMI=yi))
@@ -174,15 +182,45 @@ ggplot(df1, aes(UMI, fill=grp)) +
   geom_histogram(color='black', alpha=1, position="dodge",binwidth=0.5) + scale_fill_manual(values=group.colors)
 ```
 
+We now simulate for all genes. We set $\pi=5%$ of genes to be overdispersed.
 
-We now simulate for all genes.
+```{r}
+pi_disp = 0.05
+n=500
+p = 1000#ncol(cardiomyocytes_expression_data_filtered)
+dispersed_idx = sample(p,pi_disp*p)
+Y <- matrix(nrow=n,ncol=p)
+
+mean_sim <- c()
+var_sim <- c()
+
+for(j in 1:p){
+
+  if(i %in% dispersed_idx){
+    lambdaj <- rgamma(n,shape = mean(alphas)/10,scale = means(sigmas))
+  }
+  else{
+    lambdaj <- rgamma(n,shape = mean(alphas),scale = mean(sigmas))
+  }
+
+  for(i in 1:n){
+    Y[i,j] = rpois(1,library_sizes[i]*lambdaj[i])
+  }
+
+  mean_sim <- c(mean_sim,mean(Y[,j]))
+  var_sim <- c(var_sim, var(Y[,j]))
+}
+
+```
 
 
+```{r}
 
+plot(mean_sim,var_sim,pch=16,col="blue")
+points(mean_sim[dispersed_idx],var_sim[dispersed_idx],pch=16,col="red")
+```
 
 ```{r,eval=F,include=F}
 m2 <- glm(relative_expression[,1]~1, family = Gamma(link = "identity"))
 summary(m2)
 ```
-
-
