@@ -157,7 +157,7 @@ alphas <- mean_relative_expression^2/var_relative_expression
 sigmas <- var_relative_expression/mean_relative_expression
 ```
 
-We use the estimates for $\alpha$ and $\sigma$ to simulate the $\lambda_j \sim Gamma(\alpha,\sigma)$. The simulated $\lambda_j$ and library size $L_i$ is used to simulate $y_{ij} \sim Pois(L_i\lambda_j)$. We do this first for 1 example gene.
+We use the estimates for $\alpha$ and $\sigma$ to simulate the $\lambda_j \sim Gamma(\alpha,\sigma)$. The simulated $\lambda_j$ and library size $L_i$ are used to simulate $y_{ij} \sim Pois(L_i\lambda_j)$. We do this first for 1 example gene.
 
 ```{r}
 set.seed(8626)
@@ -182,7 +182,7 @@ ggplot(df1, aes(UMI, fill=grp)) +
   geom_histogram(color='black', alpha=1, position="dodge",binwidth=0.5) + scale_fill_manual(values=group.colors)
 ```
 
-We now simulate for all genes. We set $\pi=5%$ of genes to be overdispersed.
+We now simulate for all genes. We set $\pi=5\%$ of genes to be overdispersed.
 
 ```{r}
 pi_disp = 0.05
