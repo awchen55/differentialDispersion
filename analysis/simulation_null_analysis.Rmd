@@ -123,6 +123,8 @@ We first calculate the mean gene expression for in the hybrid dataset using Huma
 require(Seurat)
 require(SeuratDisk)
 require(SeuratData)
+library(ggplot2)
+library(cowplot)
 HC <- LoadH5Seurat("/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat")
 cardiomyocytes_data <- subset(HC, subset = (labels == "Cardiomyocytes"))
 cardiomyocytes_expression_data <- t(cardiomyocytes_data[['RNA']]$counts)
@@ -150,16 +152,93 @@ for(i in 1:length(mean_relative_expression)){
 }
 ```
 
-We estimate the mean and variance from the relative expression to calculate estimates for $\alpha = mean^2/variance$ and $\sigma = variance/mean$.
+
+## **Mean Estimation**
+
+We calculate the sample mean of genes to get an idea of ranges of mean expression. This will inform us of how to bin mean expression.
 
 ```{r}
-alphas <- mean_relative_expression^2/var_relative_expression
-sigmas <- var_relative_expression/mean_relative_expression
+hist(mean_relative_expression, breaks=100)
 ```
 
-We use the estimates for $\alpha$ and $\sigma$ to simulate the $\lambda_j \sim Gamma(\alpha,\sigma)$. The simulated $\lambda_j$ and library size $L_i$ are used to simulate $y_{ij} \sim Pois(L_i\lambda_j)$. We do this first for 1 example gene.
-
 ```{r}
+# get the intervals of relative mean expression
+mean_intervals <- seq(min(mean_relative_expression), max(mean_relative_expression),length.out=100)
+```
+
+
+## **Determine Dispersion Levels**
+
+We simulate a single gene for $n=500$ cells and change the multiplier of the $\sigma$ parameter. Again for the **rgamma** function, the mean is $\alpha\sigma$ and the variance is $\alpha \sigma^2$. Thus, we test different multipliers for sigma to increase the variance in the simulated dispersed genes.
+
+```{r Simulate Gene Function}
+# function to simulate a null gene and dispersed gene
+sim_gene <- function(n,alpha,sigma,Li, sigma_multiplier=1){
+
+  # Simulate a single genes with following parameters:
+  # n:                number of cells
+  # alpha:            alpha parameter
+  # sigma:            sigma parameter
+  # Li:               library size
+  # sigma_multiplier: factor to increase variance
+ 
+  
+  # initialize Y
+  Y <- rep(NA,n) 
+  
+  # calculate latent expression using gamma distribution
+  lambdaj <- rgamma(n,shape = alpha,scale = sigma*sigma_multiplier)
+  
+  # for each cell use the latent expression and library size to simulate expression
+  for(i in 1:n){
+  
+    Y[i] <- rpois(1,Li*lambdaj[i])
+  }
+  
+  return(Y)
+}
+```
+
+
+```{r Dispersion Histogram, warning=F}
+set.seed(8626)
+n=500
+alpha = 0.5
+sigma = 0.0002
+Li = 8000
+
+gene1 <- sim_gene(n,alpha,sigma,Li)
+gene1.5 <- sim_gene(n,alpha,sigma,Li,1.5)
+gene2 <- sim_gene(n,alpha,sigma,Li,2)
+gene2.5 <- sim_gene(n,alpha,sigma,Li,2.5)
+gene3 <- sim_gene(n,alpha,sigma,Li,3)
+
+df1 = rbind(data.frame(factor='1', UMI=gene1), data.frame(factor='1.5', UMI=gene1.5), data.frame(factor='2', UMI=gene2), data.frame(factor='2.5', UMI=gene2.5), data.frame(factor='3', UMI=gene3))
+
+group.colors <- c("red","blue","forestgreen","orange", "purple")
+
+ggplot(df1, aes(UMI, fill=factor)) + 
+  geom_histogram( alpha=1, position="dodge",binwidth=0.5) + scale_fill_manual(values=group.colors) + scale_color_manual(values=group.colors) + theme(legend.key.size = unit(0.5, 'cm'), legend.title = element_text(size=10)) + theme_bw() + xlim(-0.5, 10) + ggtitle("Histogram with Varying Dispersion") 
+
+```
+
+## **Simulating for Bins of Mean Expression**
+
+
+
+
+
+
+```{r Single Gene Example, include=F,eval=F}
+# We estimate the mean and variance from the relative expression to calculate estimates for $\alpha = mean^2/variance$ and $\sigma = variance/mean$.
+
+alphas <- mean_relative_expression^2/var_relative_expression
+sigmas <- var_relative_expression/mean_relative_expression
+
+
+# We use the estimates for $\alpha$ and $\sigma$ to simulate the $\lambda_j \sim Gamma(\alpha,\sigma)$. The simulated $\lambda_j$ and library size $L_i$ are used to simulate $y_{ij} \sim Pois(L_i\lambda_j)$. We do this first for 1 example gene.
+
+
 set.seed(8626)
 n=500
 gamma_dist <- rgamma(n,shape = alphas[1],scale = sigmas[1])
@@ -170,57 +249,17 @@ for(i in 1:n){
   yi <- c(yi,rpois(1,library_size_lambda[1]))
 }
 
-```
 
-We compare the histograms of UMI in 1 real versus simulated gene.
 
-```{r}
-library(ggplot2)
+# We compare the histograms of UMI in 1 real versus simulated gene.
+
+
+
 df1 = rbind(data.frame(grp='real data', UMI=cardiomyocytes_expression_data_filtered[,1]), data.frame(grp='simulated', UMI=yi))
 group.colors <- c("red","blue")
 ggplot(df1, aes(UMI, fill=grp)) + 
   geom_histogram(color='black', alpha=1, position="dodge",binwidth=0.5) + scale_fill_manual(values=group.colors)
 ```
 
-We now simulate for all genes. We set $\pi=5\%$ of genes to be overdispersed.
-
-```{r}
-pi_disp = 0.05
-n=500
-p = 1000#ncol(cardiomyocytes_expression_data_filtered)
-dispersed_idx = sample(p,pi_disp*p)
-Y <- matrix(nrow=n,ncol=p)
-
-mean_sim <- c()
-var_sim <- c()
-
-for(j in 1:p){
-
-  if(i %in% dispersed_idx){
-    lambdaj <- rgamma(n,shape = mean(alphas)/10,scale = means(sigmas))
-  }
-  else{
-    lambdaj <- rgamma(n,shape = mean(alphas),scale = mean(sigmas))
-  }
-
-  for(i in 1:n){
-    Y[i,j] = rpois(1,library_sizes[i]*lambdaj[i])
-  }
-
-  mean_sim <- c(mean_sim,mean(Y[,j]))
-  var_sim <- c(var_sim, var(Y[,j]))
-}
-
-```
 
 
-```{r}
-
-plot(mean_sim,var_sim,pch=16,col="blue")
-points(mean_sim[dispersed_idx],var_sim[dispersed_idx],pch=16,col="red")
-```
-
-```{r,eval=F,include=F}
-m2 <- glm(relative_expression[,1]~1, family = Gamma(link = "identity"))
-summary(m2)
-```
