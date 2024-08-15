@@ -125,6 +125,7 @@ require(SeuratDisk)
 require(SeuratData)
 library(ggplot2)
 library(cowplot)
+library(scTenifoldNet)
 HC <- LoadH5Seurat("/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat")
 cardiomyocytes_data <- subset(HC, subset = (labels == "Cardiomyocytes"))
 cardiomyocytes_expression_data <- t(cardiomyocytes_data[['RNA']]$counts)
@@ -152,7 +153,6 @@ for(i in 1:length(mean_relative_expression)){
 }
 ```
 
-
 ## **Mean Estimation**
 
 We calculate the sample mean of genes to get an idea of ranges of mean expression. This will inform us of how to bin mean expression.
@@ -163,9 +163,8 @@ hist(mean_relative_expression, breaks=100)
 
 ```{r}
 # get the intervals of relative mean expression
-mean_intervals <- seq(min(mean_relative_expression), max(mean_relative_expression),length.out=100)
+mean_intervals <- seq(min(mean_relative_expression), max(mean_relative_expression),length.out=101)
 ```
-
 
 ## **Determine Dispersion Levels**
 
@@ -175,13 +174,14 @@ We simulate a single gene for $n=500$ cells and change the multiplier of the $\s
 # function to simulate a null gene and dispersed gene
 sim_gene <- function(n,alpha,sigma,Li, sigma_multiplier=1){
 
-  # Simulate a single genes with following parameters:
+  # Simulate a single gene with following parameters:
   # n:                number of cells
   # alpha:            alpha parameter
   # sigma:            sigma parameter
   # Li:               library size
   # sigma_multiplier: factor to increase variance
  
+  # Returns expression values for single gene in n cells
   
   # initialize Y
   Y <- rep(NA,n) 
@@ -199,8 +199,7 @@ sim_gene <- function(n,alpha,sigma,Li, sigma_multiplier=1){
 }
 ```
 
-
-```{r Dispersion Histogram, warning=F}
+```{r Dispersion Histogram Low Alpha, warning=F}
 set.seed(8626)
 n=500
 alpha = 0.5
@@ -218,16 +217,145 @@ df1 = rbind(data.frame(factor='1', UMI=gene1), data.frame(factor='1.5', UMI=gene
 group.colors <- c("red","blue","forestgreen","orange", "purple")
 
 ggplot(df1, aes(UMI, fill=factor)) + 
-  geom_histogram( alpha=1, position="dodge",binwidth=0.5) + scale_fill_manual(values=group.colors) + scale_color_manual(values=group.colors) + theme(legend.key.size = unit(0.5, 'cm'), legend.title = element_text(size=10)) + theme_bw() + xlim(-0.5, 10) + ggtitle("Histogram with Varying Dispersion") 
+  geom_histogram( alpha=1, position="dodge",binwidth=0.5) + scale_fill_manual(values=group.colors) + scale_color_manual(values=group.colors) + theme(legend.key.size = unit(0.5, 'cm'), legend.title = element_text(size=10)) + theme_bw() + xlim(-0.5, 10) + ggtitle("Histogram with Varying Dispersion for Low Alpha") 
+
+```
+```{r Dispersion Histogram High Alpha, warning=F}
+set.seed(8626)
+n=500
+alpha = 5
+sigma = 0.0002
+Li = 8000
+
+gene1 <- sim_gene(n,alpha,sigma,Li)
+gene1.5 <- sim_gene(n,alpha,sigma,Li,1.5)
+gene2 <- sim_gene(n,alpha,sigma,Li,2)
+gene2.5 <- sim_gene(n,alpha,sigma,Li,2.5)
+gene3 <- sim_gene(n,alpha,sigma,Li,3)
+
+df1 = rbind(data.frame(factor='1', UMI=gene1), data.frame(factor='1.5', UMI=gene1.5), data.frame(factor='2', UMI=gene2), data.frame(factor='2.5', UMI=gene2.5), data.frame(factor='3', UMI=gene3))
+
+group.colors <- c("red","blue","forestgreen","orange", "purple")
+
+ggplot(df1, aes(UMI, fill=factor)) + 
+  geom_histogram( alpha=1, position="dodge",binwidth=1) + scale_fill_manual(values=group.colors) + scale_color_manual(values=group.colors) + theme(legend.key.size = unit(0.5, 'cm'), legend.title = element_text(size=10)) + theme_bw() + ggtitle("Histogram with Varying Dispersion for High Alpha") + xlim(-0.5, 40) 
 
 ```
 
+
+```{r, eval=F, include=F}
+hist(cardiomyocytes_expression_data_filtered[,which.max(mean_relative_expression)], breaks=20)
+```
+
+
 ## **Simulating for Bins of Mean Expression**
 
+We have broken down the range of mean expression into 100 bins. For each bin we will simulate 100 genes. 5% of those genes will have $\sigma$ multiplied by a factor of 2. This will yield 10,000 simulated genes with 5% of genes being significantly dispersed.
+
+```{r Bins of Mean Expression}
+# calculate alpha given mean expression and fixed sigma
+calc_alpha <- function(mu, sigma){
+  alpha = mu/sigma
+  return(alpha)
+}
 
 
+# Function to simulate genes within a bin of mean expression
+sim_bin <- function(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr){
+  
+  # Simulate all genes with following parameters:
+  # n:                number of cells
+  # p:                number of genes
+  # sigma:            sigma parameter
+  # Li:               library size
+  # mean_expr_lwr:    lower bound of mean expression window
+  # mean_expr_upr:    upper bound of mean expression window
+ 
+  # Returns matrix of expression for n cells and p genes. 
+  # Returns vector of index values for simulated dispersed genes.
+  
+  # initialize Y for bin of expression
+  Y_bin <- matrix(NA,nrow=n,ncol=p)
+  
+  # breakdown expression range into p values
+  bin_expression <- seq(mean_expr_lwr,mean_expr_upr,length.out=p)
+  
+  # randomly select p expression means
+  bin_sim_idx <- sample.int(p, p, replace = TRUE)
+  # randomly select 5% to be significantly dispersed
+  bin_disp_idx <- sample.int(p, 0.05*p, replace = FALSE)
+  # get expression means
+  sim_expression_values <- bin_expression[bin_sim_idx]
+  
+  # simulate genes for each expression mean
+  for(i in 1:p){
+    
+    # get expression mean
+    mu <- sim_expression_values[i]
+    # calculate alpha for fixed sigma based on expression mean
+    alpha <- calc_alpha(mu,sigma)
+    
+    # for dispersed genes multiply sigma by factor of 2
+    if(i %in% bin_disp_idx){
+      Y_bin[,i] <- sim_gene(n,alpha,sigma,Li,2)
+    }
+    else{
+      Y_bin[,i] <- sim_gene(n,alpha,sigma,Li)
+    }
+  }
+  
+  return(list("Y_bin"=Y_bin, "disp_idx"=bin_disp_idx))
+}
+
+#### Simulate Y matrix for all genes
+# Parameters
+n=500
+p=100
+sigma = 0.0002
+Li = 8000
+
+Y <- c()
+disp_idx <- c()
+for(i in 1:100){
+  
+  mean_expr_lwr <- mean_intervals[i]
+  mean_expr_upr <- mean_intervals[i+1]
+  
+  gene_sim <- sim_bin(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr)
+  Y_bin <- gene_sim$Y_bin
+  bin_disp_idx <- gene_sim$disp_idx + (i-1)*100
+  
+  Y <- cbind(Y,Y_bin)
+  disp_idx <- c(disp_idx,bin_disp_idx)
+}
 
 
+```
+
+
+```{r}
+
+Y_cpm_normalized <- t(cpmNormalization(t(Y)))
+
+
+Y_cv <- apply(Y_cpm_normalized, 2, sd)/apply(Y_cpm_normalized, 2, mean)
+Y_mean <- apply(Y_cpm_normalized, 2, mean)
+
+plot(log(Y_mean),Y_cv, pch=16, cex=0.5 ,main = "CPM Normalized")
+points(log(Y_mean[disp_idx]),Y_cv[disp_idx],pch=16,col="red",cex=0.5)
+```
+
+```{r}
+
+Y_log_cpm_normalized <- log(t(cpmNormalization(t(Y))))
+
+
+Y_cv_log <- apply(Y_log_cpm_normalized, 2, sd)/apply(Y_log_cpm_normalized, 2, mean)
+Y_mean_log <- apply(Y_log_cpm_normalized, 2, mean)
+
+plot(Y_mean_log,Y_cv_log, pch=16, cex=0.5,main = "Log CPM Normalized")
+points(Y_mean_log[disp_idx],Y_cv_log[disp_idx],pch=16,col="red",cex=0.5)
+```
 
 ```{r Single Gene Example, include=F,eval=F}
 # We estimate the mean and variance from the relative expression to calculate estimates for $\alpha = mean^2/variance$ and $\sigma = variance/mean$.
@@ -260,6 +388,3 @@ group.colors <- c("red","blue")
 ggplot(df1, aes(UMI, fill=grp)) + 
   geom_histogram(color='black', alpha=1, position="dodge",binwidth=0.5) + scale_fill_manual(values=group.colors)
 ```
-
-
-
