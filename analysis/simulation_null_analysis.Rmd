@@ -261,12 +261,13 @@ calc_alpha <- function(mu, sigma){
 
 
 # Function to simulate genes within a bin of mean expression
-sim_bin <- function(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr){
+sim_bin <- function(n,p,sigma,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
   
   # Simulate all genes with following parameters:
   # n:                number of cells
   # p:                number of genes
   # sigma:            sigma parameter
+  # sigma_multiplier: factor to increase variance
   # Li:               library size
   # mean_expr_lwr:    lower bound of mean expression window
   # mean_expr_upr:    upper bound of mean expression window
@@ -295,9 +296,9 @@ sim_bin <- function(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr){
     # calculate alpha for fixed sigma based on expression mean
     alpha <- calc_alpha(mu,sigma)
     
-    # for dispersed genes multiply sigma by factor of 2
+    # for dispersed genes multiply sigma by factor
     if(i %in% bin_disp_idx){
-      Y_bin[,i] <- sim_gene(n,alpha,sigma,Li,2)
+      Y_bin[,i] <- sim_gene(n,alpha,sigma,Li,sigma_multiplier)
     }
     else{
       Y_bin[,i] <- sim_gene(n,alpha,sigma,Li)
@@ -307,6 +308,43 @@ sim_bin <- function(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr){
   return(list("Y_bin"=Y_bin, "disp_idx"=bin_disp_idx))
 }
 
+sim_Y <- function(n,p,sigma,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
+  Y <- c()
+  disp_idx <- c()
+  for(i in 1:100){
+    
+    mean_expr_lwr <- mean_intervals[i]
+    mean_expr_upr <- mean_intervals[i+1]
+    
+    gene_sim <- sim_bin(n,p,sigma,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr)
+    Y_bin <- gene_sim$Y_bin
+    bin_disp_idx <- gene_sim$disp_idx + (i-1)*100
+    
+    Y <- cbind(Y,Y_bin)
+    disp_idx <- c(disp_idx,bin_disp_idx)
+  }
+  return(list("Y"=Y,"disp_idx"=disp_idx))
+}
+
+
+cpm_norm <- function(Y){
+  
+  require(scTenifoldNet)
+  Y_cpm_normalized <- t(cpmNormalization(t(Y)))
+  Y_log_cpm_normalized <- log(t(cpmNormalization(t(Y))))
+  
+  Y_cv <- apply(Y_cpm_normalized, 2, sd)/apply(Y_cpm_normalized, 2, mean)
+  Y_mean <- apply(Y_cpm_normalized, 2, mean)
+  Y_cv_log <- apply(Y_log_cpm_normalized, 2, sd)/apply(Y_log_cpm_normalized, 2, mean)
+  Y_mean_log <- apply(Y_log_cpm_normalized, 2, mean)
+  
+  return(list("Y_cpm_normalized"=Y_cpm_normalized, "Y_log_cpm_normalized" = Y_log_cpm_normalized, "Y_cv" = Y_cv, "Y_mean" = Y_mean, "Y_cv_log"=Y_cv_log, "Y_mean_log" = Y_mean_log))
+}
+
+```
+
+We simulate applying different factors to amplify the variance.
+```{r}
 #### Simulate Y matrix for all genes
 # Parameters
 n=500
@@ -314,48 +352,91 @@ p=100
 sigma = 0.0002
 Li = 8000
 
-Y <- c()
-disp_idx <- c()
-for(i in 1:100){
-  
-  mean_expr_lwr <- mean_intervals[i]
-  mean_expr_upr <- mean_intervals[i+1]
-  
-  gene_sim <- sim_bin(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr)
-  Y_bin <- gene_sim$Y_bin
-  bin_disp_idx <- gene_sim$disp_idx + (i-1)*100
-  
-  Y <- cbind(Y,Y_bin)
-  disp_idx <- c(disp_idx,bin_disp_idx)
-}
-
+Y_1.25 <- sim_Y(n,p,sigma,1.25,Li,mean_expr_lwr,mean_expr_upr)
+Y_1.5 <- sim_Y(n,p,sigma,1.5,Li,mean_expr_lwr,mean_expr_upr)
+Y_1.75 <- sim_Y(n,p,sigma,1.75,Li,mean_expr_lwr,mean_expr_upr)
+Y_2 <- sim_Y(n,p,sigma,2,Li,mean_expr_lwr,mean_expr_upr)
 
 ```
 
+Perform normalization on data. 
+```{r}
+Y_1.25_cpm <- cpm_norm(Y_1.25$Y)
+Y_1.5_cpm <- cpm_norm(Y_1.5$Y)
+Y_1.75_cpm <- cpm_norm(Y_1.75$Y)
+Y_2_cpm <- cpm_norm(Y_2$Y)
+
+
+Y_1.25_cv <- apply(Y_1.25$Y, 2, sd)/apply(Y_1.25$Y, 2, mean)
+Y_1.25_mean <- apply(Y_1.25$Y, 2, mean)
+
+Y_1.5_cv <- apply(Y_1.5$Y, 2, sd)/apply(Y_1.5$Y, 2, mean)
+Y_1.5_mean <- apply(Y_1.5$Y, 2, mean)
+
+Y_1.75_cv <- apply(Y_1.75$Y, 2, sd)/apply(Y_1.75$Y, 2, mean)
+Y_1.75_mean <- apply(Y_1.75$Y, 2, mean)
+
+Y_2_cv <- apply(Y_2$Y, 2, sd)/apply(Y_2$Y, 2, mean)
+Y_2_mean <- apply(Y_2$Y, 2, mean)
+```
+
+```{r, eval=F, include=F}
+par(mfrow = c(2, 2))
+
+plot(log(Y_1.25_mean),Y_1.25_cv, pch=16, cex=0.5 ,main = "Factor: 1.25", xlab="log(mean)", ylab="CV")
+points(log(Y_1.25_mean[Y_1.25$disp_idx]),Y_1.25_cv[Y_1.25$disp_idx],pch=16,col="red",cex=0.5)
+
+plot(log(Y_1.5_mean),Y_1.5_cv, pch=16, cex=0.5 ,main = "Factor: 1.5", xlab="log(mean)", ylab="CV")
+points(log(Y_1.5_mean[Y_1.5$disp_idx]),Y_1.5_cv[Y_1.5$disp_idx],pch=16,col="red",cex=0.5)
+
+plot(log(Y_1.75_mean),Y_1.75_cv, pch=16, cex=0.5 ,main = "Factor: 1.75", xlab="log(mean)", ylab="CV")
+points(log(Y_1.75_mean[Y_1.75$disp_idx]),Y_1.75_cv[Y_1.75$disp_idx],pch=16,col="red",cex=0.5)
+
+plot(log(Y_2_mean),Y_2_cv, pch=16, cex=0.5 ,main = "Factor: 2", xlab="log(mean)", ylab="CV")
+points(log(Y_2_mean[Y_2$disp_idx]),Y_2_cv[Y_2$disp_idx],pch=16,col="red",cex=0.5)
+mtext("No Normalization", side = 3, line = - 1, outer = TRUE)
+```
+
+We compare CPM vs log(CPM) normalization. We see the increase effect of the factor. For high expressed genes, we see the mean-variance relationship, which may make it difficult to identify signifcantly dispersed genes.
+```{r}
+par(mfrow = c(2, 2))
+
+plot(log(Y_1.25_cpm$Y_mean),Y_1.25_cpm$Y_cv, pch=16, cex=0.5 ,main = "Factor: 1.25", xlab="log(mean)", ylab="CV")
+points(log(Y_1.25_cpm$Y_mean[Y_1.25$disp_idx]),Y_1.25_cpm$Y_cv[Y_1.25$disp_idx],pch=16,col="red",cex=0.5)
+
+plot(log(Y_1.5_cpm$Y_mean),Y_1.5_cpm$Y_cv, pch=16, cex=0.5 ,main = "Factor: 1.5", xlab="log(mean)", ylab="CV")
+points(log(Y_1.5_cpm$Y_mean[Y_1.5$disp_idx]),Y_1.5_cpm$Y_cv[Y_1.5$disp_idx],pch=16,col="red",cex=0.5)
+
+plot(log(Y_1.75_cpm$Y_mean),Y_1.75_cpm$Y_cv, pch=16, cex=0.5 ,main = "Factor: 1.75", xlab="log(mean)", ylab="CV")
+points(log(Y_1.75_cpm$Y_mean[Y_1.75$disp_idx]),Y_1.75_cpm$Y_cv[Y_1.75$disp_idx],pch=16,col="red",cex=0.5)
+
+plot(log(Y_2_cpm$Y_mean),Y_2_cpm$Y_cv, pch=16, cex=0.5 ,main = "Factor: 2", xlab="log(mean)", ylab="CV")
+points(log(Y_2_cpm$Y_mean[Y_2$disp_idx]),Y_2_cpm$Y_cv[Y_2$disp_idx],pch=16,col="red",cex=0.5)
+mtext("CPM Normalized", side = 3, line = - 1, outer = TRUE)
+```
 
 ```{r}
+par(mfrow = c(2, 2))
 
-Y_cpm_normalized <- t(cpmNormalization(t(Y)))
+plot(Y_1.25_cpm$Y_mean_log,Y_1.25_cpm$Y_cv_log, pch=16, cex=0.5 ,main = "Factor: 1.25", xlab="log(mean)", ylab="CV")
+points(Y_1.25_cpm$Y_mean_log[Y_1.25$disp_idx],Y_1.25_cpm$Y_cv_log[Y_1.25$disp_idx],pch=16,col="red",cex=0.5)
 
+plot(Y_1.5_cpm$Y_mean_log,Y_1.5_cpm$Y_cv_log, pch=16, cex=0.5 ,main = "Factor: 1.5", xlab="log(mean)", ylab="CV")
+points(Y_1.5_cpm$Y_mean_log[Y_1.5$disp_idx],Y_1.5_cpm$Y_cv_log[Y_1.5$disp_idx],pch=16,col="red",cex=0.5)
 
-Y_cv <- apply(Y_cpm_normalized, 2, sd)/apply(Y_cpm_normalized, 2, mean)
-Y_mean <- apply(Y_cpm_normalized, 2, mean)
+plot(Y_1.75_cpm$Y_mean_log,Y_1.75_cpm$Y_cv_log, pch=16, cex=0.5 ,main = "Factor: 1.75", xlab="log(mean)", ylab="CV")
+points(Y_1.75_cpm$Y_mean_log[Y_1.75$disp_idx],Y_1.75_cpm$Y_cv_log[Y_1.75$disp_idx],pch=16,col="red",cex=0.5)
 
-plot(log(Y_mean),Y_cv, pch=16, cex=0.5 ,main = "CPM Normalized")
-points(log(Y_mean[disp_idx]),Y_cv[disp_idx],pch=16,col="red",cex=0.5)
+plot(Y_2_cpm$Y_mean_log,Y_2_cpm$Y_cv_log, pch=16, cex=0.5 ,main = "Factor: 2", xlab="log(mean)", ylab="CV")
+points(Y_2_cpm$Y_mean_log[Y_2$disp_idx],Y_2_cpm$Y_cv_log[Y_2$disp_idx],pch=16,col="red",cex=0.5)
+
+mtext("Log CPM Normalized", side = 3, line = - 1, outer = TRUE)
+
 ```
 
-```{r}
-
-Y_log_cpm_normalized <- log(t(cpmNormalization(t(Y))))
 
 
-Y_cv_log <- apply(Y_log_cpm_normalized, 2, sd)/apply(Y_log_cpm_normalized, 2, mean)
-Y_mean_log <- apply(Y_log_cpm_normalized, 2, mean)
 
-plot(Y_mean_log,Y_cv_log, pch=16, cex=0.5,main = "Log CPM Normalized")
-points(Y_mean_log[disp_idx],Y_cv_log[disp_idx],pch=16,col="red",cex=0.5)
-```
 
 ```{r Single Gene Example, include=F,eval=F}
 # We estimate the mean and variance from the relative expression to calculate estimates for $\alpha = mean^2/variance$ and $\sigma = variance/mean$.

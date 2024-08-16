@@ -395,7 +395,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-08-15
+<strong>Last updated:</strong> 2024-08-16
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -555,15 +555,15 @@ data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree23e157da6638082dc5079827509d1f546ebfe4e9targetblank23e157da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreef599f8dbcff6e9f62f33737f800434a72bb7b68btargetblankf599f8da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/23e157da6638082dc5079827509d1f546ebfe4e9" target="_blank">23e157d</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/f599f8dbcff6e9f62f33737f800434a72bb7b68b" target="_blank">f599f8d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree23e157da6638082dc5079827509d1f546ebfe4e9targetblank23e157da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreef599f8dbcff6e9f62f33737f800434a72bb7b68btargetblankf599f8da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -573,7 +573,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/23e157da6638082dc5079827509d1f546ebfe4e9" target="_blank">23e157d</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/f599f8dbcff6e9f62f33737f800434a72bb7b68b" target="_blank">f599f8d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -662,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/f599f8dbcff6e9f62f33737f800434a72bb7b68b/analysis/simulation_null_analysis.Rmd" target="_blank">f599f8d</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-15
+</td>
+<td>
+updated simulation results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/f599f8dbcff6e9f62f33737f800434a72bb7b68b/docs/simulation_null_analysis.html" target="_blank">f599f8d</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-15
+</td>
+<td>
+updated simulation results
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1176,6 +1210,44 @@ group.colors &lt;- c(&quot;red&quot;,&quot;blue&quot;,&quot;forestgreen&quot;,&q
 ggplot(df1, aes(UMI, fill=factor)) + 
   geom_histogram( alpha=1, position=&quot;dodge&quot;,binwidth=0.5) + scale_fill_manual(values=group.colors) + scale_color_manual(values=group.colors) + theme(legend.key.size = unit(0.5, &#39;cm&#39;), legend.title = element_text(size=10)) + theme_bw() + xlim(-0.5, 10) + ggtitle(&quot;Histogram with Varying Dispersion for Low Alpha&quot;) </code></pre>
 <p><img src="figure/simulation_null_analysis.Rmd/Dispersion%20Histogram%20Low%20Alpha-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Dispersion-Histogram-Low-Alpha-1">
+Past versions of "Dispersion Histogram Low Alpha-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-Dispersion-Histogram-Low-Alpha-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/f599f8dbcff6e9f62f33737f800434a72bb7b68b/docs/figure/simulation_null_analysis.Rmd/Dispersion Histogram Low Alpha-1.png" target="_blank">f599f8d</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>set.seed(8626)
 n=500
 alpha = 5
@@ -1195,6 +1267,44 @@ group.colors &lt;- c(&quot;red&quot;,&quot;blue&quot;,&quot;forestgreen&quot;,&q
 ggplot(df1, aes(UMI, fill=factor)) + 
   geom_histogram( alpha=1, position=&quot;dodge&quot;,binwidth=1) + scale_fill_manual(values=group.colors) + scale_color_manual(values=group.colors) + theme(legend.key.size = unit(0.5, &#39;cm&#39;), legend.title = element_text(size=10)) + theme_bw() + ggtitle(&quot;Histogram with Varying Dispersion for High Alpha&quot;) + xlim(-0.5, 40) </code></pre>
 <p><img src="figure/simulation_null_analysis.Rmd/Dispersion%20Histogram%20High%20Alpha-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Dispersion-Histogram-High-Alpha-1">
+Past versions of "Dispersion Histogram High Alpha-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-Dispersion-Histogram-High-Alpha-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/f599f8dbcff6e9f62f33737f800434a72bb7b68b/docs/figure/simulation_null_analysis.Rmd/Dispersion Histogram High Alpha-1.png" target="_blank">f599f8d</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="simulating-for-bins-of-mean-expression" class="section level2">
 <h2><strong>Simulating for Bins of Mean Expression</strong></h2>
@@ -1211,12 +1321,13 @@ calc_alpha &lt;- function(mu, sigma){
 
 
 # Function to simulate genes within a bin of mean expression
-sim_bin &lt;- function(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr){
+sim_bin &lt;- function(n,p,sigma,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
   
   # Simulate all genes with following parameters:
   # n:                number of cells
   # p:                number of genes
   # sigma:            sigma parameter
+  # sigma_multiplier: factor to increase variance
   # Li:               library size
   # mean_expr_lwr:    lower bound of mean expression window
   # mean_expr_upr:    upper bound of mean expression window
@@ -1245,9 +1356,9 @@ sim_bin &lt;- function(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr){
     # calculate alpha for fixed sigma based on expression mean
     alpha &lt;- calc_alpha(mu,sigma)
     
-    # for dispersed genes multiply sigma by factor of 2
+    # for dispersed genes multiply sigma by factor
     if(i %in% bin_disp_idx){
-      Y_bin[,i] &lt;- sim_gene(n,alpha,sigma,Li,2)
+      Y_bin[,i] &lt;- sim_gene(n,alpha,sigma,Li,sigma_multiplier)
     }
     else{
       Y_bin[,i] &lt;- sim_gene(n,alpha,sigma,Li)
@@ -1257,82 +1368,103 @@ sim_bin &lt;- function(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr){
   return(list(&quot;Y_bin&quot;=Y_bin, &quot;disp_idx&quot;=bin_disp_idx))
 }
 
-#### Simulate Y matrix for all genes
+sim_Y &lt;- function(n,p,sigma,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
+  Y &lt;- c()
+  disp_idx &lt;- c()
+  for(i in 1:100){
+    
+    mean_expr_lwr &lt;- mean_intervals[i]
+    mean_expr_upr &lt;- mean_intervals[i+1]
+    
+    gene_sim &lt;- sim_bin(n,p,sigma,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr)
+    Y_bin &lt;- gene_sim$Y_bin
+    bin_disp_idx &lt;- gene_sim$disp_idx + (i-1)*100
+    
+    Y &lt;- cbind(Y,Y_bin)
+    disp_idx &lt;- c(disp_idx,bin_disp_idx)
+  }
+  return(list(&quot;Y&quot;=Y,&quot;disp_idx&quot;=disp_idx))
+}
+
+
+cpm_norm &lt;- function(Y){
+  
+  require(scTenifoldNet)
+  Y_cpm_normalized &lt;- t(cpmNormalization(t(Y)))
+  Y_log_cpm_normalized &lt;- log(t(cpmNormalization(t(Y))))
+  
+  Y_cv &lt;- apply(Y_cpm_normalized, 2, sd)/apply(Y_cpm_normalized, 2, mean)
+  Y_mean &lt;- apply(Y_cpm_normalized, 2, mean)
+  Y_cv_log &lt;- apply(Y_log_cpm_normalized, 2, sd)/apply(Y_log_cpm_normalized, 2, mean)
+  Y_mean_log &lt;- apply(Y_log_cpm_normalized, 2, mean)
+  
+  return(list(&quot;Y_cpm_normalized&quot;=Y_cpm_normalized, &quot;Y_log_cpm_normalized&quot; = Y_log_cpm_normalized, &quot;Y_cv&quot; = Y_cv, &quot;Y_mean&quot; = Y_mean, &quot;Y_cv_log&quot;=Y_cv_log, &quot;Y_mean_log&quot; = Y_mean_log))
+}</code></pre>
+<p>We simulate applying different factors to amplify the variance.</p>
+<pre class="r"><code>#### Simulate Y matrix for all genes
 # Parameters
 n=500
 p=100
 sigma = 0.0002
 Li = 8000
 
-Y &lt;- c()
-disp_idx &lt;- c()
-for(i in 1:100){
-  
-  mean_expr_lwr &lt;- mean_intervals[i]
-  mean_expr_upr &lt;- mean_intervals[i+1]
-  
-  gene_sim &lt;- sim_bin(n,p,sigma,Li,mean_expr_lwr,mean_expr_upr)
-  Y_bin &lt;- gene_sim$Y_bin
-  bin_disp_idx &lt;- gene_sim$disp_idx + (i-1)*100
-  
-  Y &lt;- cbind(Y,Y_bin)
-  disp_idx &lt;- c(disp_idx,bin_disp_idx)
-}</code></pre>
-<pre class="r"><code>Y_cpm_normalized &lt;- t(cpmNormalization(t(Y)))
+Y_1.25 &lt;- sim_Y(n,p,sigma,1.25,Li,mean_expr_lwr,mean_expr_upr)
+Y_1.5 &lt;- sim_Y(n,p,sigma,1.5,Li,mean_expr_lwr,mean_expr_upr)
+Y_1.75 &lt;- sim_Y(n,p,sigma,1.75,Li,mean_expr_lwr,mean_expr_upr)
+Y_2 &lt;- sim_Y(n,p,sigma,2,Li,mean_expr_lwr,mean_expr_upr)</code></pre>
+<p>Perform normalization on data.</p>
+<pre class="r"><code>Y_1.25_cpm &lt;- cpm_norm(Y_1.25$Y)
+Y_1.5_cpm &lt;- cpm_norm(Y_1.5$Y)
+Y_1.75_cpm &lt;- cpm_norm(Y_1.75$Y)
+Y_2_cpm &lt;- cpm_norm(Y_2$Y)
 
 
-Y_cv &lt;- apply(Y_cpm_normalized, 2, sd)/apply(Y_cpm_normalized, 2, mean)
-Y_mean &lt;- apply(Y_cpm_normalized, 2, mean)
+Y_1.25_cv &lt;- apply(Y_1.25$Y, 2, sd)/apply(Y_1.25$Y, 2, mean)
+Y_1.25_mean &lt;- apply(Y_1.25$Y, 2, mean)
 
-plot(log(Y_mean),Y_cv, pch=16, cex=0.5 ,main = &quot;CPM Normalized&quot;)
-points(log(Y_mean[disp_idx]),Y_cv[disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)</code></pre>
-<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>Y_log_cpm_normalized &lt;- log(t(cpmNormalization(t(Y))))
+Y_1.5_cv &lt;- apply(Y_1.5$Y, 2, sd)/apply(Y_1.5$Y, 2, mean)
+Y_1.5_mean &lt;- apply(Y_1.5$Y, 2, mean)
 
+Y_1.75_cv &lt;- apply(Y_1.75$Y, 2, sd)/apply(Y_1.75$Y, 2, mean)
+Y_1.75_mean &lt;- apply(Y_1.75$Y, 2, mean)
 
-Y_cv_log &lt;- apply(Y_log_cpm_normalized, 2, sd)/apply(Y_log_cpm_normalized, 2, mean)
-Y_mean_log &lt;- apply(Y_log_cpm_normalized, 2, mean)
+Y_2_cv &lt;- apply(Y_2$Y, 2, sd)/apply(Y_2$Y, 2, mean)
+Y_2_mean &lt;- apply(Y_2$Y, 2, mean)</code></pre>
+<p>We compare CPM vs log(CPM) normalization. We see the increase effect
+of the factor. For high expressed genes, we see the mean-variance
+relationship, which may make it difficult to identify signifcantly
+dispersed genes.</p>
+<pre class="r"><code>par(mfrow = c(2, 2))
 
-plot(Y_mean_log,Y_cv_log, pch=16, cex=0.5,main = &quot;Log CPM Normalized&quot;)
-points(Y_mean_log[disp_idx],Y_cv_log[disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)</code></pre>
-<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
-Past versions of unnamed-chunk-9-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-9-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/d68bca91fa39da29e9a25fa0f2cccc87a740dbc0/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" target="_blank">d68bca9</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-08-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+plot(log(Y_1.25_cpm$Y_mean),Y_1.25_cpm$Y_cv, pch=16, cex=0.5 ,main = &quot;Factor: 1.25&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
+points(log(Y_1.25_cpm$Y_mean[Y_1.25$disp_idx]),Y_1.25_cpm$Y_cv[Y_1.25$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
+
+plot(log(Y_1.5_cpm$Y_mean),Y_1.5_cpm$Y_cv, pch=16, cex=0.5 ,main = &quot;Factor: 1.5&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
+points(log(Y_1.5_cpm$Y_mean[Y_1.5$disp_idx]),Y_1.5_cpm$Y_cv[Y_1.5$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
+
+plot(log(Y_1.75_cpm$Y_mean),Y_1.75_cpm$Y_cv, pch=16, cex=0.5 ,main = &quot;Factor: 1.75&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
+points(log(Y_1.75_cpm$Y_mean[Y_1.75$disp_idx]),Y_1.75_cpm$Y_cv[Y_1.75$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
+
+plot(log(Y_2_cpm$Y_mean),Y_2_cpm$Y_cv, pch=16, cex=0.5 ,main = &quot;Factor: 2&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
+points(log(Y_2_cpm$Y_mean[Y_2$disp_idx]),Y_2_cpm$Y_cv[Y_2$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
+mtext(&quot;CPM Normalized&quot;, side = 3, line = - 1, outer = TRUE)</code></pre>
+<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(2, 2))
+
+plot(Y_1.25_cpm$Y_mean_log,Y_1.25_cpm$Y_cv_log, pch=16, cex=0.5 ,main = &quot;Factor: 1.25&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
+points(Y_1.25_cpm$Y_mean_log[Y_1.25$disp_idx],Y_1.25_cpm$Y_cv_log[Y_1.25$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
+
+plot(Y_1.5_cpm$Y_mean_log,Y_1.5_cpm$Y_cv_log, pch=16, cex=0.5 ,main = &quot;Factor: 1.5&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
+points(Y_1.5_cpm$Y_mean_log[Y_1.5$disp_idx],Y_1.5_cpm$Y_cv_log[Y_1.5$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
+
+plot(Y_1.75_cpm$Y_mean_log,Y_1.75_cpm$Y_cv_log, pch=16, cex=0.5 ,main = &quot;Factor: 1.75&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
+points(Y_1.75_cpm$Y_mean_log[Y_1.75$disp_idx],Y_1.75_cpm$Y_cv_log[Y_1.75$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
+
+plot(Y_2_cpm$Y_mean_log,Y_2_cpm$Y_cv_log, pch=16, cex=0.5 ,main = &quot;Factor: 2&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
+points(Y_2_cpm$Y_mean_log[Y_2$disp_idx],Y_2_cpm$Y_cv_log[Y_2$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
+
+mtext(&quot;Log CPM Normalized&quot;, side = 3, line = - 1, outer = TRUE)</code></pre>
+<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
