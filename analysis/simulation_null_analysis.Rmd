@@ -53,15 +53,15 @@ We use the **rpois(**$n$, $\lambda$) function in R to simulate the Poisson distr
 We simulate the Negative Binomial distribution using the Gamma-Poisson distribution, since the Gamma distribution is a conjugate prior of the Poisson distribution. Under this model,
 
 $$
-y_{ij} \sim Pois(L_i \lambda_j)
+y_{ij} \sim Pois(L_i \lambda_{ij})
 $$
 
 $$
-\lambda_j \sim \begin{equation}
-  f(\cdot) =
+\lambda_{ij} \sim \begin{equation}
+  f_j(\cdot) =
     \begin{cases}
-      \pi & Gamma(\mu_j,\phi_j)\\
-      (1-\pi) & Gamma(\mu_0,\phi_0) \\
+      Gamma(\mu_{j_0},\phi_{j_0}) & \text{for background gene} \\
+      Gamma(\mu_0,\phi_0) & \text{for overdispersed gene} \\
     \end{cases}       
 \end{equation}
 $$
@@ -72,17 +72,15 @@ Where the variables for cell $i$ and gene $j$ are:
 
 -   $L_i$ is the library size of cell $i$
 
--   $\lambda_j$ is the latent expression value of gene $j$
+-   $\lambda_{ij}$ is the latent expression value of gene $j$
 
--   $\pi$ is the percent of genes that are overdispersed
+-   $\mu_j$ is the mean relative expression value of $\lambda_{ij}$ for gene $j$
 
--   $\mu_j$ is the mean relative expression value of $\lambda_j$ for gene $j$
+-   $\mu_{j_0}$ is the null mean relative expression value for a background gene
 
--   $\mu_0$ is the null relative expression value for a gene that has no dispersion
+-   $\phi_j$ is the dispersion value of $\lambda_{ij}$ for gene $j$
 
--   $\phi_j$ is the dispersion value of $\lambda_j$ for gene $j$
-
--   $\phi_0$ is the null relative dispersion value for a gene that has no dispersion
+-   $\phi_{j_0}$ is the null dispersion value for a background gene
 
 ### ***Density Function***
 
@@ -140,6 +138,9 @@ cardiomyocytes_expression_data_filtered <- cardiomyocytes_expression_data[, colS
 # calculate library size
 library_sizes <- rowSums(cardiomyocytes_expression_data_filtered)
 
+# calculate mean expression
+mean_expression <- colMeans(cardiomyocytes_expression_data_filtered)
+
 # calculate the relative expression for each cell (quantity/rowsum)
 relative_expression <- t(apply(cardiomyocytes_expression_data_filtered,1, function(x) x/sum(x)))
 
@@ -162,8 +163,60 @@ hist(mean_relative_expression, breaks=100)
 ```
 
 ```{r}
+hist(mean_expression, breaks=100)
+```
+
+```{r}
 # get the intervals of relative mean expression
-mean_intervals <- seq(min(mean_relative_expression), max(mean_relative_expression),length.out=101)
+#mean_intervals <- seq(min(mean_relative_expression), max(mean_relative_expression),length.out=101)
+mean_intervals <- seq(min(mean_expression), 10,length.out=501)
+#mean_intervals <- seq(min(mean_relative_expression), 0.001,length.out=501)
+```
+
+## **Estimating Dispersion Parameter**
+
+We have divided mean expression into groups of 500 bins. For each bin of mean expression, genes are grouped together and a Gamma-Poisson distribution is fit to the data to estimate the dispersion parameter. We use the **glm_gp** function from the *glmGamPoi* package to fit a Gamma-Poisson model that uses MLE to estimate $\mu$ and $dispersion$ parameters. Using this parameterization, the mean is $\mu$ and the variance is $\mu + \mu^2*dispersion$.
+
+[The manual for glmGamPoi can be found here.](https://www.bioconductor.org/packages/3.16/bioc/manuals/glmGamPoi/man/glmGamPoi.pdf)
+
+```{r}
+# require(fitdistrplus)
+# require(MASS)
+library(glmGamPoi)
+library(dplyr)
+# fitnb <- fitdist(cardiomyocytes_expression_data_filtered[,1],"nbinom", method="mle")
+# 
+# fitnb_mass <- fitdistr(cardiomyocytes_expression_data_filtered[,1], "Negative Binomial")
+# summary(fitnb)
+# plot(fitnb)
+
+mu_values <- c()
+disp_values <- c()
+
+for(i in 1:500){
+ # get indices for genes within bin of mean expression
+ mean_idx <- which(between(mean_expression,mean_intervals[i],mean_intervals[i+1])) 
+ 
+ if(length(mean_idx) > 0){
+   # group genes into single vector of data
+   grouped_data <- as.vector(cardiomyocytes_expression_data_filtered[,mean_idx])
+   
+   # fit gamma-poisson distribution
+   fit_gp <- glm_gp(grouped_data, size_factors=1)
+   sum_gp <- summary(fit_gp)
+   
+   # get mu and dispersion estimates
+   mu <-  median(sum_gp$Mu)
+   mu_values <- c(mu_values,mu)
+   dispersion <- sum_gp$overdispersions
+   disp_values <- c(disp_values,dispersion)
+ }
+ 
+}
+```
+
+```{r}
+plot(mu_values, disp_values, pch=16, xlab="mean", ylab = "dispersion")
 ```
 
 ## **Determine Dispersion Levels**
@@ -187,7 +240,7 @@ sim_gene <- function(n,alpha,sigma,Li, sigma_multiplier=1){
   Y <- rep(NA,n) 
   
   # calculate latent expression using gamma distribution
-  lambdaj <- rgamma(n,shape = alpha,scale = sigma*sigma_multiplier)
+  lambdaj <- rgamma(n,shape = alpha/sigma_multiplier,scale = sigma*sigma_multiplier)
   
   # for each cell use the latent expression and library size to simulate expression
   for(i in 1:n){
@@ -220,6 +273,7 @@ ggplot(df1, aes(UMI, fill=factor)) +
   geom_histogram( alpha=1, position="dodge",binwidth=0.5) + scale_fill_manual(values=group.colors) + scale_color_manual(values=group.colors) + theme(legend.key.size = unit(0.5, 'cm'), legend.title = element_text(size=10)) + theme_bw() + xlim(-0.5, 10) + ggtitle("Histogram with Varying Dispersion for Low Alpha") 
 
 ```
+
 ```{r Dispersion Histogram High Alpha, warning=F}
 set.seed(8626)
 n=500
@@ -242,11 +296,9 @@ ggplot(df1, aes(UMI, fill=factor)) +
 
 ```
 
-
 ```{r, eval=F, include=F}
 hist(cardiomyocytes_expression_data_filtered[,which.max(mean_relative_expression)], breaks=20)
 ```
-
 
 ## **Simulating for Bins of Mean Expression**
 
@@ -344,6 +396,7 @@ cpm_norm <- function(Y){
 ```
 
 We simulate applying different factors to amplify the variance.
+
 ```{r}
 #### Simulate Y matrix for all genes
 # Parameters
@@ -359,7 +412,8 @@ Y_2 <- sim_Y(n,p,sigma,2,Li,mean_expr_lwr,mean_expr_upr)
 
 ```
 
-Perform normalization on data. 
+Perform normalization on data.
+
 ```{r}
 Y_1.25_cpm <- cpm_norm(Y_1.25$Y)
 Y_1.5_cpm <- cpm_norm(Y_1.5$Y)
@@ -397,7 +451,8 @@ points(log(Y_2_mean[Y_2$disp_idx]),Y_2_cv[Y_2$disp_idx],pch=16,col="red",cex=0.5
 mtext("No Normalization", side = 3, line = - 1, outer = TRUE)
 ```
 
-We compare CPM vs log(CPM) normalization. We see the increase effect of the factor. For high expressed genes, we see the mean-variance relationship, which may make it difficult to identify signifcantly dispersed genes.
+We compare CPM vs log(CPM) normalization. We see the increase effect of applying the factor to the variance.
+
 ```{r}
 par(mfrow = c(2, 2))
 
@@ -433,10 +488,6 @@ points(Y_2_cpm$Y_mean_log[Y_2$disp_idx],Y_2_cpm$Y_cv_log[Y_2$disp_idx],pch=16,co
 mtext("Log CPM Normalized", side = 3, line = - 1, outer = TRUE)
 
 ```
-
-
-
-
 
 ```{r Single Gene Example, include=F,eval=F}
 # We estimate the mean and variance from the relative expression to calculate estimates for $\alpha = mean^2/variance$ and $\sigma = variance/mean$.

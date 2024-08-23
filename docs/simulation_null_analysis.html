@@ -395,7 +395,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-08-16
+<strong>Last updated:</strong> 2024-08-23
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -555,15 +555,15 @@ data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreef599f8dbcff6e9f62f33737f800434a72bb7b68btargetblankf599f8da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree68e4b1d6f6be72234e9cb27b0f73dc42711d1085targetblank68e4b1da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/f599f8dbcff6e9f62f33737f800434a72bb7b68b" target="_blank">f599f8d</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/68e4b1d6f6be72234e9cb27b0f73dc42711d1085" target="_blank">68e4b1d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreef599f8dbcff6e9f62f33737f800434a72bb7b68btargetblankf599f8da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree68e4b1d6f6be72234e9cb27b0f73dc42711d1085targetblank68e4b1da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -573,7 +573,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/f599f8dbcff6e9f62f33737f800434a72bb7b68b" target="_blank">f599f8d</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/68e4b1d6f6be72234e9cb27b0f73dc42711d1085" target="_blank">68e4b1d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -662,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/68e4b1d6f6be72234e9cb27b0f73dc42711d1085/analysis/simulation_null_analysis.Rmd" target="_blank">68e4b1d</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-16
+</td>
+<td>
+added simulation using different factors
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/68e4b1d6f6be72234e9cb27b0f73dc42711d1085/docs/simulation_null_analysis.html" target="_blank">68e4b1d</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-16
+</td>
+<td>
+added simulation using different factors
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -992,14 +1026,14 @@ the dispersion level for each simulated gene.</p>
 Gamma-Poisson distribution, since the Gamma distribution is a conjugate
 prior of the Poisson distribution. Under this model,</p>
 <p><span class="math display">\[
-y_{ij} \sim Pois(L_i \lambda_j)
+y_{ij} \sim Pois(L_i \lambda_{ij})
 \]</span></p>
 <p><span class="math display">\[
-\lambda_j \sim \begin{equation}
-  f(\cdot) =
+\lambda_{ij} \sim \begin{equation}
+  f_j(\cdot) =
     \begin{cases}
-      \pi &amp; Gamma(\mu_j,\phi_j)\\
-      (1-\pi) &amp; Gamma(\mu_0,\phi_0) \\
+      Gamma(\mu_{j_0},\phi_{j_0}) &amp; \text{for background gene} \\
+      Gamma(\mu_0,\phi_0) &amp; \text{for overdispersed gene} \\
     \end{cases}       
 \end{equation}
 \]</span></p>
@@ -1012,20 +1046,18 @@ class="math inline">\(i\)</span> and gene <span
 class="math inline">\(j\)</span></p></li>
 <li><p><span class="math inline">\(L_i\)</span> is the library size of
 cell <span class="math inline">\(i\)</span></p></li>
-<li><p><span class="math inline">\(\lambda_j\)</span> is the latent
+<li><p><span class="math inline">\(\lambda_{ij}\)</span> is the latent
 expression value of gene <span class="math inline">\(j\)</span></p></li>
-<li><p><span class="math inline">\(\pi\)</span> is the percent of genes
-that are overdispersed</p></li>
 <li><p><span class="math inline">\(\mu_j\)</span> is the mean relative
-expression value of <span class="math inline">\(\lambda_j\)</span> for
-gene <span class="math inline">\(j\)</span></p></li>
-<li><p><span class="math inline">\(\mu_0\)</span> is the null relative
-expression value for a gene that has no dispersion</p></li>
+expression value of <span class="math inline">\(\lambda_{ij}\)</span>
+for gene <span class="math inline">\(j\)</span></p></li>
+<li><p><span class="math inline">\(\mu_{j_0}\)</span> is the null mean
+relative expression value for a background gene</p></li>
 <li><p><span class="math inline">\(\phi_j\)</span> is the dispersion
-value of <span class="math inline">\(\lambda_j\)</span> for gene <span
-class="math inline">\(j\)</span></p></li>
-<li><p><span class="math inline">\(\phi_0\)</span> is the null relative
-dispersion value for a gene that has no dispersion</p></li>
+value of <span class="math inline">\(\lambda_{ij}\)</span> for gene
+<span class="math inline">\(j\)</span></p></li>
+<li><p><span class="math inline">\(\phi_{j_0}\)</span> is the null
+dispersion value for a background gene</p></li>
 </ul>
 </div>
 <div id="density-function" class="section level3">
@@ -1086,6 +1118,9 @@ cardiomyocytes_expression_data_filtered &lt;- cardiomyocytes_expression_data[, c
 
 # calculate library size
 library_sizes &lt;- rowSums(cardiomyocytes_expression_data_filtered)
+
+# calculate mean expression
+mean_expression &lt;- colMeans(cardiomyocytes_expression_data_filtered)
 
 # calculate the relative expression for each cell (quantity/rowsum)
 relative_expression &lt;- t(apply(cardiomyocytes_expression_data_filtered,1, function(x) x/sum(x)))
@@ -1152,8 +1187,119 @@ awchen55
 </table>
 </div>
 </div>
+<pre class="r"><code>hist(mean_expression, breaks=100)</code></pre>
+<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># get the intervals of relative mean expression
-mean_intervals &lt;- seq(min(mean_relative_expression), max(mean_relative_expression),length.out=101)</code></pre>
+#mean_intervals &lt;- seq(min(mean_relative_expression), max(mean_relative_expression),length.out=101)
+mean_intervals &lt;- seq(min(mean_expression), 10,length.out=501)
+#mean_intervals &lt;- seq(min(mean_relative_expression), 0.001,length.out=501)</code></pre>
+</div>
+<div id="estimating-dispersion-parameter" class="section level2">
+<h2><strong>Estimating Dispersion Parameter</strong></h2>
+<p>We have divided mean expression into groups of 500 bins. For each bin
+of mean expression, genes are grouped together and a Gamma-Poisson
+distribution is fit to the data to estimate the dispersion parameter. We
+use the <strong>glm_gp</strong> function from the <em>glmGamPoi</em>
+package to fit a Gamma-Poisson model that uses MLE to estimate <span
+class="math inline">\(\mu\)</span> and <span
+class="math inline">\(dispersion\)</span> parameters. Using this
+parameterization, the mean is <span class="math inline">\(\mu\)</span>
+and the variance is <span class="math inline">\(\mu +
+\mu^2*dispersion\)</span>.</p>
+<p><a
+href="https://www.bioconductor.org/packages/3.16/bioc/manuals/glmGamPoi/man/glmGamPoi.pdf">The
+manual for glmGamPoi can be found here.</a></p>
+<pre class="r"><code># require(fitdistrplus)
+# require(MASS)
+library(glmGamPoi)
+library(dplyr)</code></pre>
+<pre><code>
+Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code># fitnb &lt;- fitdist(cardiomyocytes_expression_data_filtered[,1],&quot;nbinom&quot;, method=&quot;mle&quot;)
+# 
+# fitnb_mass &lt;- fitdistr(cardiomyocytes_expression_data_filtered[,1], &quot;Negative Binomial&quot;)
+# summary(fitnb)
+# plot(fitnb)
+
+mu_values &lt;- c()
+disp_values &lt;- c()
+
+for(i in 1:500){
+ # get indices for genes within bin of mean expression
+ mean_idx &lt;- which(between(mean_expression,mean_intervals[i],mean_intervals[i+1])) 
+ 
+ if(length(mean_idx) &gt; 0){
+   # group genes into single vector of data
+   grouped_data &lt;- as.vector(cardiomyocytes_expression_data_filtered[,mean_idx])
+   
+   # fit gamma-poisson distribution
+   fit_gp &lt;- glm_gp(grouped_data, size_factors=1)
+   sum_gp &lt;- summary(fit_gp)
+   
+   # get mu and dispersion estimates
+   mu &lt;-  median(sum_gp$Mu)
+   mu_values &lt;- c(mu_values,mu)
+   dispersion &lt;- sum_gp$overdispersions
+   disp_values &lt;- c(disp_values,dispersion)
+ }
+ 
+}</code></pre>
+<pre class="r"><code>plot(mu_values, disp_values, pch=16, xlab=&quot;mean&quot;, ylab = &quot;dispersion&quot;)</code></pre>
+<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/f599f8dbcff6e9f62f33737f800434a72bb7b68b/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" target="_blank">f599f8d</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-15
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/d68bca91fa39da29e9a25fa0f2cccc87a740dbc0/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" target="_blank">d68bca9</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="determine-dispersion-levels" class="section level2">
 <h2><strong>Determine Dispersion Levels</strong></h2>
@@ -1181,7 +1327,7 @@ sim_gene &lt;- function(n,alpha,sigma,Li, sigma_multiplier=1){
   Y &lt;- rep(NA,n) 
   
   # calculate latent expression using gamma distribution
-  lambdaj &lt;- rgamma(n,shape = alpha,scale = sigma*sigma_multiplier)
+  lambdaj &lt;- rgamma(n,shape = alpha/sigma_multiplier,scale = sigma*sigma_multiplier)
   
   # for each cell use the latent expression and library size to simulate expression
   for(i in 1:n){
@@ -1431,9 +1577,7 @@ Y_1.75_mean &lt;- apply(Y_1.75$Y, 2, mean)
 Y_2_cv &lt;- apply(Y_2$Y, 2, sd)/apply(Y_2$Y, 2, mean)
 Y_2_mean &lt;- apply(Y_2$Y, 2, mean)</code></pre>
 <p>We compare CPM vs log(CPM) normalization. We see the increase effect
-of the factor. For high expressed genes, we see the mean-variance
-relationship, which may make it difficult to identify signifcantly
-dispersed genes.</p>
+of applying the factor to the variance.</p>
 <pre class="r"><code>par(mfrow = c(2, 2))
 
 plot(log(Y_1.25_cpm$Y_mean),Y_1.25_cpm$Y_cv, pch=16, cex=0.5 ,main = &quot;Factor: 1.25&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
@@ -1448,7 +1592,7 @@ points(log(Y_1.75_cpm$Y_mean[Y_1.75$disp_idx]),Y_1.75_cpm$Y_cv[Y_1.75$disp_idx],
 plot(log(Y_2_cpm$Y_mean),Y_2_cpm$Y_cv, pch=16, cex=0.5 ,main = &quot;Factor: 2&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
 points(log(Y_2_cpm$Y_mean[Y_2$disp_idx]),Y_2_cpm$Y_cv[Y_2$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
 mtext(&quot;CPM Normalized&quot;, side = 3, line = - 1, outer = TRUE)</code></pre>
-<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(2, 2))
 
 plot(Y_1.25_cpm$Y_mean_log,Y_1.25_cpm$Y_cv_log, pch=16, cex=0.5 ,main = &quot;Factor: 1.25&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
@@ -1464,7 +1608,7 @@ plot(Y_2_cpm$Y_mean_log,Y_2_cpm$Y_cv_log, pch=16, cex=0.5 ,main = &quot;Factor: 
 points(Y_2_cpm$Y_mean_log[Y_2$disp_idx],Y_2_cpm$Y_cv_log[Y_2$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
 
 mtext(&quot;Log CPM Normalized&quot;, side = 3, line = - 1, outer = TRUE)</code></pre>
-<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1491,54 +1635,84 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] scTenifoldNet_1.3     cowplot_1.1.1         ggplot2_3.5.1        
-[4] SeuratData_0.2.2.9001 SeuratDisk_0.0.0.9021 Seurat_5.1.0         
-[7] SeuratObject_5.0.2    sp_1.6-0             
+ [1] dplyr_1.1.4           glmGamPoi_1.8.0       scTenifoldNet_1.3    
+ [4] cowplot_1.1.1         ggplot2_3.5.1         SeuratData_0.2.2.9001
+ [7] SeuratDisk_0.0.0.9021 Seurat_5.1.0          SeuratObject_5.0.2   
+[10] sp_1.6-0             
 
 loaded via a namespace (and not attached):
-  [1] spam_2.8-0             workflowr_1.7.1        plyr_1.8.7            
-  [4] igraph_2.0.3           lazyeval_0.2.2         splines_4.2.0         
-  [7] RcppHNSW_0.4.1         listenv_0.8.0          scattermore_1.2       
- [10] digest_0.6.29          htmltools_0.5.2        fansi_1.0.3           
- [13] magrittr_2.0.3         tensor_1.5             cluster_2.1.3         
- [16] ROCR_1.0-11            globals_0.15.0         matrixStats_0.62.0    
- [19] spatstat.sparse_3.0-0  colorspace_2.0-3       rappdirs_0.3.3        
- [22] ggrepel_0.9.5          xfun_0.30              dplyr_1.1.4           
- [25] crayon_1.5.1           jsonlite_1.8.0         progressr_0.10.0      
- [28] spatstat.data_3.0-0    survival_3.3-1         zoo_1.8-10            
- [31] glue_1.7.0             polyclip_1.10-0        gtable_0.3.0          
- [34] leiden_0.4.2           future.apply_1.9.0     abind_1.4-5           
- [37] scales_1.3.0           DBI_1.1.2              spatstat.random_3.1-3 
- [40] miniUI_0.1.1.1         Rcpp_1.0.12            viridisLite_0.4.0     
- [43] xtable_1.8-4           reticulate_1.24        bit_4.0.4             
- [46] dotCall64_1.0-1        htmlwidgets_1.5.4      httr_1.4.3            
- [49] RColorBrewer_1.1-3     ellipsis_0.3.2         ica_1.0-2             
- [52] farver_2.1.0           pkgconfig_2.0.3        sass_0.4.1            
- [55] uwot_0.1.14            deldir_1.0-6           utf8_1.2.2            
- [58] tidyselect_1.2.1       labeling_0.4.2         rlang_1.1.4           
- [61] reshape2_1.4.4         later_1.3.0            munsell_0.5.0         
- [64] tools_4.2.0            cli_3.6.3              generics_0.1.3        
- [67] ggridges_0.5.3         evaluate_0.15          stringr_1.5.1         
- [70] fastmap_1.1.0          yaml_2.3.5             goftest_1.2-3         
- [73] RhpcBLASctl_0.23-42    knitr_1.39             bit64_4.0.5           
- [76] fs_1.5.2               fitdistrplus_1.1-8     purrr_1.0.2           
- [79] RANN_2.6.1             pbapply_1.5-0          future_1.25.0         
- [82] nlme_3.1-157           whisker_0.4            mime_0.12             
- [85] hdf5r_1.3.8            compiler_4.2.0         rstudioapi_0.13       
- [88] plotly_4.10.0          png_0.1-7              spatstat.utils_3.0-1  
- [91] tibble_3.2.1           bslib_0.3.1            stringi_1.7.6         
- [94] highr_0.9              RSpectra_0.16-1        lattice_0.20-45       
- [97] Matrix_1.6-4           vctrs_0.6.5            pillar_1.9.0          
-[100] lifecycle_1.0.4        spatstat.geom_3.0-6    lmtest_0.9-40         
-[103] jquerylib_0.1.4        RcppAnnoy_0.0.19       data.table_1.14.2     
-[106] irlba_2.3.5.1          httpuv_1.6.5           patchwork_1.2.0       
-[109] R6_2.5.1               promises_1.2.0.1       KernSmooth_2.23-20    
-[112] gridExtra_2.3          parallelly_1.31.1      codetools_0.2-18      
-[115] fastDummies_1.7.3      MASS_7.3-56            rprojroot_2.0.3       
-[118] withr_3.0.0            sctransform_0.4.1      parallel_4.2.0        
-[121] grid_4.2.0             tidyr_1.3.1            rmarkdown_2.14        
-[124] Rtsne_0.16             git2r_0.30.1           spatstat.explore_3.0-6
-[127] shiny_1.7.1           </code></pre>
+  [1] spam_2.8-0                  workflowr_1.7.1            
+  [3] plyr_1.8.7                  igraph_2.0.3               
+  [5] lazyeval_0.2.2              splines_4.2.0              
+  [7] RcppHNSW_0.4.1              listenv_0.8.0              
+  [9] scattermore_1.2             GenomeInfoDb_1.32.2        
+ [11] digest_0.6.29               htmltools_0.5.2            
+ [13] fansi_1.0.3                 magrittr_2.0.3             
+ [15] tensor_1.5                  cluster_2.1.3              
+ [17] ROCR_1.0-11                 globals_0.15.0             
+ [19] matrixStats_0.62.0          spatstat.sparse_3.0-0      
+ [21] colorspace_2.0-3            rappdirs_0.3.3             
+ [23] ggrepel_0.9.5               xfun_0.30                  
+ [25] RCurl_1.98-1.7              crayon_1.5.1               
+ [27] jsonlite_1.8.0              progressr_0.10.0           
+ [29] spatstat.data_3.0-0         survival_3.3-1             
+ [31] zoo_1.8-10                  glue_1.7.0                 
+ [33] polyclip_1.10-0             gtable_0.3.0               
+ [35] zlibbioc_1.42.0             XVector_0.36.0             
+ [37] leiden_0.4.2                DelayedArray_0.22.0        
+ [39] future.apply_1.9.0          BiocGenerics_0.42.0        
+ [41] abind_1.4-5                 scales_1.3.0               
+ [43] DBI_1.1.2                   spatstat.random_3.1-3      
+ [45] miniUI_0.1.1.1              Rcpp_1.0.12                
+ [47] viridisLite_0.4.0           xtable_1.8-4               
+ [49] reticulate_1.24             bit_4.0.4                  
+ [51] dotCall64_1.0-1             stats4_4.2.0               
+ [53] htmlwidgets_1.5.4           httr_1.4.3                 
+ [55] RColorBrewer_1.1-3          ellipsis_0.3.2             
+ [57] ica_1.0-2                   farver_2.1.0               
+ [59] pkgconfig_2.0.3             sass_0.4.1                 
+ [61] uwot_0.1.14                 deldir_1.0-6               
+ [63] utf8_1.2.2                  labeling_0.4.2             
+ [65] tidyselect_1.2.1            rlang_1.1.4                
+ [67] reshape2_1.4.4              later_1.3.0                
+ [69] munsell_0.5.0               tools_4.2.0                
+ [71] cli_3.6.3                   generics_0.1.3             
+ [73] ggridges_0.5.3              evaluate_0.15              
+ [75] stringr_1.5.1               fastmap_1.1.0              
+ [77] yaml_2.3.5                  goftest_1.2-3              
+ [79] RhpcBLASctl_0.23-42         knitr_1.39                 
+ [81] bit64_4.0.5                 fs_1.5.2                   
+ [83] fitdistrplus_1.1-8          purrr_1.0.2                
+ [85] RANN_2.6.1                  sparseMatrixStats_1.8.0    
+ [87] pbapply_1.5-0               future_1.25.0              
+ [89] nlme_3.1-157                whisker_0.4                
+ [91] mime_0.12                   hdf5r_1.3.8                
+ [93] compiler_4.2.0              rstudioapi_0.13            
+ [95] plotly_4.10.0               png_0.1-7                  
+ [97] spatstat.utils_3.0-1        tibble_3.2.1               
+ [99] bslib_0.3.1                 stringi_1.7.6              
+[101] highr_0.9                   RSpectra_0.16-1            
+[103] lattice_0.20-45             Matrix_1.6-4               
+[105] vctrs_0.6.5                 pillar_1.9.0               
+[107] lifecycle_1.0.4             spatstat.geom_3.0-6        
+[109] lmtest_0.9-40               jquerylib_0.1.4            
+[111] RcppAnnoy_0.0.19            bitops_1.0-7               
+[113] data.table_1.14.2           irlba_2.3.5.1              
+[115] GenomicRanges_1.48.0        httpuv_1.6.5               
+[117] patchwork_1.2.0             R6_2.5.1                   
+[119] promises_1.2.0.1            KernSmooth_2.23-20         
+[121] gridExtra_2.3               IRanges_2.30.0             
+[123] parallelly_1.31.1           codetools_0.2-18           
+[125] fastDummies_1.7.3           MASS_7.3-56                
+[127] SummarizedExperiment_1.26.1 rprojroot_2.0.3            
+[129] withr_3.0.0                 sctransform_0.4.1          
+[131] GenomeInfoDbData_1.2.8      S4Vectors_0.34.0           
+[133] parallel_4.2.0              grid_4.2.0                 
+[135] tidyr_1.3.1                 DelayedMatrixStats_1.18.2  
+[137] rmarkdown_2.14              MatrixGenerics_1.8.0       
+[139] Rtsne_0.16                  git2r_0.30.1               
+[141] spatstat.explore_3.0-6      Biobase_2.56.0             
+[143] shiny_1.7.1                </code></pre>
 </div>
 </div>
 </div>
