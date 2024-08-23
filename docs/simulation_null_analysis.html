@@ -555,15 +555,15 @@ data/hybrid_lines_raw_data/human.ASE.Rep3.h5Seurat
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree68e4b1d6f6be72234e9cb27b0f73dc42711d1085targetblank68e4b1da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreedd2efcfb54796f9303e1df3f8ef3187b21ffcdc4targetblankdd2efcfa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/68e4b1d6f6be72234e9cb27b0f73dc42711d1085" target="_blank">68e4b1d</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4" target="_blank">dd2efcf</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree68e4b1d6f6be72234e9cb27b0f73dc42711d1085targetblank68e4b1da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreedd2efcfb54796f9303e1df3f8ef3187b21ffcdc4targetblankdd2efcfa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -573,7 +573,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/68e4b1d6f6be72234e9cb27b0f73dc42711d1085" target="_blank">68e4b1d</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4" target="_blank">dd2efcf</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -662,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/analysis/simulation_null_analysis.Rmd" target="_blank">dd2efcf</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-23
+</td>
+<td>
+add dispersion estimate to simulations
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/docs/simulation_null_analysis.html" target="_blank">dd2efcf</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-23
+</td>
+<td>
+add dispersion estimate to simulations
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1033,7 +1067,7 @@ y_{ij} \sim Pois(L_i \lambda_{ij})
   f_j(\cdot) =
     \begin{cases}
       Gamma(\mu_{j_0},\phi_{j_0}) &amp; \text{for background gene} \\
-      Gamma(\mu_0,\phi_0) &amp; \text{for overdispersed gene} \\
+      Gamma(\mu_j,\phi_j) &amp; \text{for overdispersed gene} \\
     \end{cases}       
 \end{equation}
 \]</span></p>
@@ -1189,6 +1223,43 @@ awchen55
 </div>
 <pre class="r"><code>hist(mean_expression, breaks=100)</code></pre>
 <p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-6-1.png" target="_blank">dd2efcf</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># get the intervals of relative mean expression
 #mean_intervals &lt;- seq(min(mean_relative_expression), max(mean_relative_expression),length.out=101)
 mean_intervals &lt;- seq(min(mean_expression), 10,length.out=501)
@@ -1274,6 +1345,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" target="_blank">dd2efcf</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/awchen55/differentialDispersion/blob/f599f8dbcff6e9f62f33737f800434a72bb7b68b/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" target="_blank">f599f8d</a>
@@ -1381,6 +1463,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/docs/figure/simulation_null_analysis.Rmd/Dispersion Histogram Low Alpha-1.png" target="_blank">dd2efcf</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-23
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/awchen55/differentialDispersion/blob/f599f8dbcff6e9f62f33737f800434a72bb7b68b/docs/figure/simulation_null_analysis.Rmd/Dispersion Histogram Low Alpha-1.png" target="_blank">f599f8d</a>
 </td>
 <td>
@@ -1436,6 +1529,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/docs/figure/simulation_null_analysis.Rmd/Dispersion Histogram High Alpha-1.png" target="_blank">dd2efcf</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/awchen55/differentialDispersion/blob/f599f8dbcff6e9f62f33737f800434a72bb7b68b/docs/figure/simulation_null_analysis.Rmd/Dispersion Histogram High Alpha-1.png" target="_blank">f599f8d</a>
@@ -1593,6 +1697,43 @@ plot(log(Y_2_cpm$Y_mean),Y_2_cpm$Y_cv, pch=16, cex=0.5 ,main = &quot;Factor: 2&q
 points(log(Y_2_cpm$Y_mean[Y_2$disp_idx]),Y_2_cpm$Y_cv[Y_2$disp_idx],pch=16,col=&quot;red&quot;,cex=0.5)
 mtext(&quot;CPM Normalized&quot;, side = 3, line = - 1, outer = TRUE)</code></pre>
 <p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-14-1.png" target="_blank">dd2efcf</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>par(mfrow = c(2, 2))
 
 plot(Y_1.25_cpm$Y_mean_log,Y_1.25_cpm$Y_cv_log, pch=16, cex=0.5 ,main = &quot;Factor: 1.25&quot;, xlab=&quot;log(mean)&quot;, ylab=&quot;CV&quot;)
@@ -1609,6 +1750,43 @@ points(Y_2_cpm$Y_mean_log[Y_2$disp_idx],Y_2_cpm$Y_cv_log[Y_2$disp_idx],pch=16,co
 
 mtext(&quot;Log CPM Normalized&quot;, side = 3, line = - 1, outer = TRUE)</code></pre>
 <p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-15-1.png" target="_blank">dd2efcf</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-08-23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

@@ -61,7 +61,7 @@ $$
   f_j(\cdot) =
     \begin{cases}
       Gamma(\mu_{j_0},\phi_{j_0}) & \text{for background gene} \\
-      Gamma(\mu_0,\phi_0) & \text{for overdispersed gene} \\
+      Gamma(\mu_j,\phi_j) & \text{for overdispersed gene} \\
     \end{cases}       
 \end{equation}
 $$
