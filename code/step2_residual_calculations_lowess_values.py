@@ -6,19 +6,20 @@ from statsmodels.nonparametric.smoothers_lowess import lowess
 ######## LOAD DATA
 
 #replicate
-replicate = 'Rep3'
+replicate = 'Rep1'
 cell_label_name = 'labels'
+species = "human"
 path = r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_cpm_normalized/'
-input_name = path + 'chimp_ase_cpm_' + replicate
-output_name = path + 'chimp_ase_cpm_' + replicate 
+input_name = path + species + '_ase_cpm_' + replicate
+output_name = path + species + '_ase_cpm_' + replicate 
 
 
-var_data = pd.read_pickle(input_name + '_variance.pkl')
-std_data = pd.read_pickle(input_name + '_std.pkl')
-mean_data = pd.read_pickle(input_name + '_mean.pkl')
-cv_data = pd.read_pickle(input_name + '_cv.pkl')
-cell_type_counts = pd.read_pickle(input_name + '_cell_type_counts.pkl')
-umi_data = pd.read_pickle(input_name + '_umi_data.pkl')
+var_data = pd.read_csv(input_name + '_variance.csv', index_col=0)
+std_data = pd.read_csv(input_name + '_std.csv', index_col=0)
+mean_data = pd.read_csv(input_name + '_mean.csv', index_col=0)
+cv_data = pd.read_csv(input_name + '_cv.csv', index_col=0)
+cell_type_counts = pd.read_csv(input_name + '_cell_type_counts.csv', index_col=0)
+umi_data = pd.read_csv(input_name + '_umi_data.csv', index_col=0)
 
 # get CV and UMI values
 cv_mod = cv_data.set_index("labels").T
@@ -81,7 +82,7 @@ lowess_df = lowess_df.rename(columns={"Cardiomyocytes_y": "Cardiomyocytes"})
 
 
 ######## OUTPUT
-resid_df.to_pickle(output_name + '_residuals.pkl')
-lowess_df.to_pickle(output_name + '_lowess_values.pkl')
+resid_df.to_csv(output_name + '_residuals.csv')
+lowess_df.to_csv(output_name + '_lowess_values.csv')
 
 

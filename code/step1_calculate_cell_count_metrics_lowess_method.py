@@ -122,18 +122,21 @@ def var_mean_of_expression(adata, annotation_title):
 ######## LOAD DATA
 
 # paths and names
-replicate = 'Rep1'
+replicate = 'Rep3'
 cell_label_name = 'labels'
+species = "human"
 path = r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_cpm_normalized/'
-input_name = r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/' + 'human.ASE.' + replicate 
-output_name = path + 'human_ase_cpm_' + replicate 
+input_name = r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/' + species + '.ASE.' + replicate 
+output_name = path + species + '_ase_cpm_' + replicate 
 
 
 # cell data
 adata_human_ase = anndata.read_h5ad(input_name + '.h5ad')
 
-# CPM normalization
+# log(CPM) normalization and regress out number of genes detected (same as % of zeros)
 sc.pp.normalize_total(adata_human_ase, target_sum=1e6)
+sc.pp.log1p(adata_human_ase)
+#sc.pp.regress_out(adata_human_ase,keys=["nFeature_RNA"])
 
 ######## RUN CODE
 results = var_mean_of_expression(adata_human_ase,cell_label_name)

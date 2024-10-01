@@ -50,7 +50,7 @@ We use the **rpois(**$n$, $\lambda$) function in R to simulate the Poisson distr
 
 ### ***Model***
 
-We simulate the Negative Binomial distribution using the Gamma-Poisson distribution, since the Gamma distribution is a conjugate prior of the Poisson distribution. Under this model,
+We simulate the Negative Binomial distribution using the Gamma-Poisson distribution, since the Gamma distribution is a conjugate prior of the Poisson distribution. The mean is fixed for each bin of mean expression. The dispersion parameter differs from the background versus the dispersed gene. Under this model,
 
 $$
 y_{ij} \sim Pois(L_i \lambda_{ij})
@@ -60,7 +60,7 @@ $$
 \lambda_{ij} \sim \begin{equation}
   f_j(\cdot) =
     \begin{cases}
-      Gamma(\mu_{j_0},\phi_{j_0}) & \text{for background gene} \\
+      Gamma(\mu_{j},\phi_{j_0}) & \text{for background gene} \\
       Gamma(\mu_j,\phi_j) & \text{for overdispersed gene} \\
     \end{cases}       
 \end{equation}
@@ -75,8 +75,6 @@ Where the variables for cell $i$ and gene $j$ are:
 -   $\lambda_{ij}$ is the latent expression value of gene $j$
 
 -   $\mu_j$ is the mean relative expression value of $\lambda_{ij}$ for gene $j$
-
--   $\mu_{j_0}$ is the null mean relative expression value for a background gene
 
 -   $\phi_j$ is the dispersion value of $\lambda_{ij}$ for gene $j$
 
@@ -175,7 +173,7 @@ mean_intervals <- seq(min(mean_expression), 10,length.out=501)
 
 ## **Estimating Dispersion Parameter**
 
-We have divided mean expression into groups of 500 bins. For each bin of mean expression, genes are grouped together and a Gamma-Poisson distribution is fit to the data to estimate the dispersion parameter. We use the **glm_gp** function from the *glmGamPoi* package to fit a Gamma-Poisson model that uses MLE to estimate $\mu$ and $dispersion$ parameters. Using this parameterization, the mean is $\mu$ and the variance is $\mu + \mu^2*dispersion$.
+We have divided mean expression into groups of 500 bins. For each bin of mean expression, genes are grouped together and a Gamma-Poisson distribution is fit to the data to estimate the dispersion parameter. We use the **glm_gp** function from the *glmGamPoi* package to fit a Gamma-Poisson model that uses MLE to estimate $\mu$ and $dispersion (\phi)$ parameters. Using this parameterization, the mean is $\mu$ and the variance is $\mu + \mu^2\phi$.
 
 [The manual for glmGamPoi can be found here.](https://www.bioconductor.org/packages/3.16/bioc/manuals/glmGamPoi/man/glmGamPoi.pdf)
 
@@ -217,6 +215,12 @@ for(i in 1:500){
 
 ```{r}
 plot(mu_values, disp_values, pch=16, xlab="mean", ylab = "dispersion")
+```
+
+```{r,include=F,eval=F}
+beta = c(rep(0,50),rexp(50))
+y = rpois(100,beta) # simulate Poisson observations
+y.ash = ash_pois(y,scale=1)
 ```
 
 ## **Determine Dispersion Levels**
@@ -302,9 +306,31 @@ hist(cardiomyocytes_expression_data_filtered[,which.max(mean_relative_expression
 
 ## **Simulating for Bins of Mean Expression**
 
-We have broken down the range of mean expression into 100 bins. For each bin we will simulate 100 genes. 5% of those genes will have $\sigma$ multiplied by a factor of 2. This will yield 10,000 simulated genes with 5% of genes being significantly dispersed.
+### Parameter Estimations
+We have broken down the range of mean expression into 100 bins. For each bin we will simulate 100 genes. The mean expression, $\mu$, varies for the genes within each bin. So the background genes and dispersed genes fall within the same mean expression bin. We incorporate the estimated dispersion from the real data. The dispersion level is relatively similar across varying gene expression, so we use the mean dispersion level as our estimate: $\hat{\phi} = \frac{1}{n}\sum_i^n \phi_i$. 
 
-```{r Bins of Mean Expression}
+We then use $\hat{\phi}$ to calculate $\sigma$ and $\alpha$ and respectively. From *glmGamPoi*:
+
+$$
+E[X] = \mu \hspace{20 mm} Var[X] = \mu + \mu^2\phi
+$$
+
+From the *rgamma* simulations:
+
+$$
+E[X] = \alpha\sigma \hspace{20 mm} Var[X] = \alpha\sigma^2
+$$
+Setting the equations equal to each other:
+
+$$
+\sigma = \mu\phi + 1 \hspace{20 mm} \alpha = \frac{\mu}{\mu\phi + 1}
+$$
+
+We use these equations to calculate $\sigma$ and $\alpha$. For 5% of genes we multiply $\sigma$ by these factors: 1.25, 1.5, 1.75, 2. These are the dispersed genes.
+
+
+### Simulations
+```{r Bins of Mean Expression, include=F, eval=F}
 # calculate alpha given mean expression and fixed sigma
 calc_alpha <- function(mu, sigma){
   alpha = mu/sigma
@@ -318,6 +344,7 @@ sim_bin <- function(n,p,sigma,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
   # Simulate all genes with following parameters:
   # n:                number of cells
   # p:                number of genes
+  # phi:              estimated dispersion parameter
   # sigma:            sigma parameter
   # sigma_multiplier: factor to increase variance
   # Li:               library size
@@ -360,7 +387,7 @@ sim_bin <- function(n,p,sigma,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
   return(list("Y_bin"=Y_bin, "disp_idx"=bin_disp_idx))
 }
 
-sim_Y <- function(n,p,sigma,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
+sim_Y <- function(n,p,sigma,sigma_multiplier,Li,mean_intervals){
   Y <- c()
   disp_idx <- c()
   for(i in 1:100){
@@ -395,20 +422,124 @@ cpm_norm <- function(Y){
 
 ```
 
+```{r Bins of Mean Expression 2}
+# calculate alpha given mean expression and fixed sigma
+calc_alpha <- function(mu, sigma){
+  alpha = mu/sigma
+  return(alpha)
+}
+
+
+# Function to simulate genes within a bin of mean expression
+sim_bin <- function(n,p,phi,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
+  
+  # Simulate all genes with following parameters:
+  # n:                number of cells
+  # p:                number of genes
+  # phi:              estimated dispersion parameter
+  # phi_multiplier:   factor to increase dispersion parameter
+  # Li:               library size
+  # mean_expr_lwr:    lower bound of mean expression window
+  # mean_expr_upr:    upper bound of mean expression window
+ 
+  # Returns matrix of expression for n cells and p genes. 
+  # Returns vector of index values for simulated dispersed genes.
+  
+  # initialize Y for bin of expression
+  Y_bin <- matrix(NA,nrow=n,ncol=p)
+  
+  # breakdown expression range into p values
+  bin_expression <- seq(mean_expr_lwr,mean_expr_upr,length.out=p)
+  
+  # randomly select p expression means
+  bin_sim_idx <- sample.int(p, p, replace = TRUE)
+  # randomly select 5% to be significantly dispersed
+  bin_disp_idx <- sample.int(p, 0.05*p, replace = FALSE)
+  # get expression means
+  sim_expression_values <- bin_expression[bin_sim_idx]
+  
+  # simulate genes for each expression mean
+  for(i in 1:p){
+    
+    # get expression mean
+    mu <- sim_expression_values[i]
+    
+    # calculate sigma parameter
+    sigma <- mu*phi + 1
+    #sigma_disp <- mu*phi*phi_multiplier + 1
+    
+    # calculate alpha for fixed sigma based on expression mean
+    alpha <- calc_alpha(mu,sigma)
+    #alpha_disp <- calc_alpha(mu,sigma_disp)
+    
+    # for dispersed genes multiply sigma by factor
+    if(i %in% bin_disp_idx){
+      Y_bin[,i] <- sim_gene(n,alpha,sigma,Li,sigma_multiplier)
+    }
+    else{
+      Y_bin[,i] <- sim_gene(n,alpha,sigma,Li)
+    }
+  }
+  
+  return(list("Y_bin"=Y_bin, "disp_idx"=bin_disp_idx))
+}
+
+sim_Y <- function(n,p,phi,sigma_multiplier,Li,mean_intervals){
+  Y <- c()
+  disp_idx <- c()
+  for(i in 1:100){
+    
+    mean_expr_lwr <- mean_intervals[i]
+    mean_expr_upr <- mean_intervals[i+1]
+    
+    gene_sim <- sim_bin(n,p,phi,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr)
+    Y_bin <- gene_sim$Y_bin
+    bin_disp_idx <- gene_sim$disp_idx + (i-1)*100
+    
+    Y <- cbind(Y,Y_bin)
+    disp_idx <- c(disp_idx,bin_disp_idx)
+  }
+  return(list("Y"=Y,"disp_idx"=disp_idx))
+}
+
+
+cpm_norm <- function(Y){
+  
+  require(scTenifoldNet)
+  Y_cpm_normalized <- t(cpmNormalization(t(Y)))
+  Y_log_cpm_normalized <- log(t(cpmNormalization(t(Y))))
+  
+  Y_cv <- apply(Y_cpm_normalized, 2, sd)/apply(Y_cpm_normalized, 2, mean)
+  Y_mean <- apply(Y_cpm_normalized, 2, mean)
+  Y_cv_log <- apply(Y_log_cpm_normalized, 2, sd)/apply(Y_log_cpm_normalized, 2, mean)
+  Y_mean_log <- apply(Y_log_cpm_normalized, 2, mean)
+  
+  return(list("Y_cpm_normalized"=Y_cpm_normalized, "Y_log_cpm_normalized" = Y_log_cpm_normalized, "Y_cv" = Y_cv, "Y_mean" = Y_mean, "Y_cv_log"=Y_cv_log, "Y_mean_log" = Y_mean_log))
+}
+
+```
+
 We simulate applying different factors to amplify the variance.
 
 ```{r}
 #### Simulate Y matrix for all genes
+set.seed(10012024)
+
 # Parameters
 n=500
 p=100
-sigma = 0.0002
+phi = mean(disp_values)
+sigma=0.0002
 Li = 8000
 
-Y_1.25 <- sim_Y(n,p,sigma,1.25,Li,mean_expr_lwr,mean_expr_upr)
-Y_1.5 <- sim_Y(n,p,sigma,1.5,Li,mean_expr_lwr,mean_expr_upr)
-Y_1.75 <- sim_Y(n,p,sigma,1.75,Li,mean_expr_lwr,mean_expr_upr)
-Y_2 <- sim_Y(n,p,sigma,2,Li,mean_expr_lwr,mean_expr_upr)
+Y_1.25 <- sim_Y(n,p,phi,1.25,Li,mean_intervals)
+Y_1.5 <- sim_Y(n,p,phi,1.5,Li,mean_intervals)
+Y_1.75 <- sim_Y(n,p,phi,1.75,Li,mean_intervals)
+Y_2 <- sim_Y(n,p,phi,2,Li,mean_intervals)
+# Y_1.25 <- sim_Y(n,p,sigma,1.25,Li,mean_intervals)
+# Y_1.5 <- sim_Y(n,p,sigma,1.5,Li,mean_intervals)
+# Y_1.75 <- sim_Y(n,p,sigma,1.75,Li,mean_intervals)
+# Y_2 <- sim_Y(n,p,sigma,2,Li,mean_intervals)
 
 ```
 
@@ -434,7 +565,7 @@ Y_2_cv <- apply(Y_2$Y, 2, sd)/apply(Y_2$Y, 2, mean)
 Y_2_mean <- apply(Y_2$Y, 2, mean)
 ```
 
-```{r, eval=F, include=F}
+```{r, include=F, eval=F}
 par(mfrow = c(2, 2))
 
 plot(log(Y_1.25_mean),Y_1.25_cv, pch=16, cex=0.5 ,main = "Factor: 1.25", xlab="log(mean)", ylab="CV")
@@ -451,7 +582,7 @@ points(log(Y_2_mean[Y_2$disp_idx]),Y_2_cv[Y_2$disp_idx],pch=16,col="red",cex=0.5
 mtext("No Normalization", side = 3, line = - 1, outer = TRUE)
 ```
 
-We compare CPM vs log(CPM) normalization. We see the increase effect of applying the factor to the variance.
+We look at the CV curve of the simulated data. The red dots indicate genes with increased dispersion.
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -470,7 +601,95 @@ points(log(Y_2_cpm$Y_mean[Y_2$disp_idx]),Y_2_cpm$Y_cv[Y_2$disp_idx],pch=16,col="
 mtext("CPM Normalized", side = 3, line = - 1, outer = TRUE)
 ```
 
+
+## **Identifying Significant Genes on Simulated Data**
+
+We run the pipeline to identify genes with significant dispersion.
+```{r load results}
+path = "/project2/gilad/awchen55/differentialDispersion/data/simulations"
+
+# index of simulated dispersed genes
+disp_idx_1.25 <- read.csv(file.path(path, "sim_sig_disp_idx_1.25.csv"))
+disp_idx_1.25 <- disp_idx_1.25[2:ncol(disp_idx_1.25)]
+
+disp_idx_1.5 <- read.csv(file.path(path, "sim_sig_disp_idx_1.5.csv"))
+disp_idx_1.5 <- disp_idx_1.5[2:ncol(disp_idx_1.5)]
+
+disp_idx_1.75 <- read.csv(file.path(path, "sim_sig_disp_idx_1.75.csv"))
+disp_idx_1.75 <- disp_idx_1.75[2:ncol(disp_idx_1.75)]
+
+disp_idx_2 <- read.csv(file.path(path, "sim_sig_disp_idx_2.csv"))
+disp_idx_2 <- disp_idx_2[2:ncol(disp_idx_2)]
+
+# pipeline results
+sim1.25 <- read.csv(file.path(path,"simulation_bootstrap_results_1.25.csv"))
+sim1.5 <- read.csv(file.path(path,"simulation_bootstrap_results_1.5.csv"))
+sim1.75 <- read.csv(file.path(path,"simulation_bootstrap_results_1.75.csv"))
+sim2 <- read.csv(file.path(path,"simulation_bootstrap_results_2.csv"))
+
+```
+
 ```{r}
+library(dplyr)
+sim1.25_sig <- sim1.25 %>%
+  filter(p_value_adj < 0.05)
+
+overlap_sig_1.25 <- sim1.25[do.call(cbind, lapply(disp_idx_1.25, unlist)),]%>%
+  filter(p_value_adj < 0.05)
+
+sim1.5_sig <- sim1.5 %>%
+  filter(p_value_adj < 0.05)
+
+overlap_sig_1.5 <- sim1.5[do.call(cbind, lapply(disp_idx_1.5, unlist)),]%>%
+  filter(p_value_adj < 0.05)
+
+sim1.75_sig <- sim1.75 %>%
+  filter(p_value_adj < 0.05)
+
+overlap_sig_1.75 <- sim1.75[do.call(cbind, lapply(disp_idx_1.75, unlist)),]%>%
+  filter(p_value_adj < 0.05)
+
+sim2_sig <- sim2 %>%
+  filter(p_value_adj < 0.05)
+
+overlap_sig_2 <- sim2[do.call(cbind, lapply(disp_idx_2, unlist)),]%>%
+  filter(p_value_adj < 0.05)
+```
+
+We show the number of genes identified as significantly dispersed. We show the number of true significantly dispersed genes captured.
+```{r summary of results}
+library(dplyr)
+
+applied_factor <- c(1.25, 1.5, 1.75, 2)
+number_identified <- c(nrow(sim1.25_sig),nrow(sim1.5_sig), nrow(sim1.75_sig), nrow(sim2_sig))
+percent_identified <- number_identified/10000
+
+number_overlap_significant <- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
+percent_overlap_significant <- number_overlap_significant/500
+
+cbind(applied_factor,number_identified,percent_identified,number_overlap_significant,percent_overlap_significant)
+```
+
+
+```{r write data, include=F, eval=F}
+
+
+#library(MASS)
+# write.matrix(Y_1.25_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/Y_1.25_cpm.csv")
+# 
+# write.matrix(Y_1.5_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/Y_1.5_cpm.csv")
+# write.matrix(Y_1.75_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/Y_1.75_cpm.csv")
+# write.matrix(Y_2_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/Y_2_cpm.csv")
+
+write.csv(matrix(Y_1.25$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_sig_disp_idx_1.25.csv")
+write.csv(matrix(Y_1.5$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_sig_disp_idx_1.5.csv")
+write.csv(matrix(Y_1.75$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_sig_disp_idx_1.75.csv")
+write.csv(matrix(Y_2$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_sig_disp_idx_2.csv")
+```
+
+
+
+```{r, include=F,eval=F}
 par(mfrow = c(2, 2))
 
 plot(Y_1.25_cpm$Y_mean_log,Y_1.25_cpm$Y_cv_log, pch=16, cex=0.5 ,main = "Factor: 1.25", xlab="log(mean)", ylab="CV")

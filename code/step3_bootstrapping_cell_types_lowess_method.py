@@ -7,7 +7,6 @@ import scipy.stats.mstats as mstats
 from statsmodels.stats.multitest import fdrcorrection
 import scipy
 import time
-import pickle
 import random
 import anndata
 
@@ -20,15 +19,17 @@ test_statistic = lambda x: np.std(x)/np.mean(x)
 
 # inputs
 replicate = 'Rep1'
-cell_type = "Undifferentiated 1"
-cell_type_name = "Undifferentiated1"
+cell_type = "Cardiomyocytes"
+cell_type_name = "Cardiomyocytes"
+species = "chimp"
 path = r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_cpm_normalized/'
-input_name = path + 'chimp_ase_cpm_' + replicate
-output_name = path + 'chimp_ase_cpm_' + replicate + '_' + cell_type_name
+input_name = path + species +'_ase_cpm_' + replicate
+output_name = path + species +'_ase_cpm_' + replicate + '_' + cell_type_name
 cell_label_name = 'labels'
 
 #  anndata object
-adata_human_ase = anndata.read_h5ad(r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/human.ASE.' + replicate +'.h5ad')
+adata_human_ase = anndata.read_h5ad(r'/project2/gilad/awchen55/differentialDispersion/data/hybrid_lines_raw_data/' + species + '.ASE.' + replicate +'.h5ad')
+sc.pp.normalize_total(adata_human_ase, target_sum=1e6)
 adata_clusters = adata_human_ase.obs.reset_index()
 adata_clusters.rename(columns={'index': 'cell'}, inplace=True)
 
@@ -38,14 +39,14 @@ expression_data = adata_human_ase.X.toarray()[idx,:]
 
 
 # get lowess, cv, umi data
-lowess = pd.read_pickle(input_name + "_lowess_values.pkl")
-cv_data = pd.read_pickle(input_name + '_cv.pkl')
-umi_data = pd.read_pickle(input_name + '_umi_data.pkl')
-cell_counts = pd.read_pickle(input_name + '_cell_type_counts.pkl')
-cell_counts =cell_counts.set_index(cell_label_name)
+lowess = pd.read_csv(input_name + "_lowess_values.csv", index_col=0)
+cv_data = pd.read_csv(input_name + '_cv.csv', index_col=0)
+umi_data = pd.read_csv(input_name + '_umi_data.csv', index_col=0)
+cell_type_counts = pd.read_csv(input_name + '_cell_type_counts.csv', index_col=0)
+cell_counts =cell_type_counts.set_index(cell_label_name)
 
 # residual value and get gene list
-resid_cv = pd.read_pickle(input_name + "_residuals.pkl")
+resid_cv = pd.read_csv(input_name + "_residuals.csv", index_col=0)
 gene_list = list(resid_cv.index)
 
 # get expression data for cell type and gene list from non na values
@@ -117,5 +118,5 @@ cell_fn = time.time()
 ######## OUTPUT  
 print(cell_type)
 print("Cell Time:", cell_fn-cell_st)
-merged.to_pickle(output_name +'_dispersion.pkl')   
+merged.to_csv(output_name +'_dispersion.csv')   
 
