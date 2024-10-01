@@ -627,15 +627,15 @@ data/simulations/sim_sig_disp_idx_2.csv
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeb4c576d7902ad37e2b69a71e4035b48e4f135f8ctargetblankb4c576da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeaf83133ba459cc257f6d3a01eb07e93160cd35datargetblankaf83133a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/b4c576d7902ad37e2b69a71e4035b48e4f135f8c" target="_blank">b4c576d</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/af83133ba459cc257f6d3a01eb07e93160cd35da" target="_blank">af83133</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeb4c576d7902ad37e2b69a71e4035b48e4f135f8ctargetblankb4c576da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeaf83133ba459cc257f6d3a01eb07e93160cd35datargetblankaf83133a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -645,7 +645,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/b4c576d7902ad37e2b69a71e4035b48e4f135f8c" target="_blank">b4c576d</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/af83133ba459cc257f6d3a01eb07e93160cd35da" target="_blank">af83133</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -663,7 +663,6 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/cell_count_metrics_by_cell_type/
-    Ignored:    analysis/figure/
     Ignored:    analysis/scran_size_factors_debugging.nb.html
     Ignored:    code/.ipynb_checkpoints/
     Ignored:    data/.ipynb_checkpoints/
@@ -675,9 +674,6 @@ Untracked files:
     Untracked:  analysis/fitting_ash_hybrid_data.Rmd
     Untracked:  analysis/scran_size_factors_debugging.Rmd
     Untracked:  analysis/simulation_analysis.ipynb
-    Untracked:  code/step1_simulations.py
-    Untracked:  code/step2_simulations.py
-    Untracked:  code/step3_simulations.py
     Untracked:  data/hybrid_lines_cpm_normalized/
     Untracked:  data/hybrid_lines_log_cpm_regressed_out_data/
     Untracked:  data/hybrid_lines_raw_data/
@@ -689,9 +685,6 @@ Unstaged changes:
     Modified:   analysis/differential_dispersion_hybrid_line_cpm_analysis.Rmd
     Modified:   analysis/negative_binomial_dispersion_estimation.Rmd
     Modified:   analysis/simulation_null_analysis.Rmd
-    Modified:   code/step1_calculate_cell_count_metrics_lowess_method.py
-    Modified:   code/step2_residual_calculations_lowess_values.py
-    Modified:   code/step3_bootstrapping_cell_types_lowess_method.py
     Deleted:    data/chimp_ASE_subset.csv
     Deleted:    data/human_ASE_subset.csv
 
@@ -740,6 +733,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/af83133ba459cc257f6d3a01eb07e93160cd35da/analysis/simulation_null_analysis.Rmd" target="_blank">af83133</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-10-01
+</td>
+<td>
+updated simulation results - ran pipeline
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/af83133ba459cc257f6d3a01eb07e93160cd35da/docs/simulation_null_analysis.html" target="_blank">af83133</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-10-01
+</td>
+<td>
+updated simulation results - ran pipeline
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1377,124 +1404,6 @@ awchen55
 mean_intervals &lt;- seq(min(mean_expression), 10,length.out=501)
 #mean_intervals &lt;- seq(min(mean_relative_expression), 0.001,length.out=501)</code></pre>
 </div>
-<div id="estimating-dispersion-parameter" class="section level2">
-<h2><strong>Estimating Dispersion Parameter</strong></h2>
-<p>We have divided mean expression into groups of 500 bins. For each bin
-of mean expression, genes are grouped together and a Gamma-Poisson
-distribution is fit to the data to estimate the dispersion parameter. We
-use the <strong>glm_gp</strong> function from the <em>glmGamPoi</em>
-package to fit a Gamma-Poisson model that uses MLE to estimate <span
-class="math inline">\(\mu\)</span> and <span
-class="math inline">\(dispersion (\phi)\)</span> parameters. Using this
-parameterization, the mean is <span class="math inline">\(\mu\)</span>
-and the variance is <span class="math inline">\(\mu +
-\mu^2\phi\)</span>.</p>
-<p><a
-href="https://www.bioconductor.org/packages/3.16/bioc/manuals/glmGamPoi/man/glmGamPoi.pdf">The
-manual for glmGamPoi can be found here.</a></p>
-<pre class="r"><code># require(fitdistrplus)
-# require(MASS)
-library(glmGamPoi)
-library(dplyr)</code></pre>
-<pre><code>
-Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:stats&#39;:
-
-    filter, lag</code></pre>
-<pre><code>The following objects are masked from &#39;package:base&#39;:
-
-    intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code># fitnb &lt;- fitdist(cardiomyocytes_expression_data_filtered[,1],&quot;nbinom&quot;, method=&quot;mle&quot;)
-# 
-# fitnb_mass &lt;- fitdistr(cardiomyocytes_expression_data_filtered[,1], &quot;Negative Binomial&quot;)
-# summary(fitnb)
-# plot(fitnb)
-
-mu_values &lt;- c()
-disp_values &lt;- c()
-
-for(i in 1:500){
- # get indices for genes within bin of mean expression
- mean_idx &lt;- which(between(mean_expression,mean_intervals[i],mean_intervals[i+1])) 
- 
- if(length(mean_idx) &gt; 0){
-   # group genes into single vector of data
-   grouped_data &lt;- as.vector(cardiomyocytes_expression_data_filtered[,mean_idx])
-   
-   # fit gamma-poisson distribution
-   fit_gp &lt;- glm_gp(grouped_data, size_factors=1)
-   sum_gp &lt;- summary(fit_gp)
-   
-   # get mu and dispersion estimates
-   mu &lt;-  median(sum_gp$Mu)
-   mu_values &lt;- c(mu_values,mu)
-   dispersion &lt;- sum_gp$overdispersions
-   disp_values &lt;- c(disp_values,dispersion)
- }
- 
-}</code></pre>
-<pre class="r"><code>plot(mu_values, disp_values, pch=16, xlab=&quot;mean&quot;, ylab = &quot;dispersion&quot;)</code></pre>
-<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
-Past versions of unnamed-chunk-9-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-9-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" target="_blank">dd2efcf</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-08-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/f599f8dbcff6e9f62f33737f800434a72bb7b68b/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" target="_blank">f599f8d</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-08-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/d68bca91fa39da29e9a25fa0f2cccc87a740dbc0/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-9-1.png" target="_blank">d68bca9</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-08-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
 <div id="determine-dispersion-levels" class="section level2">
 <h2><strong>Determine Dispersion Levels</strong></h2>
 <p>We simulate a single gene for <span
@@ -1668,10 +1577,71 @@ awchen55
 </div>
 </div>
 </div>
+<div id="estimating-dispersion-parameter" class="section level2">
+<h2><strong>Estimating Dispersion Parameter</strong></h2>
+<p>We have divided mean expression into groups of 500 bins. For each bin
+of mean expression, genes are grouped together and a Gamma-Poisson
+distribution is fit to the data to estimate the dispersion parameter. We
+use the <strong>glm_gp</strong> function from the <em>glmGamPoi</em>
+package to fit a Gamma-Poisson model that uses MLE to estimate <span
+class="math inline">\(\mu\)</span> and <span
+class="math inline">\(dispersion (\phi)\)</span> parameters. Using this
+parameterization, the mean is <span class="math inline">\(\mu\)</span>
+and the variance is <span class="math inline">\(\mu +
+\mu^2\phi\)</span>.</p>
+<p><a
+href="https://www.bioconductor.org/packages/3.16/bioc/manuals/glmGamPoi/man/glmGamPoi.pdf">The
+manual for glmGamPoi can be found here.</a></p>
+<pre class="r"><code># require(fitdistrplus)
+# require(MASS)
+library(glmGamPoi)
+library(dplyr)</code></pre>
+<pre><code>
+Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code># fitnb &lt;- fitdist(cardiomyocytes_expression_data_filtered[,1],&quot;nbinom&quot;, method=&quot;mle&quot;)
+# 
+# fitnb_mass &lt;- fitdistr(cardiomyocytes_expression_data_filtered[,1], &quot;Negative Binomial&quot;)
+# summary(fitnb)
+# plot(fitnb)
+
+mu_values &lt;- c()
+disp_values &lt;- c()
+
+for(i in 1:500){
+ # get indices for genes within bin of mean expression
+ mean_idx &lt;- which(between(mean_expression,mean_intervals[i],mean_intervals[i+1])) 
+ 
+ if(length(mean_idx) &gt; 0){
+   # group genes into single vector of data
+   grouped_data &lt;- as.vector(cardiomyocytes_expression_data_filtered[,mean_idx])
+   
+   # fit gamma-poisson distribution
+   fit_gp &lt;- glm_gp(grouped_data, size_factors=1)
+   sum_gp &lt;- summary(fit_gp)
+   
+   # get mu and dispersion estimates
+   mu &lt;-  median(sum_gp$Mu)
+   mu_values &lt;- c(mu_values,mu)
+   dispersion &lt;- sum_gp$overdispersions
+   disp_values &lt;- c(disp_values,dispersion)
+ }
+ 
+}</code></pre>
+<pre class="r"><code>plot(mu_values, disp_values, pch=16, xlab=&quot;mean&quot;, ylab = &quot;dispersion&quot;)
+abline(h=mean(disp_values), col =&quot;red&quot;, lwd=3)
+text(8.3, 0.74, round(mean(disp_values),3), col =&quot;red&quot;)</code></pre>
+<p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 <div id="simulating-for-bins-of-mean-expression" class="section level2">
 <h2><strong>Simulating for Bins of Mean Expression</strong></h2>
 <div id="parameter-estimations" class="section level3">
-<h3>Parameter Estimations</h3>
+<h3><strong><em>Parameter Estimations</em></strong></h3>
 <p>We have broken down the range of mean expression into 100 bins. For
 each bin we will simulate 100 genes. The mean expression, <span
 class="math inline">\(\mu\)</span>, varies for the genes within each
@@ -1702,7 +1672,7 @@ class="math inline">\(\sigma\)</span> by these factors: 1.25, 1.5, 1.75,
 2. These are the dispersed genes.</p>
 </div>
 <div id="simulations-1" class="section level3">
-<h3>Simulations</h3>
+<h3><strong><em>Simulations</em></strong></h3>
 <pre class="r"><code># calculate alpha given mean expression and fixed sigma
 calc_alpha &lt;- function(mu, sigma){
   alpha = mu/sigma
@@ -1874,6 +1844,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/af83133ba459cc257f6d3a01eb07e93160cd35da/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-15-1.png" target="_blank">af83133</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-10-01
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/awchen55/differentialDispersion/blob/dd2efcfb54796f9303e1df3f8ef3187b21ffcdc4/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-15-1.png" target="_blank">dd2efcf</a>
 </td>
 <td>
@@ -2024,8 +2005,8 @@ loaded via a namespace (and not attached):
  [57] ica_1.0-2                   farver_2.1.0               
  [59] pkgconfig_2.0.3             sass_0.4.1                 
  [61] uwot_0.1.14                 deldir_1.0-6               
- [63] utf8_1.2.2                  labeling_0.4.2             
- [65] tidyselect_1.2.1            rlang_1.1.4                
+ [63] utf8_1.2.2                  tidyselect_1.2.1           
+ [65] labeling_0.4.2              rlang_1.1.4                
  [67] reshape2_1.4.4              later_1.3.0                
  [69] munsell_0.5.0               tools_4.2.0                
  [71] cli_3.6.3                   generics_0.1.3             

@@ -171,57 +171,6 @@ mean_intervals <- seq(min(mean_expression), 10,length.out=501)
 #mean_intervals <- seq(min(mean_relative_expression), 0.001,length.out=501)
 ```
 
-## **Estimating Dispersion Parameter**
-
-We have divided mean expression into groups of 500 bins. For each bin of mean expression, genes are grouped together and a Gamma-Poisson distribution is fit to the data to estimate the dispersion parameter. We use the **glm_gp** function from the *glmGamPoi* package to fit a Gamma-Poisson model that uses MLE to estimate $\mu$ and $dispersion (\phi)$ parameters. Using this parameterization, the mean is $\mu$ and the variance is $\mu + \mu^2\phi$.
-
-[The manual for glmGamPoi can be found here.](https://www.bioconductor.org/packages/3.16/bioc/manuals/glmGamPoi/man/glmGamPoi.pdf)
-
-```{r}
-# require(fitdistrplus)
-# require(MASS)
-library(glmGamPoi)
-library(dplyr)
-# fitnb <- fitdist(cardiomyocytes_expression_data_filtered[,1],"nbinom", method="mle")
-# 
-# fitnb_mass <- fitdistr(cardiomyocytes_expression_data_filtered[,1], "Negative Binomial")
-# summary(fitnb)
-# plot(fitnb)
-
-mu_values <- c()
-disp_values <- c()
-
-for(i in 1:500){
- # get indices for genes within bin of mean expression
- mean_idx <- which(between(mean_expression,mean_intervals[i],mean_intervals[i+1])) 
- 
- if(length(mean_idx) > 0){
-   # group genes into single vector of data
-   grouped_data <- as.vector(cardiomyocytes_expression_data_filtered[,mean_idx])
-   
-   # fit gamma-poisson distribution
-   fit_gp <- glm_gp(grouped_data, size_factors=1)
-   sum_gp <- summary(fit_gp)
-   
-   # get mu and dispersion estimates
-   mu <-  median(sum_gp$Mu)
-   mu_values <- c(mu_values,mu)
-   dispersion <- sum_gp$overdispersions
-   disp_values <- c(disp_values,dispersion)
- }
- 
-}
-```
-
-```{r}
-plot(mu_values, disp_values, pch=16, xlab="mean", ylab = "dispersion")
-```
-
-```{r,include=F,eval=F}
-beta = c(rep(0,50),rexp(50))
-y = rpois(100,beta) # simulate Poisson observations
-y.ash = ash_pois(y,scale=1)
-```
 
 ## **Determine Dispersion Levels**
 
@@ -304,9 +253,64 @@ ggplot(df1, aes(UMI, fill=factor)) +
 hist(cardiomyocytes_expression_data_filtered[,which.max(mean_relative_expression)], breaks=20)
 ```
 
+## **Estimating Dispersion Parameter**
+
+We have divided mean expression into groups of 500 bins. For each bin of mean expression, genes are grouped together and a Gamma-Poisson distribution is fit to the data to estimate the dispersion parameter. We use the **glm_gp** function from the *glmGamPoi* package to fit a Gamma-Poisson model that uses MLE to estimate $\mu$ and $dispersion (\phi)$ parameters. Using this parameterization, the mean is $\mu$ and the variance is $\mu + \mu^2\phi$.
+
+[The manual for glmGamPoi can be found here.](https://www.bioconductor.org/packages/3.16/bioc/manuals/glmGamPoi/man/glmGamPoi.pdf)
+
+```{r}
+# require(fitdistrplus)
+# require(MASS)
+library(glmGamPoi)
+library(dplyr)
+# fitnb <- fitdist(cardiomyocytes_expression_data_filtered[,1],"nbinom", method="mle")
+# 
+# fitnb_mass <- fitdistr(cardiomyocytes_expression_data_filtered[,1], "Negative Binomial")
+# summary(fitnb)
+# plot(fitnb)
+
+mu_values <- c()
+disp_values <- c()
+
+for(i in 1:500){
+ # get indices for genes within bin of mean expression
+ mean_idx <- which(between(mean_expression,mean_intervals[i],mean_intervals[i+1])) 
+ 
+ if(length(mean_idx) > 0){
+   # group genes into single vector of data
+   grouped_data <- as.vector(cardiomyocytes_expression_data_filtered[,mean_idx])
+   
+   # fit gamma-poisson distribution
+   fit_gp <- glm_gp(grouped_data, size_factors=1)
+   sum_gp <- summary(fit_gp)
+   
+   # get mu and dispersion estimates
+   mu <-  median(sum_gp$Mu)
+   mu_values <- c(mu_values,mu)
+   dispersion <- sum_gp$overdispersions
+   disp_values <- c(disp_values,dispersion)
+ }
+ 
+}
+```
+
+```{r}
+plot(mu_values, disp_values, pch=16, xlab="mean", ylab = "dispersion")
+abline(h=mean(disp_values), col ="red", lwd=3)
+text(8.3, 0.74, round(mean(disp_values),3), col ="red")
+```
+
+```{r,include=F,eval=F}
+beta = c(rep(0,50),rexp(50))
+y = rpois(100,beta) # simulate Poisson observations
+y.ash = ash_pois(y,scale=1)
+```
+
+
 ## **Simulating for Bins of Mean Expression**
 
-### Parameter Estimations
+### ***Parameter Estimations***
 We have broken down the range of mean expression into 100 bins. For each bin we will simulate 100 genes. The mean expression, $\mu$, varies for the genes within each bin. So the background genes and dispersed genes fall within the same mean expression bin. We incorporate the estimated dispersion from the real data. The dispersion level is relatively similar across varying gene expression, so we use the mean dispersion level as our estimate: $\hat{\phi} = \frac{1}{n}\sum_i^n \phi_i$. 
 
 We then use $\hat{\phi}$ to calculate $\sigma$ and $\alpha$ and respectively. From *glmGamPoi*:
@@ -329,7 +333,7 @@ $$
 We use these equations to calculate $\sigma$ and $\alpha$. For 5% of genes we multiply $\sigma$ by these factors: 1.25, 1.5, 1.75, 2. These are the dispersed genes.
 
 
-### Simulations
+### ***Simulations***
 ```{r Bins of Mean Expression, include=F, eval=F}
 # calculate alpha given mean expression and fixed sigma
 calc_alpha <- function(mu, sigma){
