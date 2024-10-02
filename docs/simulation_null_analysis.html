@@ -395,7 +395,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-10-01
+<strong>Last updated:</strong> 2024-10-02
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -627,15 +627,15 @@ data/simulations/sim_sig_disp_idx_2.csv
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeaf83133ba459cc257f6d3a01eb07e93160cd35datargetblankaf83133a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree7a408470e020b8713395e10b1f60dcc7185d07aatargetblank7a40847a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/af83133ba459cc257f6d3a01eb07e93160cd35da" target="_blank">af83133</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/7a408470e020b8713395e10b1f60dcc7185d07aa" target="_blank">7a40847</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreeaf83133ba459cc257f6d3a01eb07e93160cd35datargetblankaf83133a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree7a408470e020b8713395e10b1f60dcc7185d07aatargetblank7a40847a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -645,7 +645,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/af83133ba459cc257f6d3a01eb07e93160cd35da" target="_blank">af83133</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/7a408470e020b8713395e10b1f60dcc7185d07aa" target="_blank">7a40847</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -663,6 +663,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/cell_count_metrics_by_cell_type/
+    Ignored:    analysis/figure/
     Ignored:    analysis/scran_size_factors_debugging.nb.html
     Ignored:    code/.ipynb_checkpoints/
     Ignored:    data/.ipynb_checkpoints/
@@ -733,6 +734,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/7a408470e020b8713395e10b1f60dcc7185d07aa/analysis/simulation_null_analysis.Rmd" target="_blank">7a40847</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-10-01
+</td>
+<td>
+cleaned up analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/7a408470e020b8713395e10b1f60dcc7185d07aa/docs/simulation_null_analysis.html" target="_blank">7a40847</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-10-01
+</td>
+<td>
+cleaned up analysis
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1637,6 +1672,43 @@ for(i in 1:500){
 abline(h=mean(disp_values), col =&quot;red&quot;, lwd=3)
 text(8.3, 0.74, round(mean(disp_values),3), col =&quot;red&quot;)</code></pre>
 <p><img src="figure/simulation_null_analysis.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/7a408470e020b8713395e10b1f60dcc7185d07aa/docs/figure/simulation_null_analysis.Rmd/unnamed-chunk-10-1.png" target="_blank">7a40847</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-10-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="simulating-for-bins-of-mean-expression" class="section level2">
 <h2><strong>Simulating for Bins of Mean Expression</strong></h2>
@@ -1925,23 +1997,18 @@ show the number of true significantly dispersed genes captured.</p>
 <pre class="r"><code>library(dplyr)
 
 applied_factor &lt;- c(1.25, 1.5, 1.75, 2)
-number_identified &lt;- c(nrow(sim1.25_sig),nrow(sim1.5_sig), nrow(sim1.75_sig), nrow(sim2_sig))
-percent_identified &lt;- number_identified/10000
+n_positive &lt;- c(nrow(sim1.25_sig),nrow(sim1.5_sig), nrow(sim1.75_sig), nrow(sim2_sig))
+positive_rate &lt;- n_positive/10000
 
-number_overlap_significant &lt;- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
-percent_overlap_significant &lt;- number_overlap_significant/500
+n_true_positive &lt;- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
+true_positive_rate &lt;- n_true_positive/500
 
-cbind(applied_factor,number_identified,percent_identified,number_overlap_significant,percent_overlap_significant)</code></pre>
-<pre><code>     applied_factor number_identified percent_identified
-[1,]           1.25               162             0.0162
-[2,]           1.50               544             0.0544
-[3,]           1.75               683             0.0683
-[4,]           2.00               706             0.0706
-     number_overlap_significant percent_overlap_significant
-[1,]                         22                       0.044
-[2,]                        322                       0.644
-[3,]                        450                       0.900
-[4,]                        472                       0.944</code></pre>
+cbind(applied_factor,n_positive,positive_rate,n_true_positive,true_positive_rate)</code></pre>
+<pre><code>     applied_factor n_positive positive_rate n_true_positive true_positive_rate
+[1,]           1.25        162        0.0162              22              0.044
+[2,]           1.50        544        0.0544             322              0.644
+[3,]           1.75        683        0.0683             450              0.900
+[4,]           2.00        706        0.0706             472              0.944</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

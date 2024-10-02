@@ -665,13 +665,13 @@ We show the number of genes identified as significantly dispersed. We show the n
 library(dplyr)
 
 applied_factor <- c(1.25, 1.5, 1.75, 2)
-number_identified <- c(nrow(sim1.25_sig),nrow(sim1.5_sig), nrow(sim1.75_sig), nrow(sim2_sig))
-percent_identified <- number_identified/10000
+n_positive <- c(nrow(sim1.25_sig),nrow(sim1.5_sig), nrow(sim1.75_sig), nrow(sim2_sig))
+positive_rate <- n_positive/10000
 
-number_overlap_significant <- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
-percent_overlap_significant <- number_overlap_significant/500
+n_true_positive <- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
+true_positive_rate <- n_true_positive/500
 
-cbind(applied_factor,number_identified,percent_identified,number_overlap_significant,percent_overlap_significant)
+cbind(applied_factor,n_positive,positive_rate,n_true_positive,true_positive_rate)
 ```
 
 
