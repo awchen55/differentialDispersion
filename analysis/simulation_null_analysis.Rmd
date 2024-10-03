@@ -663,17 +663,37 @@ overlap_sig_2 <- sim2[do.call(cbind, lapply(disp_idx_2, unlist)),]%>%
 We show the number of genes identified as significantly dispersed. We show the number of true significantly dispersed genes captured.
 ```{r summary of results}
 library(dplyr)
+n_genes = 10000
+n_disp = 500
+
 
 applied_factor <- c(1.25, 1.5, 1.75, 2)
 n_positive <- c(nrow(sim1.25_sig),nrow(sim1.5_sig), nrow(sim1.75_sig), nrow(sim2_sig))
 positive_rate <- n_positive/10000
 
-n_true_positive <- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
-true_positive_rate <- n_true_positive/500
+TP <- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
+FN <- n_disp - TP
+FP <- n_positive - TP
+TN <- n_genes - n_disp - FP
 
-cbind(applied_factor,n_positive,positive_rate,n_true_positive,true_positive_rate)
+TPR <- TP/(TP+FN)
+FNR <- FN/(TP+FN)
+FDR <- FP/(FP+TP)
+FPR <- FP/(TN+FP)
+
+
+
+cbind(applied_factor,TP,FN,FP,TN,FNR, FPR, FDR)
 ```
 
+```{r}
+
+```
+
+
+```{r,include=FALSE}
+sim1.25["mean"] <- sim1.25["umi"]/500
+```
 
 ```{r write data, include=F, eval=F}
 

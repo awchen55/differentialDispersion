@@ -395,7 +395,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-10-02
+<strong>Last updated:</strong> 2024-10-03
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -627,15 +627,15 @@ data/simulations/sim_sig_disp_idx_2.csv
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree7a408470e020b8713395e10b1f60dcc7185d07aatargetblank7a40847a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree20ec0177433636c6aae8438e4b1ecf1f16db69batargetblank20ec017a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/7a408470e020b8713395e10b1f60dcc7185d07aa" target="_blank">7a40847</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/20ec0177433636c6aae8438e4b1ecf1f16db69ba" target="_blank">20ec017</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree7a408470e020b8713395e10b1f60dcc7185d07aatargetblank7a40847a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree20ec0177433636c6aae8438e4b1ecf1f16db69batargetblank20ec017a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -645,7 +645,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/7a408470e020b8713395e10b1f60dcc7185d07aa" target="_blank">7a40847</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/20ec0177433636c6aae8438e4b1ecf1f16db69ba" target="_blank">20ec017</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -663,7 +663,6 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/cell_count_metrics_by_cell_type/
-    Ignored:    analysis/figure/
     Ignored:    analysis/scran_size_factors_debugging.nb.html
     Ignored:    code/.ipynb_checkpoints/
     Ignored:    data/.ipynb_checkpoints/
@@ -734,6 +733,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/20ec0177433636c6aae8438e4b1ecf1f16db69ba/analysis/simulation_null_analysis.Rmd" target="_blank">20ec017</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-10-02
+</td>
+<td>
+change terminology
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/20ec0177433636c6aae8438e4b1ecf1f16db69ba/docs/simulation_null_analysis.html" target="_blank">20ec017</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-10-02
+</td>
+<td>
+change terminology
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1995,20 +2028,32 @@ overlap_sig_2 &lt;- sim2[do.call(cbind, lapply(disp_idx_2, unlist)),]%&gt;%
 <p>We show the number of genes identified as significantly dispersed. We
 show the number of true significantly dispersed genes captured.</p>
 <pre class="r"><code>library(dplyr)
+n_genes = 10000
+n_disp = 500
+
 
 applied_factor &lt;- c(1.25, 1.5, 1.75, 2)
 n_positive &lt;- c(nrow(sim1.25_sig),nrow(sim1.5_sig), nrow(sim1.75_sig), nrow(sim2_sig))
 positive_rate &lt;- n_positive/10000
 
-n_true_positive &lt;- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
-true_positive_rate &lt;- n_true_positive/500
+TP &lt;- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
+FN &lt;- n_disp - TP
+FP &lt;- n_positive - TP
+TN &lt;- n_genes - n_disp - FP
 
-cbind(applied_factor,n_positive,positive_rate,n_true_positive,true_positive_rate)</code></pre>
-<pre><code>     applied_factor n_positive positive_rate n_true_positive true_positive_rate
-[1,]           1.25        162        0.0162              22              0.044
-[2,]           1.50        544        0.0544             322              0.644
-[3,]           1.75        683        0.0683             450              0.900
-[4,]           2.00        706        0.0706             472              0.944</code></pre>
+TPR &lt;- TP/(TP+FN)
+FNR &lt;- FN/(TP+FN)
+FDR &lt;- FP/(FP+TP)
+FPR &lt;- FP/(TN+FP)
+
+
+
+cbind(applied_factor,TP,FN,FP,TN,FNR, FPR, FDR)</code></pre>
+<pre><code>     applied_factor  TP  FN  FP   TN   FNR        FPR       FDR
+[1,]           1.25  22 478 140 9360 0.956 0.01473684 0.8641975
+[2,]           1.50 322 178 222 9278 0.356 0.02336842 0.4080882
+[3,]           1.75 450  50 233 9267 0.100 0.02452632 0.3411420
+[4,]           2.00 472  28 234 9266 0.056 0.02463158 0.3314448</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
