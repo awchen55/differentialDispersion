@@ -92,8 +92,8 @@ merged=merged.merge(umi_data.set_index(cell_label_name).T[cell_type],left_index=
 merged = merged.rename(columns={cell_type: 'umi'})
 
 # Add cell counts
-merged=merged.merge(cell_counts.T[str(cell_type + '_nonzero')],left_index=True,right_index=True, how="inner")
-merged = merged.rename(columns={str(cell_type + '_nonzero'): 'cell_count'})
+merged=merged.merge(cell_counts.T[str(cell_type + '_total')],left_index=True,right_index=True, how="inner")
+merged = merged.rename(columns={str(cell_type + '_total'): 'cell_count'})
 
 # Add LOWESS estimate
 merged=merged.merge(lowess[cell_type],left_index=True,right_index=True, how="inner")
