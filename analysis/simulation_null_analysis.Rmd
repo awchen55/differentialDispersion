@@ -127,11 +127,11 @@ cardiomyocytes_data <- subset(HC, subset = (labels == "Cardiomyocytes"))
 cardiomyocytes_expression_data <- t(cardiomyocytes_data[['RNA']]$counts)
 ```
 
-We filter for low expression genes and calculate the $L_i$ and relative expression to get $\lambda_j$ values.
+We filter for low expression genes and calculate the $L_i$ and relative expression to get $\lambda_j$ values. We target genes that have mean > 0.01 UMI per cell. 
 
 ```{r}
 # calculate mean expression and remove genes with low expression
-cardiomyocytes_expression_data_filtered <- cardiomyocytes_expression_data[, colSums(cardiomyocytes_expression_data != 0) > 50]
+cardiomyocytes_expression_data_filtered <- cardiomyocytes_expression_data[, colSums(cardiomyocytes_expression_data != 0) > 10]
 
 # calculate library size
 library_sizes <- rowSums(cardiomyocytes_expression_data_filtered)
@@ -168,7 +168,7 @@ hist(mean_expression, breaks=100)
 # get the intervals of relative mean expression
 #mean_intervals <- seq(min(mean_relative_expression), max(mean_relative_expression),length.out=101)
 mean_intervals <- seq(min(mean_expression), 10,length.out=501)
-#mean_intervals <- seq(min(mean_relative_expression), 0.001,length.out=501)
+mean_relative_intervals <- seq(min(mean_relative_expression), 0.01,length.out=501)
 ```
 
 
@@ -193,7 +193,15 @@ sim_gene <- function(n,alpha,sigma,Li, sigma_multiplier=1){
   Y <- rep(NA,n) 
   
   # calculate latent expression using gamma distribution
+  # ensure that simulation has mean within 10% of target
+  # perc_diff = 1
+  # while(perc_diff > 0.05){
   lambdaj <- rgamma(n,shape = alpha/sigma_multiplier,scale = sigma*sigma_multiplier)
+  # perc_diff = (alpha*sigma - mean(lambdaj))/alpha*sigma
+  # }
+
+  
+  #lambdaj <- rgamma(n,shape = alpha/sigma_multiplier,scale = sigma*sigma_multiplier)
   
   # for each cell use the latent expression and library size to simulate expression
   for(i in 1:n){
@@ -300,6 +308,20 @@ plot(mu_values, disp_values, pch=16, xlab="mean", ylab = "dispersion")
 abline(h=mean(disp_values), col ="red", lwd=3)
 text(8.3, 0.74, round(mean(disp_values),3), col ="red")
 ```
+```{r}
+#rowMeans(cardiomyocytes_expression_data_filtered)
+#par(mfrow = c(1, 2))
+card_cpm <- t(cpmNormalization(t(cardiomyocytes_expression_data_filtered)))
+cv_card <- apply(card_cpm, 2, sd)/apply(card_cpm, 2, mean)
+mean_card <- apply(card_cpm, 2, mean)
+
+cv_card_raw <- apply(cardiomyocytes_expression_data_filtered, 2, sd)/apply(cardiomyocytes_expression_data_filtered, 2, mean)
+mean_card_raw <- apply(cardiomyocytes_expression_data_filtered, 2, mean)
+
+plot(log(mean_card),cv_card, main = "Cardiomyocytes CPM Normalized", xlab = "log(mean)", ylab = "CV", pch=16,cex=0.5)
+plot(log(mean_card_raw),cv_card_raw, main = "Cardiomyocytes Raw", xlab = "log(mean)", ylab = "CV", pch=16,cex=0.5)
+```
+
 
 ```{r,include=F,eval=F}
 beta = c(rep(0,50),rexp(50))
@@ -491,14 +513,14 @@ sim_bin <- function(n,p,phi,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
 sim_Y <- function(n,p,phi,sigma_multiplier,Li,mean_intervals){
   Y <- c()
   disp_idx <- c()
-  for(i in 1:100){
+  for(i in 1:p){
     
     mean_expr_lwr <- mean_intervals[i]
     mean_expr_upr <- mean_intervals[i+1]
     
     gene_sim <- sim_bin(n,p,phi,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr)
     Y_bin <- gene_sim$Y_bin
-    bin_disp_idx <- gene_sim$disp_idx + (i-1)*100
+    bin_disp_idx <- gene_sim$disp_idx + (i-1)*p
     
     Y <- cbind(Y,Y_bin)
     disp_idx <- c(disp_idx,bin_disp_idx)
@@ -525,26 +547,43 @@ cpm_norm <- function(Y){
 
 We simulate applying different factors to amplify the variance.
 
+
 ```{r}
 #### Simulate Y matrix for all genes
-set.seed(10012024)
+set.seed(10012025)
 
 # Parameters
 n=500
 p=100
 phi = mean(disp_values)
-sigma=0.0002
-Li = 8000
+#sigma=0.0002
+Li = 8
 
+#Y_1.25 <- sim_Y(n,p,phi,2,Li,mean_intervals)
+# Y_1.5 <- sim_Y(n,p,phi,1.5,Li,mean_relative_intervals)
+# Y_1.75 <- sim_Y(n,p,phi,1.75,Li,mean_relative_intervals)
+# Y_2 <- sim_Y(n,p,phi,2,Li,mean_relative_intervals)
 Y_1.25 <- sim_Y(n,p,phi,1.25,Li,mean_intervals)
 Y_1.5 <- sim_Y(n,p,phi,1.5,Li,mean_intervals)
 Y_1.75 <- sim_Y(n,p,phi,1.75,Li,mean_intervals)
 Y_2 <- sim_Y(n,p,phi,2,Li,mean_intervals)
-# Y_1.25 <- sim_Y(n,p,sigma,1.25,Li,mean_intervals)
-# Y_1.5 <- sim_Y(n,p,sigma,1.5,Li,mean_intervals)
-# Y_1.75 <- sim_Y(n,p,sigma,1.75,Li,mean_intervals)
-# Y_2 <- sim_Y(n,p,sigma,2,Li,mean_intervals)
 
+```
+
+
+```{r, eval=F, include=F}
+cpm_norm1.25 <- t(cpmNormalization(t(Y_1.25$Y)))
+Y_1.25_cv_cpm <- apply(cpm_norm1.25, 2, sd)/apply(cpm_norm1.25, 2, mean)
+Y_1.25_mean_cpm <- apply(cpm_norm1.25, 2, mean)
+
+Y_1.25_cv <- apply(Y_1.25$Y, 2, sd)/apply(Y_1.25$Y, 2, mean)
+Y_1.25_mean <- apply(Y_1.25$Y, 2, mean)
+
+plot(log(Y_1.25_mean),Y_1.25_cv, pch=16, cex=0.5 ,main = "Raw - Factor: 2", xlab="log(mean)", ylab="CV")
+points(log(Y_1.25_mean[Y_1.25$disp_idx]),Y_1.25_cv[Y_1.25$disp_idx],pch=16,col="red",cex=0.5)
+
+plot(log(Y_1.25_mean_cpm),Y_1.25_cv_cpm, pch=16, cex=0.5 ,main = "CPM - Factor: 2", xlab="log(mean)", ylab="CV")
+points(log(Y_1.25_mean_cpm[Y_1.25$disp_idx]),Y_1.25_cv_cpm[Y_1.25$disp_idx],pch=16,col="red",cex=0.5)
 ```
 
 Perform normalization on data.
@@ -568,6 +607,7 @@ Y_1.75_mean <- apply(Y_1.75$Y, 2, mean)
 Y_2_cv <- apply(Y_2$Y, 2, sd)/apply(Y_2$Y, 2, mean)
 Y_2_mean <- apply(Y_2$Y, 2, mean)
 ```
+
 
 ```{r, include=F, eval=F}
 par(mfrow = c(2, 2))
@@ -608,107 +648,351 @@ mtext("CPM Normalized", side = 3, line = - 1, outer = TRUE)
 
 ## **Identifying Significant Genes on Simulated Data**
 
-We run the pipeline to identify genes with significant dispersion.
+We run the pipeline (CV + bootstrapping) to identify genes with significant dispersion.
+
 ```{r load results}
 path = "/project2/gilad/awchen55/differentialDispersion/data/simulations"
 
 # index of simulated dispersed genes
-disp_idx_1.25 <- read.csv(file.path(path, "sim_sig_disp_idx_1.25.csv"))
+disp_idx_1.25 <- read.csv(file.path(path, "sim_raw_sig_disp_idx_1.25.csv"))
 disp_idx_1.25 <- disp_idx_1.25[2:ncol(disp_idx_1.25)]
 
-disp_idx_1.5 <- read.csv(file.path(path, "sim_sig_disp_idx_1.5.csv"))
+disp_idx_1.5 <- read.csv(file.path(path, "sim_raw_sig_disp_idx_1.5.csv"))
 disp_idx_1.5 <- disp_idx_1.5[2:ncol(disp_idx_1.5)]
 
-disp_idx_1.75 <- read.csv(file.path(path, "sim_sig_disp_idx_1.75.csv"))
+disp_idx_1.75 <- read.csv(file.path(path, "sim_raw_sig_disp_idx_1.75.csv"))
 disp_idx_1.75 <- disp_idx_1.75[2:ncol(disp_idx_1.75)]
 
-disp_idx_2 <- read.csv(file.path(path, "sim_sig_disp_idx_2.csv"))
+disp_idx_2 <- read.csv(file.path(path, "sim_raw_sig_disp_idx_2.csv"))
 disp_idx_2 <- disp_idx_2[2:ncol(disp_idx_2)]
 
 # pipeline results
-sim1.25 <- read.csv(file.path(path,"simulation_bootstrap_results_1.25.csv"))
-sim1.5 <- read.csv(file.path(path,"simulation_bootstrap_results_1.5.csv"))
-sim1.75 <- read.csv(file.path(path,"simulation_bootstrap_results_1.75.csv"))
-sim2 <- read.csv(file.path(path,"simulation_bootstrap_results_2.csv"))
+sim1.25 <- read.csv(file.path(path,"simulation_bootstrap_results_1.25_cpm.csv"))
+sim1.5 <- read.csv(file.path(path,"simulation_bootstrap_results_1.5_cpm.csv"))
+sim1.75 <- read.csv(file.path(path,"simulation_bootstrap_results_1.75_cpm.csv"))
+sim2 <- read.csv(file.path(path,"simulation_bootstrap_results_2_cpm.csv"))
+
+sim1.25["mean"] <- sim1.25["umi"]/500
+sim1.5["mean"] <- sim1.5["umi"]/500
+sim1.75["mean"] <- sim1.75["umi"]/500
+sim2["mean"] <- sim2["umi"]/500
 
 ```
 
 ```{r}
+load_raw_data <- function(path, df_name){
+  df <-  read.csv(file.path(path,df_name))
+  df <- t(df[,2:ncol(df)])
+  colnames(df) <- df[1,]
+  df <- df[-1,]
+  df <- cbind(newColName = rownames(df), as.numeric(df[,"mean"]))
+  colnames(df) <- c("X","mean_raw")
+  return(df)
+}
+
+```
+
+```{r}
+
+# add raw UMI measurements to data
+sim_raw_metrics_1.25 <- load_raw_data(path,"simulation_metrics_1.25_raw.csv")
+sim_raw_metrics_1.5 <- load_raw_data(path,"simulation_metrics_1.5_raw.csv")
+sim_raw_metrics_1.75 <- load_raw_data(path,"simulation_metrics_1.75_raw.csv")
+sim_raw_metrics_2 <- load_raw_data(path,"simulation_metrics_2_raw.csv")
+
+
+sim1.25 <- left_join(sim1.25, as.data.frame(sim_raw_metrics_1.25), by = "X")
+sim1.5 <- left_join(sim1.5, as.data.frame(sim_raw_metrics_1.5), by = "X")
+sim1.75 <- left_join(sim1.75, as.data.frame(sim_raw_metrics_1.75), by = "X")
+sim2 <- left_join(sim2, as.data.frame(sim_raw_metrics_2), by = "X")
+
+sim1.25[,"mean_raw"] <- as.numeric(sim1.25[,"mean_raw"])
+sim1.5[,"mean_raw"] <- as.numeric(sim1.5[,"mean_raw"])
+sim1.75[,"mean_raw"] <- as.numeric(sim1.75[,"mean_raw"])
+sim2[,"mean_raw"] <- as.numeric(sim2[,"mean_raw"])
+```
+
+```{r}
 library(dplyr)
+
+# calculate number of true positive, false positives, etc.
+
 sim1.25_sig <- sim1.25 %>%
   filter(p_value_adj < 0.05)
 
-overlap_sig_1.25 <- sim1.25[do.call(cbind, lapply(disp_idx_1.25, unlist)),]%>%
-  filter(p_value_adj < 0.05)
+TP_1.25 <- sim1.25[do.call(cbind, lapply(disp_idx_1.25, unlist)),]%>%
+  filter(p_value_adj < 0.05, z_score < 0)
+
+FP_1.25 <- sim1.25[-do.call(cbind, lapply(disp_idx_1.25, unlist)),]%>%
+  filter(p_value_adj < 0.05, z_score < 0)
+
+FN_1.25 <- sim1.25[do.call(cbind, lapply(disp_idx_1.25, unlist)),]%>%
+  filter(p_value_adj > 0.05)
 
 sim1.5_sig <- sim1.5 %>%
-  filter(p_value_adj < 0.05)
+  filter(p_value_adj < 0.05, z_score < 0)
 
-overlap_sig_1.5 <- sim1.5[do.call(cbind, lapply(disp_idx_1.5, unlist)),]%>%
-  filter(p_value_adj < 0.05)
+TP_1.5 <- sim1.5[do.call(cbind, lapply(disp_idx_1.5, unlist)),]%>%
+  filter(p_value_adj < 0.05, z_score < 0)
+
+FP_1.5 <- sim1.5[-do.call(cbind, lapply(disp_idx_1.5, unlist)),]%>%
+  filter(p_value_adj < 0.05, z_score < 0)
+
+FN_1.5 <- sim1.5[do.call(cbind, lapply(disp_idx_1.5, unlist)),]%>%
+  filter(p_value_adj > 0.05)
 
 sim1.75_sig <- sim1.75 %>%
-  filter(p_value_adj < 0.05)
+  filter(p_value_adj < 0.05, z_score < 0)
 
-overlap_sig_1.75 <- sim1.75[do.call(cbind, lapply(disp_idx_1.75, unlist)),]%>%
-  filter(p_value_adj < 0.05)
+TP_1.75 <- sim1.75[do.call(cbind, lapply(disp_idx_1.75, unlist)),]%>%
+  filter(p_value_adj < 0.05, z_score < 0)
+
+FP_1.75 <- sim1.75[-do.call(cbind, lapply(disp_idx_1.75, unlist)),]%>%
+  filter(p_value_adj < 0.05, z_score < 0)
+
+FN_1.75 <- sim1.75[do.call(cbind, lapply(disp_idx_1.75, unlist)),]%>%
+  filter(p_value_adj > 0.05)
 
 sim2_sig <- sim2 %>%
-  filter(p_value_adj < 0.05)
+  filter(p_value_adj < 0.05, z_score < 0)
 
-overlap_sig_2 <- sim2[do.call(cbind, lapply(disp_idx_2, unlist)),]%>%
-  filter(p_value_adj < 0.05)
+TP_2 <- sim2[do.call(cbind, lapply(disp_idx_2, unlist)),]%>%
+  filter(p_value_adj < 0.05, z_score < 0)
+FP_2 <- sim2[-do.call(cbind, lapply(disp_idx_2, unlist)),]%>%
+  filter(p_value_adj < 0.05, z_score < 0)
+
+FN_2 <- sim2[do.call(cbind, lapply(disp_idx_2, unlist)),]%>%
+  filter(p_value_adj > 0.05)
 ```
 
-We show the number of genes identified as significantly dispersed. We show the number of true significantly dispersed genes captured.
-```{r summary of results}
-library(dplyr)
-n_genes = 10000
-n_disp = 500
-
-
-applied_factor <- c(1.25, 1.5, 1.75, 2)
-n_positive <- c(nrow(sim1.25_sig),nrow(sim1.5_sig), nrow(sim1.75_sig), nrow(sim2_sig))
-positive_rate <- n_positive/10000
-
-TP <- c(nrow(overlap_sig_1.25),nrow(overlap_sig_1.5), nrow(overlap_sig_1.75), nrow(overlap_sig_2))
-FN <- n_disp - TP
-FP <- n_positive - TP
-TN <- n_genes - n_disp - FP
-
-TPR <- TP/(TP+FN)
-FNR <- FN/(TP+FN)
-FDR <- FP/(FP+TP)
-FPR <- FP/(TN+FP)
-
-
-
-cbind(applied_factor,TP,FN,FP,TN,FNR, FPR, FDR)
-```
 
 ```{r}
 
+# Data cleaning
+sim1.25 <- sim1.25 %>%
+  mutate(result=case_when(
+    rownames(sim1.25) %in% disp_idx_1.25 & p_value_adj < 0.05 &  z_score < 0 ~ "TP",
+    rownames(sim1.25) %in% disp_idx_1.25 & p_value_adj > 0.05 ~ "FN",
+    !(rownames(sim1.25) %in% disp_idx_1.25)& p_value_adj < 0.05 &  z_score < 0 ~ "FP",
+    !(rownames(sim1.25) %in% disp_idx_1.25)& p_value_adj > 0.05  ~ "TN",
+    TRUE ~ "FP Under"
+  ), mean_bucket=case_when(
+    mean_raw < 1~ "low",
+    mean_raw > 5 ~ "high",
+    TRUE ~ "medium"
+  ))
+
+sim1.25$result <- factor(sim1.25$result, levels = c("TN", "FN", "TP","FP","FP Under"))
+
+sim1.5 <- sim1.5 %>%
+  mutate(result=case_when(
+    rownames(sim1.5) %in% disp_idx_1.5 & p_value_adj < 0.05 &  z_score < 0 ~ "TP",
+    rownames(sim1.5) %in% disp_idx_1.5 & p_value_adj > 0.05 ~ "FN",
+    !(rownames(sim1.5) %in% disp_idx_1.5)& p_value_adj < 0.05 &  z_score < 0 ~ "FP",
+    !(rownames(sim1.5) %in% disp_idx_1.5)& p_value_adj > 0.05  ~ "TN",
+    TRUE ~ "FP Under"
+  ), mean_bucket=case_when(
+    mean_raw < 1~ "low",
+    mean_raw > 5 ~ "high",
+    TRUE ~ "medium"
+  ))
+
+sim1.5$result <- factor(sim1.5$result, levels = c("TN", "FN", "TP","FP","FP Under"))
+
+sim1.75 <- sim1.75 %>%
+  mutate(result=case_when(
+    rownames(sim1.75) %in% disp_idx_1.75 & p_value_adj < 0.05 &  z_score < 0 ~ "TP",
+    rownames(sim1.75) %in% disp_idx_1.75 & p_value_adj > 0.05 ~ "FN",
+    !(rownames(sim1.75) %in% disp_idx_1.75)& p_value_adj < 0.05 &  z_score < 0 ~ "FP",
+    !(rownames(sim1.75) %in% disp_idx_1.75)& p_value_adj > 0.05  ~ "TN",
+    TRUE ~ "FP Under"
+  ), mean_bucket=case_when(
+    mean_raw < 1~ "low",
+    mean_raw > 5 ~ "high",
+    TRUE ~ "medium"
+  ))
+
+sim1.75$result <- factor(sim1.75$result, levels = c("TN", "FN", "TP","FP","FP Under"))
+
+sim2 <- sim2 %>%
+  mutate(result=case_when(
+    rownames(sim2) %in% disp_idx_2 & p_value_adj < 0.05 &  z_score < 0 ~ "TP",
+    rownames(sim2) %in% disp_idx_2 & p_value_adj > 0.05 ~ "FN",
+    !(rownames(sim2) %in% disp_idx_2)& p_value_adj < 0.05 &  z_score < 0 ~ "FP",
+    !(rownames(sim2) %in% disp_idx_2)& p_value_adj > 0.05  ~ "TN",
+    TRUE ~ "FP Under"
+  ), mean_bucket=case_when(
+    mean_raw < 1~ "low",
+    mean_raw > 5 ~ "high",
+    TRUE ~ "medium"
+  ))
+
+sim2$result <- factor(sim2$result, levels = c("TN", "FN", "TP","FP","FP Under"))
+
+```
+
+We compare the performance of identifying significantly dispersed genes for higher dispersion.
+```{r, warning=F, message=F}
+library(ggplot2)
+scaleFUN <- function(x) sprintf("%.1f", x)
+
+plot_1.25 <- ggplot(sim1.25, aes(x=mean_raw, y=cv, color=result)) +
+  geom_point(size=1,alpha=0.5) + scale_color_manual(values = c("TN"="grey", "FN" = "blue", "TP" = "forestgreen", "FP" = "red","FP Under" = "purple")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),plot.title = element_text(hjust = 0.5)) + labs(title="Factor: 1.25", x ="", y = "CV")+ geom_point(data=FN_1.25,aes(x=mean_raw,y=cv), color="blue", alpha=0.25) + geom_point(data=TP_1.25,aes(x=mean_raw,y=cv), color="forestgreen", alpha=0.5) + scale_x_continuous(trans = "log",labels=scaleFUN,breaks=c(0.1,1,5,20)) + ylim(0, 10)
+
+plot_1.5 <- ggplot(sim1.5, aes(x=mean_raw, y=cv, color=result)) +
+  geom_point(size=1,alpha=0.5) + scale_color_manual(values = c("TN"="grey", "FN" = "blue", "TP" = "forestgreen", "FP" = "red","FP Under" = "purple")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), plot.title = element_text(hjust = 0.5)) + labs(title="Factor: 1.5", x ="", y = "") + geom_point(data=TP_1.5,aes(x=mean_raw,y=cv), color="forestgreen", alpha=0.5) + geom_point(data=FN_1.5,aes(x=mean_raw,y=cv), color="blue", alpha=0.1) + geom_point(data=FP_1.5,aes(x=mean_raw,y=cv), color="red", alpha=0.5) + scale_x_continuous(trans = "log",labels=scaleFUN,breaks=c(0.1,1,5,20)) + ylim(0, 10)
+
+plot_1.75 <- ggplot(sim1.75, aes(x=mean_raw, y=cv, color=result)) +
+  geom_point(size=1,alpha=0.5) + scale_color_manual(values = c("TN"="grey", "FN" = "blue", "TP" = "forestgreen", "FP" = "red","FP Under" = "purple")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), plot.title = element_text(hjust = 0.5)) + labs(title="Factor: 1.75", x ="mean(UMI)", y = "CV") + geom_point(data=TP_1.75,aes(x=mean_raw,y=cv), color="forestgreen", alpha=0.5) + geom_point(data=FN_1.75,aes(x=mean_raw,y=cv), color="blue", alpha=0.25) + geom_point(data=FP_1.75,aes(x=mean_raw,y=cv), color="red", alpha=0.5) + scale_x_continuous(trans = "log",labels=scaleFUN,breaks=c(0.1,1,5,20)) + ylim(0, 10)
+
+plot_2 <- ggplot(sim2) + geom_point(aes(x=mean_raw, y=cv, color=result),size=1,alpha=0.5) + scale_color_manual(values = c("TN"="grey", "FN" = "blue", "TP" = "forestgreen", "FP" = "red","FP Under" = "purple")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), plot.title = element_text(hjust = 0.5)) + labs(title="Factor: 2", x ="mean(UMI)", y = "") + geom_point(data=TP_2,aes(x=mean_raw,y=cv), color="forestgreen", alpha=0.5) + geom_point(data=FN_2,aes(x=mean_raw,y=cv), color="blue", alpha=0.25) + geom_point(data=FP_2,aes(x=mean_raw,y=cv), color="red", alpha=0.5) +scale_x_continuous(trans = "log",labels=scaleFUN, breaks=c(0.1,1,5,20)) + ylim(0, 10)
+
+plot_1.25 + plot_1.5 + plot_1.75 + plot_2
+```
+
+```{r}
+library(dplyr)
+# calculate the 
+
+calc_performance <- function(summary_df){
+  TN <- (summary_df  %>% filter(result == "TN"))$count
+  TN <- ifelse(is.null(TN),0,TN)
+  FN <- (summary_df  %>% filter(result == "FN"))$count
+  FN <- ifelse(is.null(FN),0,FN)
+  TP <- (summary_df  %>% filter(result == "TP"))$count
+  TP <- ifelse(is.null(TP),0,TP)
+  FP <- (summary_df  %>% filter(result == "FP"))$count
+  FP <- ifelse(is.null(FP),0,FP)
+  FP_Under <- (summary_df  %>% filter(result == "FP Under"))$count
+  FP_Under <- ifelse(is.null(FP_Under),0,FP_Under)
+  
+  TPR <- TP/(TP+FN + FP_Under)
+  FNR <- FN/(TP+FN + FP_Under)
+  FDR <- FP/(FP+TP)
+  FPR <- FP/(TN+FP)
+  
+  res <- cbind(TP,FN,FP,TN,FP_Under, TPR,FNR, FPR, FDR)
+  
+  return(res)
+}
+
+combine_results_mean_buckets <- function(sim_res_df){
+
+  summary_sim2 <-  sim_res_df %>%
+    group_by(mean_bucket, result) %>%
+    summarise(count = n(), .groups = 'drop')
+  
+  mean_buckets <- c("low","medium","high")
+  res2 <- rbind(calc_performance(summary_sim2 %>% filter(mean_bucket=="low")),calc_performance(summary_sim2 %>% filter(mean_bucket=="medium")), calc_performance(summary_sim2 %>% filter(mean_bucket=="high")))
+  
+  rownames(res2) <- mean_buckets
+  return(res2)
+}
+
 ```
 
 
-```{r,include=FALSE}
-sim1.25["mean"] <- sim1.25["umi"]/500
+```{r}
+summary_sim1.25 <-  sim1.25 %>%
+    group_by(result) %>%
+    summarise(count = n(), .groups = 'drop')
+summary_sim1.5 <-  sim1.5 %>%
+    group_by(result) %>%
+    summarise(count = n(), .groups = 'drop')
+summary_sim1.75 <-  sim1.75 %>%
+    group_by(result) %>%
+    summarise(count = n(), .groups = 'drop')
+summary_sim2 <-  sim2 %>%
+    group_by(result) %>%
+    summarise(count = n(), .groups = 'drop')
+
+perf_sim1.25 <- calc_performance(summary_sim1.25)
+perf_sim1.5 <- calc_performance(summary_sim1.5)
+perf_sim1.75 <- calc_performance(summary_sim1.75)
+perf_sim2 <- calc_performance(summary_sim2)
+
+applied_factor <- c(1.25,1.5,1.75,2)
+
+perf_FDR <- c(perf_sim1.25[8],perf_sim1.5[8],perf_sim1.75[8],perf_sim2[8])
+perf_FPR <- c(perf_sim1.25[7],perf_sim1.5[7],perf_sim1.75[7],perf_sim2[7])
+perf_FNR <- c(perf_sim1.25[6],perf_sim1.5[6],perf_sim1.75[6],perf_sim2[6])
+
 ```
+
+
+```{r, warning=F, message=F}
+summary_performance <- rbind(perf_sim1.25,perf_sim1.5,perf_sim1.75,perf_sim2)
+summary_performance <- cbind(applied_factor, summary_performance)
+
+colors <- c("FDR" = "red", "FNR" = "steelblue", "FPR" = "forestgreen")
+
+plot_perf1 <- ggplot(summary_performance, aes(x=applied_factor)) + 
+  geom_line(aes(y = FDR,color = "FDR"), linetype = "dashed") + geom_point(aes(y = FDR),color = "red")+
+  geom_line(aes(y = FNR, color="FNR"), linetype="dashed") + geom_point(aes(y = FNR),color = "steelblue")+
+  geom_line(aes(y = FPR, color="FPR"), linetype="dashed") + geom_point(aes(y = FPR),color = "forestgreen") +
+  labs(x = "Applied Factor",
+         y = "(%)",
+         color = "Result") +
+    scale_color_manual(values = colors) + theme( panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+plot_roc <- ggplot(summary_performance, aes(x=FPR,y=TPR)) + geom_line(linetype = "dashed") +  geom_point() +
+  labs(x = "False Positive Rate",
+         y = "True Positive Rate")  + theme( panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+plot_perf1 + plot_roc
+```
+We also provide a table of the results.
+```{r}
+round(summary_performance,5)
+```
+
+The results are also broken down by expression level for each applied factor. We define genes as having low expression if the $mean(UMI) < 1$, medium expression if $1 \leq mean(UMI) \leq 5$, and high expression if $mean(UMI) > 5$
+
+### ***Factor: 1.25***
+```{r}
+combine_results_mean_buckets(sim1.25)
+```
+### ***Factor: 1.5***
+```{r}
+combine_results_mean_buckets(sim1.5)
+```
+
+### ***Factor: 1.75***
+```{r}
+combine_results_mean_buckets(sim1.75)
+```
+
+### ***Factor: 2***
+```{r}
+combine_results_mean_buckets(sim2)
+```
+
 
 ```{r write data, include=F, eval=F}
 
 
-#library(MASS)
-# write.matrix(Y_1.25_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/Y_1.25_cpm.csv")
-# 
-# write.matrix(Y_1.5_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/Y_1.5_cpm.csv")
-# write.matrix(Y_1.75_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/Y_1.75_cpm.csv")
-# write.matrix(Y_2_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/Y_2_cpm.csv")
+library(MASS)
+#write.csv(as.data.frame(Y_1.25$Y), file = "/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.25_raw.csv", row.names = FALSE)
+# write.csv(as.data.frame(Y_1.5$Y), file = "/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.5_raw.csv", row.names = FALSE)
+# write.csv(as.data.frame(Y_1.75$Y), file = "/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.75_raw.csv", row.names = FALSE)
+# write.csv(as.data.frame(Y_2$Y), file = "/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_2_raw.csv", row.names = FALSE)
 
-write.csv(matrix(Y_1.25$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_sig_disp_idx_1.25.csv")
-write.csv(matrix(Y_1.5$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_sig_disp_idx_1.5.csv")
-write.csv(matrix(Y_1.75$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_sig_disp_idx_1.75.csv")
-write.csv(matrix(Y_2$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_sig_disp_idx_2.csv")
+write.csv(as.data.frame(Y_1.25_cpm$Y_cpm_normalized), file = "/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.25_cpm.csv", row.names = FALSE)
+write.csv(as.data.frame(Y_1.5_cpm$Y_cpm_normalized), file = "/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.5_cpm.csv", row.names = FALSE)
+write.csv(as.data.frame(Y_1.75_cpm$Y_cpm_normalized), file = "/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.75_cpm.csv", row.names = FALSE)
+write.csv(as.data.frame(Y_2_cpm$Y_cpm_normalized), file = "/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_2_cpm.csv", row.names = FALSE)
+
+#write.matrix(matrix(Y_1.25$Y,nrow=500,ncol=10000),file="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.25_raw.csv")
+# write.matrix(Y_1.25_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.25_cpm.csv")
+# 
+# write.matrix(Y_1.5_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.5_cpm.csv")
+# write.matrix(Y_1.75_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_1.75_cpm.csv")
+# write.matrix(Y_2_cpm$Y_cpm_normalized,file="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_2_cpm.csv")
+# 
+# write.csv(matrix(Y_1.25$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_raw_sig_disp_idx_1.25.csv")
+# write.csv(matrix(Y_1.5$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_raw_sig_disp_idx_1.5.csv")
+# write.csv(matrix(Y_1.75$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_raw_sig_disp_idx_1.75.csv")
+# write.csv(matrix(Y_2$disp_idx, nrow=1), file ="/project2/gilad/awchen55/differentialDispersion/data/simulations/sim_raw_sig_disp_idx_2.csv")
 ```
 
 
