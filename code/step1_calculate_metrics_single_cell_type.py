@@ -7,7 +7,6 @@ import scanpy as sc
 import scipy.sparse as ss
 
 ######### FUNCTIONS
-######### FUNCTIONS
 def mean_func(array):
     mean = sum(array)/len(array[:,0])
     return mean
@@ -81,16 +80,17 @@ def var_mean_of_expression(adata,gene_list):
 ######## LOAD DATA
 
 # paths and names
-path = r"/project2/gilad/awchen55/differentialDispersion/data/simulations/"
-output_name = path + "simulation4000_metrics_2_raw.csv"
+path = r'/project/gilad/brendan/dispersion/pilot/cHDC_data/cellranger_cluster-mode_trial/analysis/datasets/'
+output_name = path + "OUTPUT_NAME.csv"
 
-simulated_data = pd.read_csv(path + "sim4000_2_raw.csv" ,sep=",")
-sim_data2 = np.array(simulated_data)
+expression_data = pd.read_csv(path + "lane_a_card_raw_count_matrix.csv")
+expression_data = np.transpose(expression_data.set_index("Unnamed: 0"))
+expression_data = np.array(expression_data)
 
-gene_list = [f"Gene_{i:d}" for i in range(10000)]
+gene_list = list(file.columns)
 
 ######## RUN CODE
-results = var_mean_of_expression(sim_data2,gene_list)
+results = var_mean_of_expression(expression_data,gene_list)
 
 ######## OUTPUT
 results.to_csv(output_name)

@@ -17,14 +17,17 @@ test_statistic = lambda x: np.std(x)/np.mean(x)
 ######## LOAD DATA
 
 # paths and names
-path = r"/project2/gilad/awchen55/differentialDispersion/data/simulations/"
+path = r'/project/gilad/brendan/dispersion/pilot/cHDC_data/cellranger_cluster-mode_trial/analysis/datasets/'
 input_name_res = path + "simulation4000_metrics_residuals_1.25_cpm.csv"
 input_name_metrics = path + "simulation4000_metrics_1.25_cpm.csv"
 output_name = path + "simulation4000_bootstrap_results_1.25_cpm.csv"
 
 
-# cell data
-cell_df_t = pd.read_csv(path + "sim4000_1.25_cpm.csv",sep=",")
+# expression data
+expression_data = pd.read_csv(path + "lane_a_card_raw_count_matrix.csv")
+expression_data = np.transpose(expression_data.set_index("Unnamed: 0"))
+expression_data = np.array(expression_data)
+
 #cell_data = np.array(simulated_data)
 
 
@@ -51,8 +54,8 @@ cell_st = time.time()
 # Resampling
 samples = []
 for _ in range(5000):
-    x = np.random.choice(cell_df_t.index, size=len(cell_df_t), replace=True)
-    cv_samp = np.array(test_statistic(cell_df_t.loc[x,:]))
+    x = np.random.choice(expression_data.index, size=len(expression_data), replace=True)
+    cv_samp = np.array(test_statistic(expression_data.loc[x,:]))
     samples.append(cv_samp)
 
 samp_df = pd.DataFrame(samples)
