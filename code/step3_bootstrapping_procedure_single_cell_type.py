@@ -40,7 +40,7 @@ nb_metrics = pd.read_csv(input_name_metrics).set_index("metrics")
 nb_metrics = nb_metrics.drop(nb_metrics.columns[0], axis=1)
 
 
-gene_list = [f"Gene_{i:d}" for i in range(10000)]
+gene_list = list(expression_data.columns)
 #no_nan_gene_list = list( set(nb_res.columns) & set(cell_data))
 
 
