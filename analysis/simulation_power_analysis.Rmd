@@ -1,0 +1,351 @@
+---
+title: "Power Analysis"
+output:
+  html_document:
+    df_print: paged
+---
+
+## **Power Analysis Details**
+We perform a power analysis for QTLs using our simulations. We are asking two main questions. At what effect size do you detect 80% of true positives in genes that have 1 UMI/cell and 1k cells? At that same effect size, what about 2 UMI/cell in 500 cells? 0.5 UMI/cell in 2000 cells? Additionally, at the same effect size, what about across different numbers of individuals?
+
+## **Simulations at 1000 cells and 1 UMI/cell**
+
+Under the simulation framework for $i$ cells and $j$ genes: $E[X] = L_i\alpha_j\sigma_j$ and $Var(X) =L_i\alpha_j\sigma_j + L_i^2 \alpha_j\sigma_j^2$, where $L$ is the library size and $\alpha, \sigma$ are the shape and scale parameters. To increase the dispersion level we multiply $\sigma$ by an applied factor. We assume a fixed library size for all cells. We can set the target of 1 UMI/cell by setting the expectation equal to 1 for a fixed $L,\alpha, \text{and } \sigma$.
+
+### ***Estimating $\phi$***
+
+We use the HDC dataset and look at the cardiomyocyte cell type. We pool genes that have mean expression of between 0.9 - 1.1 UMI/cell and fit a Gamma-Poisson model to estimate $\phi$.
+
+
+```{r}
+library(glmGamPoi)
+library(dplyr)
+
+card_path = "/project/gilad/brendan/dispersion/pilot/cHDC_data/cellranger_cluster-mode_trial/analysis/datasets/median_gene_detection/"
+#setwd(card_path)
+
+
+cardiomyocytes_data4000 <- readRDS(paste(card_path, "lane_a_card_downsampled_UMI_matrix_10.rds", sep = ""))
+cardiomyocytes_data4000 <- t(as.matrix(cardiomyocytes_data4000))
+
+# calculate mean expression and remove genes with low expression
+cardiomyocytes_data4000_filtered <- cardiomyocytes_data4000[, colSums(cardiomyocytes_data4000 != 0) > 10]
+
+# calculate mean expression
+mean_expression4000 <- colMeans(cardiomyocytes_data4000_filtered)
+```
+
+We group the genes within 0.9-1.1 UMI/cell. There are 778 genes.
+```{r}
+# get indices for genes within bin of mean expression
+mean_idx <- which(between(mean_expression4000,0.9,1.1)) 
+grouped_data <- as.vector(cardiomyocytes_data4000_filtered[,mean_idx])
+length(mean_idx)
+```
+
+Of these genes we also get an estimate of the average library size and use this as the fixed library size in the simulations.
+
+```{r}
+avg_li <- mean(colSums(cardiomyocytes_data4000_filtered[,mean_idx]))
+avg_li
+```
+
+We now fit the Gamma-Poisson to the pooled data and estimate $\phi$.
+```{r}
+# fit gamma-poisson distribution
+fit_gp <- glm_gp(grouped_data, size_factors=1)
+sum_gp <- summary(fit_gp)
+phi <- sum_gp$overdispersions
+phi
+```
+
+### ***Set $L, \alpha, \sigma$***
+
+We estimate the Gamma-Poisson values using **glmGamPoi**:
+$$
+E[X] = \mu \hspace{20 mm} Var[X] = \mu + \mu^2\phi
+$$
+
+Under the simulation framework:
+$$
+E[X] = L_i\alpha_j\sigma_j \hspace{20 mm} Var(X) =L_i\alpha_j\sigma_j + L_i^2 \alpha_j\sigma_j^2
+$$
+
+Setting the expectation and variance equations equal to each other, we get:
+$$
+\sigma = \frac{\mu\phi}{L} \hspace{20 mm} \alpha = \frac{1}{\phi}
+$$
+
+We know that $\mu = 1$ since we are targeting 1 UMI/cell. We multiply $L_i\alpha_j\sigma_j$ to double check that it equals 1.
+```{r}
+mu <- 1
+
+sigma <- mu*phi/avg_li
+alpha <- 1/phi
+
+sigma*alpha*avg_li
+```
+
+### ***Simulate at varying dispersion levels***
+
+For a fixed mean of 1 UMI/cell we want to test different effect sizes. We assess different effect sizes by varying the applied factor from: 1,1.1,1.2,...,2. We will do this and test across different individuals per group: 1, 5, 10, 15, 20,..., 35. Since we are testing for 1000 cells/individual we can pool all cells for individuals. For example, 35 individuals/group would be 35,000 cells in the null variance group and 35,000 cells in the effect size group for a total of 70 individuals.
+
+```{r}
+sim_gene <- function(n,alpha,sigma,Li, sigma_multiplier=1){
+
+  # Simulate a single gene with following parameters:
+  # n:                number of cells
+  # alpha:            alpha parameter
+  # sigma:            sigma parameter
+  # Li:               library size
+  # sigma_multiplier: factor to increase variance
+ 
+  # Returns expression values for single gene in n cells
+  
+  # initialize Y
+  Y <- rep(NA,n) 
+  
+  # calculate latent expression using gamma distribution
+  # ensure that simulation has mean within 10% of target
+  # perc_diff = 1
+  # while(perc_diff > 0.05){
+  lambdaj <- rgamma(n,shape = alpha/sigma_multiplier,scale = sigma*sigma_multiplier)
+  # perc_diff = (alpha*sigma - mean(lambdaj))/alpha*sigma
+  # }
+
+  
+  #lambdaj <- rgamma(n,shape = alpha/sigma_multiplier,scale = sigma*sigma_multiplier)
+  
+  # for each cell use the latent expression and library size to simulate expression
+  for(i in 1:n){
+  
+    Y[i] <- rpois(1,Li*lambdaj[i])
+  }
+  
+  return(Y)
+}
+
+```
+
+We perform the simulation for 1 individual/group and check the mean UMI.
+```{r}
+set.seed(11222024)
+varying_factor <- seq(1, 2, by = 0.1)
+
+gene_sim_matrix = c()
+for(i in 1:length(varying_factor)){
+  gene_sim <- sim_gene(1000,alpha,sigma,avg_li,sigma_multiplier=varying_factor[i])
+  gene_sim_matrix <- cbind(gene_sim_matrix,gene_sim)
+}
+colnames(gene_sim_matrix) <- make.names(varying_factor)
+colMeans(gene_sim_matrix)
+```
+
+
+We now save the matrix data for each number of individuals.
+```{r, eval=F}
+set.seed(11222024)
+
+path = "/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis"
+
+varying_factor <- seq(1, 2, by = 0.1)
+num_indv <- c(1,seq(5, 50, by = 5))
+
+for(j in 1:length(num_indv)){
+  gene_sim_matrix = c()
+  num_indv_grp = 1000*num_indv[j]
+  
+  for(i in 1:length(varying_factor)){
+    gene_sim <- sim_gene(num_indv_grp,alpha,sigma,avg_li,sigma_multiplier=varying_factor[i])
+    gene_sim_matrix <- cbind(gene_sim_matrix,gene_sim)
+    
+  }
+  colnames(gene_sim_matrix) <- make.names(varying_factor)
+  write.csv(as.data.frame(gene_sim_matrix), file = file.path(path,paste("power_analysis_indv_",num_indv[j],".csv",sep="")), row.names = FALSE)
+}
+
+```
+
+
+```{r}
+path = "/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis"
+head(read.csv(file.path(path, "power_analysis_indv_50.csv")))
+```
+
+## **Estimating Variance**
+
+We use the following equation to estimate variance by assuming a multiple hypergeometric model for the data. [Kim et al.](https://www.cell.com/cell/fulltext/S0092-8674%2824%2901144-9) uses method of moments to estimate the variance.
+
+$$
+\hat{\sigma}_{g,HG} \approx \frac{1}{n_{cells}}\sum_c \frac{Y^2_{cg} - Y_{cg}(1-q)}{N^2_cq^2 - N_c q(1-q)} - \left( \frac{1}{n_{cells}}\sum_c\frac{Y_{cg}}{N_cq} \right)
+$$
+Where for $c$ cells and $g$ genes, $Y_{cg}$ is the observed transcript count, $N_c$ is the library size, $n_{cells}$ is the number of cells, and $q$ is the sampling efficiency.
+
+
+
+
+
+```{r, eval=F, include=F}
+
+## Power Analysis for Identifying Significant Genes
+#```{r}
+# calculate alpha given mean expression and fixed sigma
+calc_alpha <- function(mu, sigma){
+  alpha = mu/sigma
+  return(alpha)
+}
+
+
+# Function to simulate genes within a bin of mean expression
+sim_bin <- function(n,p,phi,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr){
+  
+  # Simulate all genes with following parameters:
+  # n:                number of cells
+  # p:                number of genes
+  # phi:              estimated dispersion parameter
+  # phi_multiplier:   factor to increase dispersion parameter
+  # Li:               library size
+  # mean_expr_lwr:    lower bound of mean expression window
+  # mean_expr_upr:    upper bound of mean expression window
+ 
+  # Returns matrix of expression for n cells and p genes. 
+  # Returns vector of index values for simulated dispersed genes.
+  
+  # initialize Y for bin of expression
+  Y_bin <- matrix(NA,nrow=n,ncol=p)
+  
+  alpha_bin <- c()
+  sigma_bin <- c()
+  
+  n_bin_split = 100
+  # breakdown expression range into p values
+  bin_expression <- seq(mean_expr_lwr,mean_expr_upr,length.out=n_bin_split)
+  
+  # randomly select p expression means
+  bin_sim_idx <- sample.int(n_bin_split, n_bin_split, replace = TRUE)
+  # randomly select 5% to be significantly dispersed
+  bin_disp_idx <- sample.int(n_bin_split, 0.05*n_bin_split, replace = FALSE)
+  # get expression means
+  sim_expression_values <- bin_expression[bin_sim_idx]
+  
+  # simulate genes for each expression mean
+  for(i in 1:n_bin_split){
+    
+    # get expression mean
+    mu <- sim_expression_values[i]
+    
+    # calculate sigma parameter
+    sigma <- mu*phi/Li
+    sigma_bin <- c(sigma_bin,sigma)
+    #sigma_disp <- mu*phi*phi_multiplier + 1
+    
+    # calculate alpha for fixed sigma based on expression mean
+    alpha <- 1/phi#calc_alpha(mu,sigma)
+    alpha_bin <- c(alpha_bin,alpha)
+    #alpha_disp <- calc_alpha(mu,sigma_disp)
+    
+    # for dispersed genes multiply sigma by factor
+    if(i %in% bin_disp_idx){
+      
+      Y_bin[,i] <- sim_gene(n,alpha,sigma,Li,sigma_multiplier)
+    }
+    else{
+      Y_bin[,i] <- sim_gene(n,alpha,sigma,Li)
+    }
+  }
+  
+  return(list("Y_bin"=Y_bin, "disp_idx"=bin_disp_idx,"alpha_bin"=alpha_bin, "sigma_bin"=sigma_bin))
+}
+
+sim_Y <- function(n,p,phi,sigma_multiplier,Li,min_exp, max_exp){
+  Y <- c()
+  disp_idx <- c()
+  alphas <- c()
+  sigmas <- c()
+  n_bins = p/100
+  mean_intervals <- seq(min_exp, max_exp,length.out=(n_bins+1))
+  for(i in 1:n_bins){
+    
+    mean_expr_lwr <- mean_intervals[i]
+    mean_expr_upr <- mean_intervals[i+1]
+    
+    gene_sim <- sim_bin(n,n_bins,phi,sigma_multiplier,Li,mean_expr_lwr,mean_expr_upr)
+    Y_bin <- gene_sim$Y_bin
+    bin_disp_idx <- gene_sim$disp_idx + (i-1)*n_bins
+    alpha_bin <- gene_sim$alpha_bin
+    sigma_bin <- gene_sim$sigma_bin
+    
+    
+    Y <- cbind(Y,Y_bin)
+    disp_idx <- c(disp_idx,bin_disp_idx)
+    alphas <- c(alphas,alpha_bin)
+    sigmas <- c(sigmas, sigma_bin)
+  }
+  return(list("Y"=Y,"disp_idx"=disp_idx,"alpha"=alphas, "sigma"=sigmas))
+}
+
+
+cpm_norm <- function(Y){
+  
+  require(scTenifoldNet)
+  Y_cpm_normalized <- t(cpmNormalization(t(Y)))
+  Y_log_cpm_normalized <- log(t(cpmNormalization(t(Y))))
+  
+  Y_cv <- apply(Y_cpm_normalized, 2, sd)/apply(Y_cpm_normalized, 2, mean)
+  Y_mean <- apply(Y_cpm_normalized, 2, mean)
+  Y_cv_log <- apply(Y_log_cpm_normalized, 2, sd)/apply(Y_log_cpm_normalized, 2, mean)
+  Y_mean_log <- apply(Y_log_cpm_normalized, 2, mean)
+  
+  return(list("Y_cpm_normalized"=Y_cpm_normalized, "Y_log_cpm_normalized" = Y_log_cpm_normalized, "Y_cv" = Y_cv, "Y_mean" = Y_mean, "Y_cv_log"=Y_cv_log, "Y_mean_log" = Y_mean_log))
+}
+#```
+
+
+We simulate 1000 cells with 10,000 genes with a slightly variable mean (0.9-1.1 UMI/cell).
+#```{r}
+#### Simulate Y matrix for all genes
+set.seed(11222024)
+
+# Parameters
+n=1000
+p=10000
+
+Y_varying<- sim_Y(n,p,phi,1.8,avg_li,0.9,1.1)
+Y_cpm_normalized <- t(cpmNormalization(t(Y_varying$Y)))
+#```
+
+
+We look at a histogram of the example simulation.
+#```{r}
+hist(colMeans(Y_varying$Y), main = "", xlab="mean(UMI)")
+#```
+
+
+
+
+We now vary the applied factor from: 1,1.1,1.2,...,2.
+
+
+#```{r}
+set.seed(11222024)
+library(scTenifoldNet)
+applied_factor <- seq(1, 2, by = 0.1)
+path = "/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis"
+
+for(i in 1:length(applied_factor)){
+  Y_varying<- sim_Y(n,p,phi,applied_factor[i],avg_li,0.9,1.1)
+}
+
+
+#```
+
+```
+
+
+
+
+
+
+
+
+

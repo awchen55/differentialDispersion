@@ -21,7 +21,15 @@ The goal of this project is to develop a way to compare variance across differen
 
 # **Simulations**
 
-> [Poisson and Negative Binomial Analysis](simulation_null_analysis.html)
+> [Gamma-Poisson Analysis](simulation_null_analysis.html)
+
+> [Power Analysis for Data Collection](simulation_power_analysis.html)
+
+```{r,include=F,eval=F}
+>> [Simulations with Cardiomyocytes Dataset](simulation_cardiomyocytes_analysis.html)
+
+> [Normal Distrbution Analysis]()
+```
 
 # **Applications**
 

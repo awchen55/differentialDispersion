@@ -11,7 +11,7 @@
 
 
 
-<title>Home</title>
+<title>Power Analysis</title>
 
 <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -234,6 +237,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -241,6 +307,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -287,7 +363,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Home</h1>
+<h1 class="title toc-ignore">Power Analysis</h1>
 
 </div>
 
@@ -320,9 +396,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 2
 </p>
 <p>
 <strong>Knit directory:</strong> <code>differentialDispersion/</code>
@@ -354,10 +430,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -435,15 +511,41 @@ run.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
 </p>
 </div>
-<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great job! Using relative paths to the files within your workflowr
-project makes it easier to run your code on other machines.</p>
+<p>
+Using absolute paths to the files within your workflowr project makes it
+difficult for you and others to run your code on a different machine.
+Change the absolute path(s) below to the suggested relative path(s) to
+make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis
+</td>
+<td style="text-align:left;">
+data/simulations/power_analysis
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -538,351 +640,219 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
-These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
-(<code>docs/index.html</code>) files. If you’ve configured a remote Git
-repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
-in the table below to view the files as they were in that past version.
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/3b6f929115dce3e2baa2709680632c5136dc1bb9/analysis/index.Rmd" target="_blank">3b6f929</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-08-07
-</td>
-<td>
-update procedure info
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/3b6f929115dce3e2baa2709680632c5136dc1bb9/docs/index.html" target="_blank">3b6f929</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-08-07
-</td>
-<td>
-update procedure info
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/e89b6f835e3619ad650d0de07a22085ff5c2a3ef/analysis/index.Rmd" target="_blank">e89b6f8</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-30
-</td>
-<td>
-outline procedure using ash
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/e89b6f835e3619ad650d0de07a22085ff5c2a3ef/docs/index.html" target="_blank">e89b6f8</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-30
-</td>
-<td>
-outline procedure using ash
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/f2f7418058b176bc84d9dc8250b3fd6077cf2201/analysis/index.Rmd" target="_blank">f2f7418</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-24
-</td>
-<td>
-add simulation details
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/f2f7418058b176bc84d9dc8250b3fd6077cf2201/docs/index.html" target="_blank">f2f7418</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-24
-</td>
-<td>
-add simulation details
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/1209e3d4581f1b9465ccea7195a6beb093ca4486/docs/index.html" target="_blank">1209e3d</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-16
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/a48d565df9e7924bce3207097223450bc34cfa51/analysis/index.Rmd" target="_blank">a48d565</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-16
-</td>
-<td>
-website fixes
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/c672a3cd92bc73d930dde1c1932089a5c32f2751/docs/index.html" target="_blank">c672a3c</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-12
-</td>
-<td>
-update website files
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/b06fc530ed83aec7abd0b62db88b34c4b9bd15d6/analysis/index.Rmd" target="_blank">b06fc53</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-07-12
-</td>
-<td>
-add initial dispersion analysis
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/dd3944adfeebfd5319833c8d9129417887d89655/docs/index.html" target="_blank">dd3944a</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-27
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/1017d08b195cd1ad6b89a6d13ef283e051808070/analysis/index.Rmd" target="_blank">1017d08</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-27
-</td>
-<td>
-Add my first analysis
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/6ec0551c8ae3e18fc2a68525483beac812466ce9/docs/index.html" target="_blank">6ec0551</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-26
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/6a2982a2c645bc784a1fb140d110416f664b45e3/docs/index.html" target="_blank">6a2982a</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-26
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/awchen55/differentialDispersion/blob/33a835c93d1815fa14f779f573a8615a75cb4e2e/analysis/index.Rmd" target="_blank">33a835c</a>
-</td>
-<td>
-awchen55
-</td>
-<td>
-2024-06-25
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
-<div id="objective" class="section level1">
-<h1><strong>Objective</strong></h1>
-<p>The goal of this project is to develop a way to compare variance
-across different contexts such as species, cell types, and individuals.
-A property of single cell data is the direct mean-variance relationship
-in gene expression. Thus, a procedure to capture variance independent of
-the mean may be biologically informative. Specifically, we aim to
-measure dispersion as a quantifiable metric that drives these
-differences in variance. Technically, dispersion may be measured as the
-mean-independent variance. Theoretically, dispersion is the biological
-variation associated with transcriptional and translational events.</p>
+<div id="power-analysis-details" class="section level2">
+<h2><strong>Power Analysis Details</strong></h2>
+<p>We perform a power analysis for QTLs using our simulations. We are
+asking two main questions. At what effect size do you detect 80% of true
+positives in genes that have 1 UMI/cell and 1k cells? At that same
+effect size, what about 2 UMI/cell in 500 cells? 0.5 UMI/cell in 2000
+cells? Additionally, at the same effect size, what about across
+different numbers of individuals?</p>
 </div>
-<div id="procedure" class="section level1">
-<h1><strong>Procedure</strong></h1>
-<ol style="list-style-type: decimal">
-<li>Estimate mean and variance using an underlying distribution such as
-NB or ASHR. Use the pooled data across all cell types and replicates for
-each bin of mean gene expression to estimate the null variance. Ideally
-we want to fit the ASH distribution on several genes within the same bin
-of mean gene expression and estimate the variance per each group.
-Alternatively we can fit each gene independently and then take the
-median variance of these genes in bins of mean expression.</li>
-<li>Use bootstrapping to estimate variance within specific cell types
-and compare estimate to null variance. This tests the hypothesis <span
-class="math inline">\(H_0: \hat{V}=V_0\)</span>, where <span
-class="math inline">\(H_A: \hat{V}&gt;V_0\)</span>. For each gene within
-a cell type, variance is estimated using the ASHR distribution from
-randomly selected cells with replacement for 5,000 iterations. The
-resampling distribution is used to calculate the standard errors and
-confidence intervals, which can be compared to <span
-class="math inline">\(V_0\)</span>.</li>
-</ol>
+<div id="simulations-at-1000-cells-and-1-umicell"
+class="section level2">
+<h2><strong>Simulations at 1000 cells and 1 UMI/cell</strong></h2>
+<p>Under the simulation framework for <span
+class="math inline">\(i\)</span> cells and <span
+class="math inline">\(j\)</span> genes: <span class="math inline">\(E[X]
+= L_i\alpha_j\sigma_j\)</span> and <span class="math inline">\(Var(X)
+=L_i\alpha_j\sigma_j + L_i^2 \alpha_j\sigma_j^2\)</span>, where <span
+class="math inline">\(L\)</span> is the library size and <span
+class="math inline">\(\alpha, \sigma\)</span> are the shape and scale
+parameters. To increase the dispersion level we multiply <span
+class="math inline">\(\sigma\)</span> by an applied factor. We assume a
+fixed library size for all cells. We can set the target of 1 UMI/cell by
+setting the expectation equal to 1 for a fixed <span
+class="math inline">\(L,\alpha, \text{and } \sigma\)</span>.</p>
+<div id="estimating-phi" class="section level3">
+<h3><strong><em>Estimating <span
+class="math inline">\(\phi\)</span></em></strong></h3>
+<p>We use the HDC dataset and look at the cardiomyocyte cell type. We
+pool genes that have mean expression of between 0.9 - 1.1 UMI/cell and
+fit a Gamma-Poisson model to estimate <span
+class="math inline">\(\phi\)</span>.</p>
+<pre class="r"><code>library(glmGamPoi)
+library(dplyr)</code></pre>
+<pre><code>
+Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>card_path = &quot;/project/gilad/brendan/dispersion/pilot/cHDC_data/cellranger_cluster-mode_trial/analysis/datasets/median_gene_detection/&quot;
+#setwd(card_path)
+
+
+cardiomyocytes_data4000 &lt;- readRDS(paste(card_path, &quot;lane_a_card_downsampled_UMI_matrix_10.rds&quot;, sep = &quot;&quot;))
+cardiomyocytes_data4000 &lt;- t(as.matrix(cardiomyocytes_data4000))</code></pre>
+<pre><code>Warning in asMethod(object): sparse-&gt;dense coercion: allocating vector of size
+1.2 GiB</code></pre>
+<pre class="r"><code># calculate mean expression and remove genes with low expression
+cardiomyocytes_data4000_filtered &lt;- cardiomyocytes_data4000[, colSums(cardiomyocytes_data4000 != 0) &gt; 10]
+
+# calculate mean expression
+mean_expression4000 &lt;- colMeans(cardiomyocytes_data4000_filtered)</code></pre>
+<p>We group the genes within 0.9-1.1 UMI/cell. There are 778 genes.</p>
+<pre class="r"><code># get indices for genes within bin of mean expression
+mean_idx &lt;- which(between(mean_expression4000,0.9,1.1)) 
+grouped_data &lt;- as.vector(cardiomyocytes_data4000_filtered[,mean_idx])
+length(mean_idx)</code></pre>
+<pre><code>[1] 778</code></pre>
+<p>Of these genes we also get an estimate of the average library size
+and use this as the fixed library size in the simulations.</p>
+<pre class="r"><code>avg_li &lt;- mean(colSums(cardiomyocytes_data4000_filtered[,mean_idx]))
+avg_li</code></pre>
+<pre><code>[1] 4064.29</code></pre>
+<p>We now fit the Gamma-Poisson to the pooled data and estimate <span
+class="math inline">\(\phi\)</span>.</p>
+<pre class="r"><code># fit gamma-poisson distribution
+fit_gp &lt;- glm_gp(grouped_data, size_factors=1)
+sum_gp &lt;- summary(fit_gp)
+phi &lt;- sum_gp$overdispersions
+phi</code></pre>
+<pre><code>[1] 0.8917347</code></pre>
 </div>
-<div id="simulations" class="section level1">
-<h1><strong>Simulations</strong></h1>
-<blockquote>
-<p><a href="simulation_null_analysis.html">Gamma-Poisson
-Analysis</a></p>
-</blockquote>
-<blockquote>
-<p><a href="simulation_power_analysis.html">Power Analysis for Data
-Collection</a></p>
-</blockquote>
+<div id="set-l-alpha-sigma" class="section level3">
+<h3><strong><em>Set <span class="math inline">\(L, \alpha,
+\sigma\)</span></em></strong></h3>
+<p>We estimate the Gamma-Poisson values using
+<strong>glmGamPoi</strong>: <span class="math display">\[
+E[X] = \mu \hspace{20 mm} Var[X] = \mu + \mu^2\phi
+\]</span></p>
+<p>Under the simulation framework: <span class="math display">\[
+E[X] = L_i\alpha_j\sigma_j \hspace{20 mm} Var(X) =L_i\alpha_j\sigma_j +
+L_i^2 \alpha_j\sigma_j^2
+\]</span></p>
+<p>Setting the expectation and variance equations equal to each other,
+we get: <span class="math display">\[
+\sigma = \frac{\mu\phi}{L} \hspace{20 mm} \alpha = \frac{1}{\phi}
+\]</span></p>
+<p>We know that <span class="math inline">\(\mu = 1\)</span> since we
+are targeting 1 UMI/cell. We multiply <span
+class="math inline">\(L_i\alpha_j\sigma_j\)</span> to double check that
+it equals 1.</p>
+<pre class="r"><code>mu &lt;- 1
+
+sigma &lt;- mu*phi/avg_li
+alpha &lt;- 1/phi
+
+sigma*alpha*avg_li</code></pre>
+<pre><code>[1] 1</code></pre>
 </div>
-<div id="applications" class="section level1">
-<h1><strong>Applications</strong></h1>
-<div id="human-chimp-hybrid-data-set" class="section level2">
-<h2><strong>Human-Chimp Hybrid Data Set</strong></h2>
-<blockquote>
-<p>Click on this <a
-href="differential_dispersion_hybrid_line_cpm_analysis.html">link</a> to
-find initial dispersion comparisons using the LOWESS method.</p>
-</blockquote>
+<div id="simulate-at-varying-dispersion-levels" class="section level3">
+<h3><strong><em>Simulate at varying dispersion levels</em></strong></h3>
+<p>For a fixed mean of 1 UMI/cell we want to test different effect
+sizes. We assess different effect sizes by varying the applied factor
+from: 1,1.1,1.2,…,2. We will do this and test across different
+individuals per group: 1, 5, 10, 15, 20,…, 35. Since we are testing for
+1000 cells/individual we can pool all cells for individuals. For
+example, 35 individuals/group would be 35,000 cells in the null variance
+group and 35,000 cells in the effect size group for a total of 70
+individuals.</p>
+<pre class="r"><code>sim_gene &lt;- function(n,alpha,sigma,Li, sigma_multiplier=1){
+
+  # Simulate a single gene with following parameters:
+  # n:                number of cells
+  # alpha:            alpha parameter
+  # sigma:            sigma parameter
+  # Li:               library size
+  # sigma_multiplier: factor to increase variance
+ 
+  # Returns expression values for single gene in n cells
+  
+  # initialize Y
+  Y &lt;- rep(NA,n) 
+  
+  # calculate latent expression using gamma distribution
+  # ensure that simulation has mean within 10% of target
+  # perc_diff = 1
+  # while(perc_diff &gt; 0.05){
+  lambdaj &lt;- rgamma(n,shape = alpha/sigma_multiplier,scale = sigma*sigma_multiplier)
+  # perc_diff = (alpha*sigma - mean(lambdaj))/alpha*sigma
+  # }
+
+  
+  #lambdaj &lt;- rgamma(n,shape = alpha/sigma_multiplier,scale = sigma*sigma_multiplier)
+  
+  # for each cell use the latent expression and library size to simulate expression
+  for(i in 1:n){
+  
+    Y[i] &lt;- rpois(1,Li*lambdaj[i])
+  }
+  
+  return(Y)
+}</code></pre>
+<p>We perform the simulation for 1 individual/group and check the mean
+UMI.</p>
+<pre class="r"><code>set.seed(11222024)
+varying_factor &lt;- seq(1, 2, by = 0.1)
+
+gene_sim_matrix = c()
+for(i in 1:length(varying_factor)){
+  gene_sim &lt;- sim_gene(1000,alpha,sigma,avg_li,sigma_multiplier=varying_factor[i])
+  gene_sim_matrix &lt;- cbind(gene_sim_matrix,gene_sim)
+}
+colnames(gene_sim_matrix) &lt;- make.names(varying_factor)
+colMeans(gene_sim_matrix)</code></pre>
+<pre><code>   X1  X1.1  X1.2  X1.3  X1.4  X1.5  X1.6  X1.7  X1.8  X1.9    X2 
+0.962 0.972 0.962 1.007 1.042 1.012 0.970 1.114 0.905 0.906 1.078 </code></pre>
+<p>We now save the matrix data for each number of individuals.</p>
+<pre class="r"><code>set.seed(11222024)
+
+path = &quot;/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis&quot;
+
+varying_factor &lt;- seq(1, 2, by = 0.1)
+num_indv &lt;- c(1,seq(5, 50, by = 5))
+
+for(j in 1:length(num_indv)){
+  gene_sim_matrix = c()
+  num_indv_grp = 1000*num_indv[j]
+  
+  for(i in 1:length(varying_factor)){
+    gene_sim &lt;- sim_gene(num_indv_grp,alpha,sigma,avg_li,sigma_multiplier=varying_factor[i])
+    gene_sim_matrix &lt;- cbind(gene_sim_matrix,gene_sim)
+    
+  }
+  colnames(gene_sim_matrix) &lt;- make.names(varying_factor)
+  write.csv(as.data.frame(gene_sim_matrix), file = file.path(path,paste(&quot;power_analysis_indv_&quot;,num_indv[j],&quot;.csv&quot;,sep=&quot;&quot;)), row.names = FALSE)
+}</code></pre>
+<pre class="r"><code>path = &quot;/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis&quot;
+head(read.csv(file.path(path, &quot;power_analysis_indv_50.csv&quot;)))</code></pre>
+<pre><code>  X1 X1.1 X1.2 X1.3 X1.4 X1.5 X1.6 X1.7 X1.8 X1.9 X2
+1  0    0    0    0    0    0    0    5    2    2  1
+2  2    0    0    0    3    1    7    0    0    7  0
+3  0    2    1    0    2    0    0    3    1    0  1
+4  1    0    3    3    0    0    0    1    0    0  2
+5  0    4    2    2    5    3    0    0    1    0  0
+6  0    0    0    1    0    0    1    0    1    0  0</code></pre>
+</div>
+</div>
+<div id="estimating-variance" class="section level2">
+<h2><strong>Estimating Variance</strong></h2>
+<p>We use the following equation to estimate variance by assuming a
+multiple hypergeometric model for the data. <a
+href="https://www.cell.com/cell/fulltext/S0092-8674%2824%2901144-9">Kim
+et al.</a> uses method of moments to estimate the variance.</p>
+<p><span class="math display">\[
+\hat{\sigma}_{g,HG} \approx \frac{1}{n_{cells}}\sum_c \frac{Y^2_{cg} -
+Y_{cg}(1-q)}{N^2_cq^2 - N_c q(1-q)} - \left(
+\frac{1}{n_{cells}}\sum_c\frac{Y_{cg}}{N_cq} \right)
+\]</span> Where for <span class="math inline">\(c\)</span> cells and
+<span class="math inline">\(g\)</span> genes, <span
+class="math inline">\(Y_{cg}\)</span> is the observed transcript count,
+<span class="math inline">\(N_c\)</span> is the library size, <span
+class="math inline">\(n_{cells}\)</span> is the number of cells, and
+<span class="math inline">\(q\)</span> is the sampling efficiency.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -908,18 +878,41 @@ locale:
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
+other attached packages:
+[1] dplyr_1.1.4     glmGamPoi_1.8.0
+
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.12      rstudioapi_0.13  whisker_0.4      knitr_1.39      
- [5] magrittr_2.0.3   workflowr_1.7.1  R6_2.5.1         rlang_1.1.4     
- [9] fastmap_1.1.0    fansi_1.0.3      stringr_1.5.1    tools_4.2.0     
-[13] xfun_0.30        utf8_1.2.2       cli_3.6.3        git2r_0.30.1    
-[17] jquerylib_0.1.4  htmltools_0.5.2  rprojroot_2.0.3  yaml_2.3.5      
-[21] digest_0.6.29    tibble_3.2.1     lifecycle_1.0.4  later_1.3.0     
-[25] sass_0.4.1       vctrs_0.6.5      promises_1.2.0.1 fs_1.5.2        
-[29] glue_1.7.0       evaluate_0.15    rmarkdown_2.14   stringi_1.7.6   
-[33] bslib_0.3.1      compiler_4.2.0   pillar_1.9.0     jsonlite_1.8.0  
-[37] httpuv_1.6.5     pkgconfig_2.0.3 </code></pre>
-</div>
+ [1] SummarizedExperiment_1.26.1 tidyselect_1.2.1           
+ [3] xfun_0.30                   bslib_0.3.1                
+ [5] lattice_0.20-45             generics_0.1.3             
+ [7] vctrs_0.6.5                 htmltools_0.5.2            
+ [9] stats4_4.2.0                yaml_2.3.5                 
+[11] utf8_1.2.2                  rlang_1.1.4                
+[13] jquerylib_0.1.4             later_1.3.0                
+[15] pillar_1.9.0                glue_1.7.0                 
+[17] BiocGenerics_0.42.0         matrixStats_0.62.0         
+[19] GenomeInfoDbData_1.2.8      lifecycle_1.0.4            
+[21] stringr_1.5.1               MatrixGenerics_1.8.0       
+[23] zlibbioc_1.42.0             workflowr_1.7.1            
+[25] evaluate_0.15               Biobase_2.56.0             
+[27] knitr_1.39                  IRanges_2.30.0             
+[29] fastmap_1.1.0               httpuv_1.6.5               
+[31] GenomeInfoDb_1.32.2         fansi_1.0.3                
+[33] highr_0.9                   Rcpp_1.0.12                
+[35] promises_1.2.0.1            DelayedArray_0.22.0        
+[37] S4Vectors_0.34.0            jsonlite_1.8.0             
+[39] XVector_0.36.0              fs_1.5.2                   
+[41] digest_0.6.29               stringi_1.7.6              
+[43] GenomicRanges_1.48.0        rprojroot_2.0.3            
+[45] grid_4.2.0                  cli_3.6.3                  
+[47] tools_4.2.0                 bitops_1.0-7               
+[49] magrittr_2.0.3              sass_0.4.1                 
+[51] RCurl_1.98-1.7              tibble_3.2.1               
+[53] pkgconfig_2.0.3             Matrix_1.6-4               
+[55] DelayedMatrixStats_1.18.2   sparseMatrixStats_1.8.0    
+[57] rmarkdown_2.14              rstudioapi_0.13            
+[59] R6_2.5.1                    git2r_0.30.1               
+[61] compiler_4.2.0             </code></pre>
 </div>
 </div>
 
@@ -939,6 +932,8 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -971,6 +966,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
