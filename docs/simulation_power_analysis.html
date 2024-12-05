@@ -552,15 +552,15 @@ data/simulations/power_analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree60a5b9dede71eb6a1bf0073f78ac5bb22b51842dtargetblank60a5b9da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1ctargetblank33f41a2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/60a5b9dede71eb6a1bf0073f78ac5bb22b51842d" target="_blank">60a5b9d</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1c" target="_blank">33f41a2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree60a5b9dede71eb6a1bf0073f78ac5bb22b51842dtargetblank60a5b9da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1ctargetblank33f41a2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -570,7 +570,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/60a5b9dede71eb6a1bf0073f78ac5bb22b51842d" target="_blank">60a5b9d</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1c" target="_blank">33f41a2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -678,6 +678,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1c/analysis/simulation_power_analysis.Rmd" target="_blank">33f41a2</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-12-05
+</td>
+<td>
+update power analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1c/docs/simulation_power_analysis.html" target="_blank">33f41a2</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-12-05
+</td>
+<td>
+update power analysis
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/awchen55/differentialDispersion/blob/60a5b9dede71eb6a1bf0073f78ac5bb22b51842d/analysis/simulation_power_analysis.Rmd" target="_blank">60a5b9d</a>
 </td>
 <td>
@@ -746,24 +780,16 @@ pool genes that have mean expression of between 0.9 - 1.1 UMI/cell and
 fit a Gamma-Poisson model to estimate <span
 class="math inline">\(\phi\)</span>.</p>
 <pre class="r"><code>library(glmGamPoi)
-library(dplyr)</code></pre>
-<pre><code>
-Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:stats&#39;:
+library(dplyr)
 
-    filter, lag</code></pre>
-<pre><code>The following objects are masked from &#39;package:base&#39;:
-
-    intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>card_path = &quot;/project/gilad/brendan/dispersion/pilot/cHDC_data/cellranger_cluster-mode_trial/analysis/datasets/median_gene_detection/&quot;
+card_path = &quot;/project/gilad/brendan/dispersion/pilot/cHDC_data/cellranger_cluster-mode_trial/analysis/datasets/median_gene_detection/&quot;
 #setwd(card_path)
 
 
 cardiomyocytes_data4000 &lt;- readRDS(paste(card_path, &quot;lane_a_card_downsampled_UMI_matrix_10.rds&quot;, sep = &quot;&quot;))
-cardiomyocytes_data4000 &lt;- t(as.matrix(cardiomyocytes_data4000))</code></pre>
-<pre><code>Warning in asMethod(object): sparse-&gt;dense coercion: allocating vector of size
-1.2 GiB</code></pre>
-<pre class="r"><code># calculate mean expression and remove genes with low expression
+cardiomyocytes_data4000 &lt;- t(as.matrix(cardiomyocytes_data4000))
+
+# calculate mean expression and remove genes with low expression
 cardiomyocytes_data4000_filtered &lt;- cardiomyocytes_data4000[, colSums(cardiomyocytes_data4000 != 0) &gt; 10]
 
 # calculate mean expression
@@ -963,9 +989,10 @@ described by Efron and Tibshirani:</p>
 <div id="run-power-analysis" class="section level2">
 <h2><strong>Run Power Analysis</strong></h2>
 <p>We run the power analysis by simulating 1,000 times for <span
-class="math inline">\(B=1,000\)</span> bootstrapping iterations. We test
-out 100 different effect sizes for the applied factor to the varaince,
-spanned evenly between 1 and 2.</p>
+class="math inline">\(B=1,000\)</span> bootstrapping iterations. We
+assume <span class="math inline">\(q=0.4\)</span>. We test out 100
+different effect sizes for the applied factor to the variance, spanned
+evenly between 1 and 2.</p>
 <pre class="r"><code>n_sims = 100
 B = 1000
 n_cells = 1000
@@ -1031,17 +1058,15 @@ names(power_vec) &lt;- varying_factor[2:length(varying_factor)]
 path = &quot;/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis&quot;
 
 save(power_vec, file = file.path(path,paste(&quot;power_analysis_indv_&quot;,n_indv,&quot;.RData&quot;,sep=&quot;&quot;)))</code></pre>
-<div id="power-analysis-across-effect-size-per-individuals"
-class="section level3">
-<h3><strong><em>Power Analysis Across Effect Size per
-Individuals</em></strong></h3>
+<div id="power-analysis-across-effect-size" class="section level3">
+<h3><strong><em>Power Analysis Across Effect Size</em></strong></h3>
 <p>We look at the power based on varying effect size for the number of
 individuals.</p>
 <pre class="r"><code># Initialize an empty list
 data_list &lt;- list()
 path = &quot;/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis&quot;
 
-for (n_indv in 1:4) {
+for (n_indv in 1:8) {
   # Load the RData file into a temporary environment
   temp_env &lt;- new.env()
   load(file.path(path, paste(&quot;power_analysis_100ef_indv_&quot;, n_indv, &quot;.RData&quot;, sep = &quot;&quot;)), envir = temp_env)
@@ -1061,20 +1086,74 @@ combined_data &lt;- do.call(rbind, data_list)</code></pre>
 #colors &lt;- c(&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;)
 
 ggplot(combined_data, aes(x = x, y = y, color = as.factor(id), group = as.factor(id))) +
-  geom_line(size = 1.2) +
-  labs(title = &quot;Power Analysis Across Individuals&quot;,
+  geom_line(size = 1.2) + ylim(0,1)+
+  labs(title = &quot;Power Analysis Across Effect Size&quot;,
        x = &quot;effect size&quot;, 
        y = &quot;power&quot;,
        color = &quot;Number of Individuals per Group&quot;) +
   #scale_color_manual(values = c(&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;)) +  # Manually assign colors to each group
   theme_minimal() +
   theme(legend.position = &quot;top&quot;) </code></pre>
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.
-This warning is displayed once every 8 hours.
-Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-generated.</code></pre>
 <p><img src="figure/simulation_power_analysis.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1c/docs/figure/simulation_power_analysis.Rmd/unnamed-chunk-13-1.png" target="_blank">33f41a2</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="power-analysis-across-individuals" class="section level3">
+<h3><strong><em>Power Analysis Across Individuals</em></strong></h3>
+<pre class="r"><code>ef_1.2 &lt;- combined_data[round(combined_data$x, 6) == 1.202020, ]
+ef_1.25 &lt;- combined_data[round(combined_data$x, 6) == 1.252525, ]
+ef_1.3 &lt;- combined_data[round(combined_data$x, 6) == 1.303030, ]
+ef_1.35 &lt;- combined_data[round(combined_data$x, 6) == 1.353535, ]
+ef_1.4 &lt;- combined_data[round(combined_data$x, 6) == 1.404040, ]
+ef_1.45 &lt;- combined_data[round(combined_data$x, 6) == 1.454545, ]
+ef_1.5 &lt;- combined_data[round(combined_data$x, 6) == 1.505051, ]
+combined_ef &lt;- rbind(ef_1.2,ef_1.25,ef_1.3,ef_1.35,ef_1.4,ef_1.45,ef_1.5)
+
+ggplot(combined_ef, aes(x = id, y = y, color = as.factor(round(x,2)), group = as.factor(round(x,2)))) +
+  geom_line(size = 1.2) + ylim(0, 1) +
+  labs(title = &quot;Power Analysis Across Individuals&quot;,
+       x = &quot;number of individuals per group&quot;, 
+       y = &quot;power&quot;,
+       color = &quot;Effect Size&quot;) +
+  #scale_color_manual(values = c(&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;)) +  # Manually assign colors to each group
+  theme_minimal() +
+  theme(legend.position = &quot;top&quot;) </code></pre>
+<p><img src="figure/simulation_power_analysis.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1123,22 +1202,22 @@ loaded via a namespace (and not attached):
 [33] SummarizedExperiment_1.26.1 tibble_3.2.1               
 [35] GenomeInfoDbData_1.2.8      workflowr_1.7.1            
 [37] IRanges_2.30.0              matrixStats_0.62.0         
-[39] fansi_1.0.3                 crayon_1.5.1               
-[41] withr_3.0.0                 later_1.3.0                
-[43] bitops_1.0-7                grid_4.2.0                 
-[45] jsonlite_1.8.0              gtable_0.3.0               
-[47] lifecycle_1.0.4             git2r_0.30.1               
-[49] magrittr_2.0.3              scales_1.3.0               
-[51] cli_3.6.3                   stringi_1.7.6              
-[53] farver_2.1.0                XVector_0.36.0             
-[55] fs_1.5.2                    promises_1.2.0.1           
-[57] bslib_0.3.1                 DelayedMatrixStats_1.18.2  
-[59] vctrs_0.6.5                 generics_0.1.3             
-[61] tools_4.2.0                 Biobase_2.56.0             
-[63] glue_1.7.0                  MatrixGenerics_1.8.0       
-[65] fastmap_1.1.0               yaml_2.3.5                 
-[67] colorspace_2.0-3            GenomicRanges_1.48.0       
-[69] knitr_1.39                  sass_0.4.1                 </code></pre>
+[39] fansi_1.0.3                 withr_3.0.0                
+[41] later_1.3.0                 bitops_1.0-7               
+[43] grid_4.2.0                  jsonlite_1.8.0             
+[45] gtable_0.3.0                lifecycle_1.0.4            
+[47] git2r_0.30.1                magrittr_2.0.3             
+[49] scales_1.3.0                cli_3.6.3                  
+[51] stringi_1.7.6               farver_2.1.0               
+[53] XVector_0.36.0              fs_1.5.2                   
+[55] promises_1.2.0.1            bslib_0.3.1                
+[57] DelayedMatrixStats_1.18.2   vctrs_0.6.5                
+[59] generics_0.1.3              tools_4.2.0                
+[61] Biobase_2.56.0              glue_1.7.0                 
+[63] MatrixGenerics_1.8.0        fastmap_1.1.0              
+[65] yaml_2.3.5                  colorspace_2.0-3           
+[67] GenomicRanges_1.48.0        knitr_1.39                 
+[69] sass_0.4.1                 </code></pre>
 </div>
 </div>
 </div>

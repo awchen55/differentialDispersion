@@ -17,7 +17,7 @@ Under the simulation framework for $i$ cells and $j$ genes: $E[X] = L_i\alpha_j\
 We use the HDC dataset and look at the cardiomyocyte cell type. We pool genes that have mean expression of between 0.9 - 1.1 UMI/cell and fit a Gamma-Poisson model to estimate $\phi$.
 
 
-```{r}
+```{r,warning=F,message=F}
 library(glmGamPoi)
 library(dplyr)
 
@@ -210,7 +210,7 @@ sigma_sq_est <- function(df,n_cells,q,N_c){
 
 ## **Run Power Analysis**
 
-We run the power analysis by simulating 1,000 times for $B=1,000$ bootstrapping iterations. We test out 100 different effect sizes for the applied factor to the varaince, spanned evenly between 1 and 2. 
+We run the power analysis by simulating 1,000 times for $B=1,000$ bootstrapping iterations. We assume $q=0.4$. We test out 100 different effect sizes for the applied factor to the variance, spanned evenly between 1 and 2. 
 ```{r, include=TRUE, eval=FALSE}
 n_sims = 100
 B = 1000
@@ -280,7 +280,7 @@ save(power_vec, file = file.path(path,paste("power_analysis_indv_",n_indv,".RDat
 ```
 
 
-### ***Power Analysis Across Effect Size per Individuals***
+### ***Power Analysis Across Effect Size***
 
 We look at the power based on varying effect size for the number of individuals.
 ```{r}
@@ -288,7 +288,7 @@ We look at the power based on varying effect size for the number of individuals.
 data_list <- list()
 path = "/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis"
 
-for (n_indv in 1:4) {
+for (n_indv in 1:8) {
   # Load the RData file into a temporary environment
   temp_env <- new.env()
   load(file.path(path, paste("power_analysis_100ef_indv_", n_indv, ".RData", sep = "")), envir = temp_env)
@@ -306,14 +306,14 @@ combined_data <- do.call(rbind, data_list)
 
 ```
 
-```{r}
+```{r,warning=F,message=F}
 library(ggplot2)
 # Colors for the graphs
 #colors <- c("red", "blue", "green")
 
 ggplot(combined_data, aes(x = x, y = y, color = as.factor(id), group = as.factor(id))) +
-  geom_line(size = 1.2) +
-  labs(title = "Power Analysis Across Individuals",
+  geom_line(size = 1.2) + ylim(0,1)+
+  labs(title = "Power Analysis Across Effect Size",
        x = "effect size", 
        y = "power",
        color = "Number of Individuals per Group") +
@@ -323,8 +323,29 @@ ggplot(combined_data, aes(x = x, y = y, color = as.factor(id), group = as.factor
 ```
 
 
+### ***Power Analysis Across Individuals***
 
+```{r,warning=F,message=F}
 
+ef_1.2 <- combined_data[round(combined_data$x, 6) == 1.202020, ]
+ef_1.25 <- combined_data[round(combined_data$x, 6) == 1.252525, ]
+ef_1.3 <- combined_data[round(combined_data$x, 6) == 1.303030, ]
+ef_1.35 <- combined_data[round(combined_data$x, 6) == 1.353535, ]
+ef_1.4 <- combined_data[round(combined_data$x, 6) == 1.404040, ]
+ef_1.45 <- combined_data[round(combined_data$x, 6) == 1.454545, ]
+ef_1.5 <- combined_data[round(combined_data$x, 6) == 1.505051, ]
+combined_ef <- rbind(ef_1.2,ef_1.25,ef_1.3,ef_1.35,ef_1.4,ef_1.45,ef_1.5)
+
+ggplot(combined_ef, aes(x = id, y = y, color = as.factor(round(x,2)), group = as.factor(round(x,2)))) +
+  geom_line(size = 1.2) + ylim(0, 1) +
+  labs(title = "Power Analysis Across Individuals",
+       x = "number of individuals per group", 
+       y = "power",
+       color = "Effect Size") +
+  #scale_color_manual(values = c("red", "blue", "green")) +  # Manually assign colors to each group
+  theme_minimal() +
+  theme(legend.position = "top") 
+```
 
 ```{r, eval=F, include=F}
 
