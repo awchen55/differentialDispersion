@@ -174,7 +174,7 @@ head(read.csv(file.path(path, "power_analysis_indv_50.csv")))
 
 ## **Estimating Variance**
 
-We use the following equation to estimate variance by assuming a multiple hypergeometric model for the data. [Kim et al.](https://www.cell.com/cell/fulltext/S0092-8674%2824%2901144-9) uses method of moments to estimate the variance.
+We use the following equation to estimate variance by assuming a multivariate hypergeometric model for the data. [Kim et al.](https://www.cell.com/cell/fulltext/S0092-8674%2824%2901144-9) uses method of moments to estimate the variance.
 
 $$
 \hat{\sigma}_{g,HG}^2 = \frac{1}{n_{cells}}\sum_c \frac{Y^2_{cg} - Y_{cg}(1-q)}{N^2_cq^2- N_cq(1-q)} - \left( \frac{1}{n_{cells}}\sum_c\frac{Y_{cg}}{N_cq} \right)^2
@@ -288,7 +288,7 @@ We look at the power based on varying effect size for the number of individuals.
 data_list <- list()
 path = "/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis"
 
-for (n_indv in 1:8) {
+for (n_indv in 1:9) {
   # Load the RData file into a temporary environment
   temp_env <- new.env()
   load(file.path(path, paste("power_analysis_100ef_indv_", n_indv, ".RData", sep = "")), envir = temp_env)

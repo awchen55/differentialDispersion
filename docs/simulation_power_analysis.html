@@ -552,15 +552,15 @@ data/simulations/power_analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1ctargetblank33f41a2a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreee21e96c0dffabd2fdbba73638ee0451cde65d3b6targetblanke21e96ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1c" target="_blank">33f41a2</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/e21e96c0dffabd2fdbba73638ee0451cde65d3b6" target="_blank">e21e96c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1ctargetblank33f41a2a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreee21e96c0dffabd2fdbba73638ee0451cde65d3b6targetblanke21e96ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -570,7 +570,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1c" target="_blank">33f41a2</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/e21e96c0dffabd2fdbba73638ee0451cde65d3b6" target="_blank">e21e96c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -606,7 +606,6 @@ Untracked files:
     Untracked:  analysis/simulation_analysis.ipynb
     Untracked:  analysis/simulation_cardiomyocytes_analysis.Rmd
     Untracked:  analysis/simulation_normal_distribution.Rmd
-    Untracked:  code/QTL_power_analysis.R
     Untracked:  code/simulation_background_genes_bin_cv_empirical_p_value_method.py
     Untracked:  code/simulation_background_genes_bin_cv_method.py
     Untracked:  code/step3_simulations_nominal_p_value.py
@@ -673,6 +672,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/e21e96c0dffabd2fdbba73638ee0451cde65d3b6/analysis/simulation_power_analysis.Rmd" target="_blank">e21e96c</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-12-05
+</td>
+<td>
+update PA for more indv
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/e21e96c0dffabd2fdbba73638ee0451cde65d3b6/docs/simulation_power_analysis.html" target="_blank">e21e96c</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-12-05
+</td>
+<td>
+update PA for more indv
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -931,7 +964,7 @@ head(read.csv(file.path(path, &quot;power_analysis_indv_50.csv&quot;)))</code></
 <div id="estimating-variance" class="section level2">
 <h2><strong>Estimating Variance</strong></h2>
 <p>We use the following equation to estimate variance by assuming a
-multiple hypergeometric model for the data. <a
+multivariate hypergeometric model for the data. <a
 href="https://www.cell.com/cell/fulltext/S0092-8674%2824%2901144-9">Kim
 et al.</a> uses method of moments to estimate the variance.</p>
 <p><span class="math display">\[
@@ -1066,7 +1099,7 @@ individuals.</p>
 data_list &lt;- list()
 path = &quot;/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis&quot;
 
-for (n_indv in 1:8) {
+for (n_indv in 1:9) {
   # Load the RData file into a temporary environment
   temp_env &lt;- new.env()
   load(file.path(path, paste(&quot;power_analysis_100ef_indv_&quot;, n_indv, &quot;.RData&quot;, sep = &quot;&quot;)), envir = temp_env)
@@ -1119,6 +1152,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/e21e96c0dffabd2fdbba73638ee0451cde65d3b6/docs/figure/simulation_power_analysis.Rmd/unnamed-chunk-13-1.png" target="_blank">e21e96c</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/awchen55/differentialDispersion/blob/33f41a2b1e5cc0af9c6ba2d7c4dcc474cc2b8a1c/docs/figure/simulation_power_analysis.Rmd/unnamed-chunk-13-1.png" target="_blank">33f41a2</a>
 </td>
 <td>
@@ -1154,6 +1198,43 @@ ggplot(combined_ef, aes(x = id, y = y, color = as.factor(round(x,2)), group = as
   theme_minimal() +
   theme(legend.position = &quot;top&quot;) </code></pre>
 <p><img src="figure/simulation_power_analysis.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/e21e96c0dffabd2fdbba73638ee0451cde65d3b6/docs/figure/simulation_power_analysis.Rmd/unnamed-chunk-14-1.png" target="_blank">e21e96c</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
