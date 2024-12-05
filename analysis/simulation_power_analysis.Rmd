@@ -88,7 +88,7 @@ sigma*alpha*avg_li
 
 ### ***Simulate at varying dispersion levels***
 
-For a fixed mean of 1 UMI/cell we want to test different effect sizes. We assess different effect sizes by varying the applied factor from: 1,1.1,1.2,...,2. We will do this and test across different individuals per group: 1, 5, 10, 15, 20,..., 35. Since we are testing for 1000 cells/individual we can pool all cells for individuals. For example, 35 individuals/group would be 35,000 cells in the null variance group and 35,000 cells in the effect size group for a total of 70 individuals.
+For a fixed mean of 1 UMI/cell we want to test different effect sizes. We assess different effect sizes by varying the applied factor from: 1,1.1,1.2,...,2. We will do this and test across different individuals per group: 1, 2, 3, ... , 25. Since we are testing for 1000 cells/individual we can pool all cells for individuals. For example, 25 individuals/group would be 25,000 cells in the null variance group and 35,000 cells in the effect size group for a total of 50 individuals.
 
 ```{r}
 sim_gene <- function(n,alpha,sigma,Li, sigma_multiplier=1){
@@ -177,9 +177,150 @@ head(read.csv(file.path(path, "power_analysis_indv_50.csv")))
 We use the following equation to estimate variance by assuming a multiple hypergeometric model for the data. [Kim et al.](https://www.cell.com/cell/fulltext/S0092-8674%2824%2901144-9) uses method of moments to estimate the variance.
 
 $$
-\hat{\sigma}_{g,HG} \approx \frac{1}{n_{cells}}\sum_c \frac{Y^2_{cg} - Y_{cg}(1-q)}{N^2_cq^2 - N_c q(1-q)} - \left( \frac{1}{n_{cells}}\sum_c\frac{Y_{cg}}{N_cq} \right)
+\hat{\sigma}_{g,HG}^2 = \frac{1}{n_{cells}}\sum_c \frac{Y^2_{cg} - Y_{cg}(1-q)}{N^2_cq^2- N_cq(1-q)} - \left( \frac{1}{n_{cells}}\sum_c\frac{Y_{cg}}{N_cq} \right)^2
 $$
-Where for $c$ cells and $g$ genes, $Y_{cg}$ is the observed transcript count, $N_c$ is the library size, $n_{cells}$ is the number of cells, and $q$ is the sampling efficiency.
+Where for $c$ cells and $g$ genes, $Y_{cg}$ is the observed transcript count, $N_c$ is the true total transcripts, $n_{cells}$ is the number of cells, and $q$ is the sampling efficiency. $N_cq$ is the library size.
+
+## **Determine Significance**
+We are assuming a two-sample problem between groups A and B, where A is the group with no effect size and B is the group with an effect size. Let $\Delta t$ be the observed difference between groups A and B, where $t$ is the statistic of interest. In our case, we are interested in differences in variance for a fixed mean. We perform bootstrapping for $B$ iterations to create a sampling distribution of $\Delta t_1,\dots,\Delta t_B$. To create the null distribution we subtract $\Delta t$ from $\Delta t_1,\dots,\Delta t_B$ to calculate $\Delta t_1^*,\dots,\Delta t_B^*$. This is the same approach used by Kim et al. We then compute the achieved significance level (ASL) as described by Efron and Tibshirani:
+
+$$
+\text{ASL} =
+\begin{cases}
+\frac{1}{B}\sum^B_{i=1}1(\Delta t_i^* \geq\Delta t) , & \text{if } \Delta t \geq 0 \\
+    \frac{1}{B} \sum_{i=1}^B 1(\Delta t_i^* \leq\Delta t), & \text{if } \Delta t < 0
+\end{cases}
+\
+$$
+
+```{r}
+sigma_sq_est <- function(df,n_cells,q,N_c){
+  sigma_sq_term1 = (df^2 - df*(1-q))/(N_c^2*q^2 - N_c*q*(1-q))
+  sigma_sq_term1 = colSums(sigma_sq_term1)/n_cells
+
+  sigma_sq_term2 = df/(N_c*q)
+  sigma_sq_term2 = (colSums(sigma_sq_term2)/n_cells)^2
+
+  sigma_sq = sigma_sq_term1 - sigma_sq_term2
+  
+  
+  return(sigma_sq)
+}
+```
+
+## **Run Power Analysis**
+
+We run the power analysis by simulating 1,000 times for $B=1,000$ bootstrapping iterations. We test out 100 different effect sizes for the applied factor to the varaince, spanned evenly between 1 and 2. 
+```{r, include=TRUE, eval=FALSE}
+n_sims = 100
+B = 1000
+n_cells = 1000
+n_indv = 1
+q = 0.4
+library_size = 4064.29
+N_c = library_size/q
+
+varying_factor <- seq(1, 2, by = 100)
+#num_indv <- c(1,seq(5, 50, by = 5))
+
+
+n_sig <- rep(0,(length(varying_factor)-1))
+for(j in 1:n_sims){
+  gene_sim_matrix = c()
+  num_indv_grp = n_cells*n_indv
+  
+  for(i in 1:length(varying_factor)){
+    gene_sim <- sim_gene(num_indv_grp,alpha,sigma,avg_li,sigma_multiplier=varying_factor[i])
+    gene_sim_matrix <- cbind(gene_sim_matrix,gene_sim)
+    
+  }
+  colnames(gene_sim_matrix) <- make.names(varying_factor)
+  
+  sigma_sq_obs = sigma_sq_est(gene_sim_matrix,num_indv_grp,q,N_c)
+  delta_t = sigma_sq_obs[2:length(sigma_sq_obs)] - sigma_sq_obs[1]
+  
+  
+  asl_geq <- rep(0, (length(varying_factor)-1))
+  asl_lt <- rep(0, (length(varying_factor)-1))
+  for(i in 1:B){
+    sample_idx <- sample(1:num_indv_grp,size = num_indv_grp,replace=TRUE)
+    sample_df <- gene_sim_matrix[sample_idx,]
+    
+    sigma_sq_samp = sigma_sq_est(sample_df,num_indv_grp,q,N_c)
+    delta_t_boot = sigma_sq_samp[2:length(sigma_sq_samp)] - sigma_sq_samp[1]
+    delta_t_star = delta_t_boot - delta_t
+    
+    asl_geq = asl_geq + as.numeric(delta_t_star >= delta_t)
+    asl_lt = asl_lt + as.numeric(delta_t_star <= delta_t)
+    
+  }
+    
+  
+  asl <-c()
+  for(i in 1:length(delta_t)){
+    if(delta_t[i] >=0){
+      asl <- c(asl,asl_geq[i])
+    }
+    else{
+      asl <- c(asl,asl_lt[i])
+    }
+  }
+  
+  asl <- asl/B
+  
+  n_sig = n_sig + as.numeric(asl<0.05)
+}
+
+power_vec <- n_sig/n_sims
+names(power_vec) <- varying_factor[2:length(varying_factor)]
+
+path = "/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis"
+
+save(power_vec, file = file.path(path,paste("power_analysis_indv_",n_indv,".RData",sep="")))
+```
+
+
+### ***Power Analysis Across Effect Size per Individuals***
+
+We look at the power based on varying effect size for the number of individuals.
+```{r}
+# Initialize an empty list
+data_list <- list()
+path = "/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis"
+
+for (n_indv in 1:4) {
+  # Load the RData file into a temporary environment
+  temp_env <- new.env()
+  load(file.path(path, paste("power_analysis_100ef_indv_", n_indv, ".RData", sep = "")), envir = temp_env)
+  
+  # Extract the power_vec and remove the last element
+  powervec1 <- temp_env$power_vec
+  powervec1 <- powervec1[-length(powervec1)]  # Remove the last element
+  
+  # Append the loaded data to the list with an 'id' column
+  data_list[[n_indv]] <- data.frame(x = as.numeric(names(powervec1)), y = powervec1, id = factor(n_indv))
+}
+
+# Combine the data into a single data frame
+combined_data <- do.call(rbind, data_list)
+
+```
+
+```{r}
+library(ggplot2)
+# Colors for the graphs
+#colors <- c("red", "blue", "green")
+
+ggplot(combined_data, aes(x = x, y = y, color = as.factor(id), group = as.factor(id))) +
+  geom_line(size = 1.2) +
+  labs(title = "Power Analysis Across Individuals",
+       x = "effect size", 
+       y = "power",
+       color = "Number of Individuals per Group") +
+  #scale_color_manual(values = c("red", "blue", "green")) +  # Manually assign colors to each group
+  theme_minimal() +
+  theme(legend.position = "top") 
+```
 
 
 

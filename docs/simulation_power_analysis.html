@@ -392,7 +392,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-12-02
+<strong>Last updated:</strong> 2024-12-05
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -430,10 +430,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -552,15 +552,15 @@ data/simulations/power_analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreedac845f1dce2d158e6b2b02a1e567a28c39f9181targetblankdac845fa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree60a5b9dede71eb6a1bf0073f78ac5bb22b51842dtargetblank60a5b9da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/awchen55/differentialDispersion/tree/dac845f1dce2d158e6b2b02a1e567a28c39f9181" target="_blank">dac845f</a>
+<a href="https://github.com/awchen55/differentialDispersion/tree/60a5b9dede71eb6a1bf0073f78ac5bb22b51842d" target="_blank">60a5b9d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreedac845f1dce2d158e6b2b02a1e567a28c39f9181targetblankdac845fa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontree60a5b9dede71eb6a1bf0073f78ac5bb22b51842dtargetblank60a5b9da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -570,7 +570,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/awchen55/differentialDispersion/tree/dac845f1dce2d158e6b2b02a1e567a28c39f9181" target="_blank">dac845f</a>.
+<a href="https://github.com/awchen55/differentialDispersion/tree/60a5b9dede71eb6a1bf0073f78ac5bb22b51842d" target="_blank">60a5b9d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -600,12 +600,13 @@ Untracked files:
     Untracked:  analysis/.ipynb_checkpoints/
     Untracked:  analysis/differential_dispersion_lowess_method.ipynb
     Untracked:  analysis/fitting_ash_hybrid_data.Rmd
+    Untracked:  analysis/power_analysis.ipynb
     Untracked:  analysis/scran_size_factors_debugging.Rmd
     Untracked:  analysis/sim500_analysis.Rmd
     Untracked:  analysis/simulation_analysis.ipynb
     Untracked:  analysis/simulation_cardiomyocytes_analysis.Rmd
     Untracked:  analysis/simulation_normal_distribution.Rmd
-    Untracked:  analysis/simulation_power_analysis.Rmd
+    Untracked:  code/QTL_power_analysis.R
     Untracked:  code/simulation_background_genes_bin_cv_empirical_p_value_method.py
     Untracked:  code/simulation_background_genes_bin_cv_method.py
     Untracked:  code/step3_simulations_nominal_p_value.py
@@ -618,9 +619,9 @@ Unstaged changes:
     Modified:   .Rprofile
     Modified:   analysis/differential_dispersion_hybrid_line.Rmd
     Modified:   analysis/differential_dispersion_hybrid_line_cpm_analysis.Rmd
-    Modified:   analysis/index.Rmd
     Modified:   analysis/negative_binomial_dispersion_estimation.Rmd
     Modified:   analysis/simulation_null_analysis.Rmd
+    Modified:   analysis/simulation_power_analysis.Rmd
     Modified:   code/step1_simulations.py
     Modified:   code/step2_simulations.py
     Modified:   code/step3_simulations.py
@@ -640,10 +641,75 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/simulation_power_analysis.Rmd</code>) and HTML
+(<code>docs/simulation_power_analysis.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/awchen55/differentialDispersion/blob/60a5b9dede71eb6a1bf0073f78ac5bb22b51842d/analysis/simulation_power_analysis.Rmd" target="_blank">60a5b9d</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-12-02
+</td>
+<td>
+add power analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/awchen55/differentialDispersion/60a5b9dede71eb6a1bf0073f78ac5bb22b51842d/docs/simulation_power_analysis.html" target="_blank">60a5b9d</a>
+</td>
+<td>
+awchen55
+</td>
+<td>
+2024-12-02
+</td>
+<td>
+add power analysis
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -754,11 +820,10 @@ sigma*alpha*avg_li</code></pre>
 <p>For a fixed mean of 1 UMI/cell we want to test different effect
 sizes. We assess different effect sizes by varying the applied factor
 from: 1,1.1,1.2,…,2. We will do this and test across different
-individuals per group: 1, 5, 10, 15, 20,…, 35. Since we are testing for
-1000 cells/individual we can pool all cells for individuals. For
-example, 35 individuals/group would be 35,000 cells in the null variance
-group and 35,000 cells in the effect size group for a total of 70
-individuals.</p>
+individuals per group: 1, 2, 3, … , 25. Since we are testing for 1000
+cells/individual we can pool all cells for individuals. For example, 25
+individuals/group would be 25,000 cells in the null variance group and
+35,000 cells in the effect size group for a total of 50 individuals.</p>
 <pre class="r"><code>sim_gene &lt;- function(n,alpha,sigma,Li, sigma_multiplier=1){
 
   # Simulate a single gene with following parameters:
@@ -844,15 +909,172 @@ multiple hypergeometric model for the data. <a
 href="https://www.cell.com/cell/fulltext/S0092-8674%2824%2901144-9">Kim
 et al.</a> uses method of moments to estimate the variance.</p>
 <p><span class="math display">\[
-\hat{\sigma}_{g,HG} \approx \frac{1}{n_{cells}}\sum_c \frac{Y^2_{cg} -
-Y_{cg}(1-q)}{N^2_cq^2 - N_c q(1-q)} - \left(
-\frac{1}{n_{cells}}\sum_c\frac{Y_{cg}}{N_cq} \right)
+\hat{\sigma}_{g,HG}^2 = \frac{1}{n_{cells}}\sum_c \frac{Y^2_{cg} -
+Y_{cg}(1-q)}{N^2_cq^2- N_cq(1-q)} - \left(
+\frac{1}{n_{cells}}\sum_c\frac{Y_{cg}}{N_cq} \right)^2
 \]</span> Where for <span class="math inline">\(c\)</span> cells and
 <span class="math inline">\(g\)</span> genes, <span
 class="math inline">\(Y_{cg}\)</span> is the observed transcript count,
-<span class="math inline">\(N_c\)</span> is the library size, <span
-class="math inline">\(n_{cells}\)</span> is the number of cells, and
-<span class="math inline">\(q\)</span> is the sampling efficiency.</p>
+<span class="math inline">\(N_c\)</span> is the true total transcripts,
+<span class="math inline">\(n_{cells}\)</span> is the number of cells,
+and <span class="math inline">\(q\)</span> is the sampling efficiency.
+<span class="math inline">\(N_cq\)</span> is the library size.</p>
+</div>
+<div id="determine-significance" class="section level2">
+<h2><strong>Determine Significance</strong></h2>
+<p>We are assuming a two-sample problem between groups A and B, where A
+is the group with no effect size and B is the group with an effect size.
+Let <span class="math inline">\(\Delta t\)</span> be the observed
+difference between groups A and B, where <span
+class="math inline">\(t\)</span> is the statistic of interest. In our
+case, we are interested in differences in variance for a fixed mean. We
+perform bootstrapping for <span class="math inline">\(B\)</span>
+iterations to create a sampling distribution of <span
+class="math inline">\(\Delta t_1,\dots,\Delta t_B\)</span>. To create
+the null distribution we subtract <span class="math inline">\(\Delta
+t\)</span> from <span class="math inline">\(\Delta t_1,\dots,\Delta
+t_B\)</span> to calculate <span class="math inline">\(\Delta
+t_1^*,\dots,\Delta t_B^*\)</span>. This is the same approach used by Kim
+et al. We then compute the achieved significance level (ASL) as
+described by Efron and Tibshirani:</p>
+<p><span class="math display">\[
+\text{ASL} =
+\begin{cases}
+\frac{1}{B}\sum^B_{i=1}1(\Delta t_i^* \geq\Delta t) , &amp; \text{if }
+\Delta t \geq 0 \\
+    \frac{1}{B} \sum_{i=1}^B 1(\Delta t_i^* \leq\Delta t), &amp;
+\text{if } \Delta t &lt; 0
+\end{cases}
+\
+\]</span></p>
+<pre class="r"><code>sigma_sq_est &lt;- function(df,n_cells,q,N_c){
+  sigma_sq_term1 = (df^2 - df*(1-q))/(N_c^2*q^2 - N_c*q*(1-q))
+  sigma_sq_term1 = colSums(sigma_sq_term1)/n_cells
+
+  sigma_sq_term2 = df/(N_c*q)
+  sigma_sq_term2 = (colSums(sigma_sq_term2)/n_cells)^2
+
+  sigma_sq = sigma_sq_term1 - sigma_sq_term2
+  
+  
+  return(sigma_sq)
+}</code></pre>
+</div>
+<div id="run-power-analysis" class="section level2">
+<h2><strong>Run Power Analysis</strong></h2>
+<p>We run the power analysis by simulating 1,000 times for <span
+class="math inline">\(B=1,000\)</span> bootstrapping iterations. We test
+out 100 different effect sizes for the applied factor to the varaince,
+spanned evenly between 1 and 2.</p>
+<pre class="r"><code>n_sims = 100
+B = 1000
+n_cells = 1000
+n_indv = 1
+q = 0.4
+library_size = 4064.29
+N_c = library_size/q
+
+varying_factor &lt;- seq(1, 2, by = 100)
+#num_indv &lt;- c(1,seq(5, 50, by = 5))
+
+
+n_sig &lt;- rep(0,(length(varying_factor)-1))
+for(j in 1:n_sims){
+  gene_sim_matrix = c()
+  num_indv_grp = n_cells*n_indv
+  
+  for(i in 1:length(varying_factor)){
+    gene_sim &lt;- sim_gene(num_indv_grp,alpha,sigma,avg_li,sigma_multiplier=varying_factor[i])
+    gene_sim_matrix &lt;- cbind(gene_sim_matrix,gene_sim)
+    
+  }
+  colnames(gene_sim_matrix) &lt;- make.names(varying_factor)
+  
+  sigma_sq_obs = sigma_sq_est(gene_sim_matrix,num_indv_grp,q,N_c)
+  delta_t = sigma_sq_obs[2:length(sigma_sq_obs)] - sigma_sq_obs[1]
+  
+  
+  asl_geq &lt;- rep(0, (length(varying_factor)-1))
+  asl_lt &lt;- rep(0, (length(varying_factor)-1))
+  for(i in 1:B){
+    sample_idx &lt;- sample(1:num_indv_grp,size = num_indv_grp,replace=TRUE)
+    sample_df &lt;- gene_sim_matrix[sample_idx,]
+    
+    sigma_sq_samp = sigma_sq_est(sample_df,num_indv_grp,q,N_c)
+    delta_t_boot = sigma_sq_samp[2:length(sigma_sq_samp)] - sigma_sq_samp[1]
+    delta_t_star = delta_t_boot - delta_t
+    
+    asl_geq = asl_geq + as.numeric(delta_t_star &gt;= delta_t)
+    asl_lt = asl_lt + as.numeric(delta_t_star &lt;= delta_t)
+    
+  }
+    
+  
+  asl &lt;-c()
+  for(i in 1:length(delta_t)){
+    if(delta_t[i] &gt;=0){
+      asl &lt;- c(asl,asl_geq[i])
+    }
+    else{
+      asl &lt;- c(asl,asl_lt[i])
+    }
+  }
+  
+  asl &lt;- asl/B
+  
+  n_sig = n_sig + as.numeric(asl&lt;0.05)
+}
+
+power_vec &lt;- n_sig/n_sims
+names(power_vec) &lt;- varying_factor[2:length(varying_factor)]
+
+path = &quot;/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis&quot;
+
+save(power_vec, file = file.path(path,paste(&quot;power_analysis_indv_&quot;,n_indv,&quot;.RData&quot;,sep=&quot;&quot;)))</code></pre>
+<div id="power-analysis-across-effect-size-per-individuals"
+class="section level3">
+<h3><strong><em>Power Analysis Across Effect Size per
+Individuals</em></strong></h3>
+<p>We look at the power based on varying effect size for the number of
+individuals.</p>
+<pre class="r"><code># Initialize an empty list
+data_list &lt;- list()
+path = &quot;/project2/gilad/awchen55/differentialDispersion/data/simulations/power_analysis&quot;
+
+for (n_indv in 1:4) {
+  # Load the RData file into a temporary environment
+  temp_env &lt;- new.env()
+  load(file.path(path, paste(&quot;power_analysis_100ef_indv_&quot;, n_indv, &quot;.RData&quot;, sep = &quot;&quot;)), envir = temp_env)
+  
+  # Extract the power_vec and remove the last element
+  powervec1 &lt;- temp_env$power_vec
+  powervec1 &lt;- powervec1[-length(powervec1)]  # Remove the last element
+  
+  # Append the loaded data to the list with an &#39;id&#39; column
+  data_list[[n_indv]] &lt;- data.frame(x = as.numeric(names(powervec1)), y = powervec1, id = factor(n_indv))
+}
+
+# Combine the data into a single data frame
+combined_data &lt;- do.call(rbind, data_list)</code></pre>
+<pre class="r"><code>library(ggplot2)
+# Colors for the graphs
+#colors &lt;- c(&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;)
+
+ggplot(combined_data, aes(x = x, y = y, color = as.factor(id), group = as.factor(id))) +
+  geom_line(size = 1.2) +
+  labs(title = &quot;Power Analysis Across Individuals&quot;,
+       x = &quot;effect size&quot;, 
+       y = &quot;power&quot;,
+       color = &quot;Number of Individuals per Group&quot;) +
+  #scale_color_manual(values = c(&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;)) +  # Manually assign colors to each group
+  theme_minimal() +
+  theme(legend.position = &quot;top&quot;) </code></pre>
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
+<p><img src="figure/simulation_power_analysis.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -879,40 +1101,45 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] dplyr_1.1.4     glmGamPoi_1.8.0
+[1] ggplot2_3.5.1   dplyr_1.1.4     glmGamPoi_1.8.0
 
 loaded via a namespace (and not attached):
- [1] SummarizedExperiment_1.26.1 tidyselect_1.2.1           
- [3] xfun_0.30                   bslib_0.3.1                
- [5] lattice_0.20-45             generics_0.1.3             
- [7] vctrs_0.6.5                 htmltools_0.5.2            
- [9] stats4_4.2.0                yaml_2.3.5                 
-[11] utf8_1.2.2                  rlang_1.1.4                
-[13] jquerylib_0.1.4             later_1.3.0                
-[15] pillar_1.9.0                glue_1.7.0                 
-[17] BiocGenerics_0.42.0         matrixStats_0.62.0         
-[19] GenomeInfoDbData_1.2.8      lifecycle_1.0.4            
-[21] stringr_1.5.1               MatrixGenerics_1.8.0       
-[23] zlibbioc_1.42.0             workflowr_1.7.1            
-[25] evaluate_0.15               Biobase_2.56.0             
-[27] knitr_1.39                  IRanges_2.30.0             
-[29] fastmap_1.1.0               httpuv_1.6.5               
-[31] GenomeInfoDb_1.32.2         fansi_1.0.3                
-[33] highr_0.9                   Rcpp_1.0.12                
-[35] promises_1.2.0.1            DelayedArray_0.22.0        
-[37] S4Vectors_0.34.0            jsonlite_1.8.0             
-[39] XVector_0.36.0              fs_1.5.2                   
-[41] digest_0.6.29               stringi_1.7.6              
-[43] GenomicRanges_1.48.0        rprojroot_2.0.3            
-[45] grid_4.2.0                  cli_3.6.3                  
-[47] tools_4.2.0                 bitops_1.0-7               
-[49] magrittr_2.0.3              sass_0.4.1                 
-[51] RCurl_1.98-1.7              tibble_3.2.1               
-[53] pkgconfig_2.0.3             Matrix_1.6-4               
-[55] DelayedMatrixStats_1.18.2   sparseMatrixStats_1.8.0    
-[57] rmarkdown_2.14              rstudioapi_0.13            
-[59] R6_2.5.1                    git2r_0.30.1               
-[61] compiler_4.2.0             </code></pre>
+ [1] Rcpp_1.0.12                 lattice_0.20-45            
+ [3] rprojroot_2.0.3             digest_0.6.29              
+ [5] utf8_1.2.2                  R6_2.5.1                   
+ [7] GenomeInfoDb_1.32.2         stats4_4.2.0               
+ [9] evaluate_0.15               highr_0.9                  
+[11] pillar_1.9.0                sparseMatrixStats_1.8.0    
+[13] zlibbioc_1.42.0             rlang_1.1.4                
+[15] rstudioapi_0.13             whisker_0.4                
+[17] jquerylib_0.1.4             S4Vectors_0.34.0           
+[19] Matrix_1.6-4                rmarkdown_2.14             
+[21] labeling_0.4.2              stringr_1.5.1              
+[23] RCurl_1.98-1.7              munsell_0.5.0              
+[25] DelayedArray_0.22.0         compiler_4.2.0             
+[27] httpuv_1.6.5                xfun_0.30                  
+[29] pkgconfig_2.0.3             BiocGenerics_0.42.0        
+[31] htmltools_0.5.2             tidyselect_1.2.1           
+[33] SummarizedExperiment_1.26.1 tibble_3.2.1               
+[35] GenomeInfoDbData_1.2.8      workflowr_1.7.1            
+[37] IRanges_2.30.0              matrixStats_0.62.0         
+[39] fansi_1.0.3                 crayon_1.5.1               
+[41] withr_3.0.0                 later_1.3.0                
+[43] bitops_1.0-7                grid_4.2.0                 
+[45] jsonlite_1.8.0              gtable_0.3.0               
+[47] lifecycle_1.0.4             git2r_0.30.1               
+[49] magrittr_2.0.3              scales_1.3.0               
+[51] cli_3.6.3                   stringi_1.7.6              
+[53] farver_2.1.0                XVector_0.36.0             
+[55] fs_1.5.2                    promises_1.2.0.1           
+[57] bslib_0.3.1                 DelayedMatrixStats_1.18.2  
+[59] vctrs_0.6.5                 generics_0.1.3             
+[61] tools_4.2.0                 Biobase_2.56.0             
+[63] glue_1.7.0                  MatrixGenerics_1.8.0       
+[65] fastmap_1.1.0               yaml_2.3.5                 
+[67] colorspace_2.0-3            GenomicRanges_1.48.0       
+[69] knitr_1.39                  sass_0.4.1                 </code></pre>
+</div>
 </div>
 </div>
 
