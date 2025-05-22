@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2025-05-06" />
+
+<title>Sharing of DV Genes in cis</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">differentialDispersion</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="progress.html">Progress</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/awchen55/differentialDispersion">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Sharing of DV Genes in cis</h1>
+<h4 class="date">2025-05-06</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2025-05-22
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 2
+</p>
+<p>
+<strong>Knit directory:</strong> <code>differentialDispersion/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240625code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240625)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240625code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240625)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it
+difficult for you and others to run your code on a different machine.
+Change the absolute path(s) below to the suggested relative path(s) to
+make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/
+</td>
+<td style="text-align:left;">
+data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreef8a8bb8c2923cc74902ae1263528c10d17981ea2targetblankf8a8bb8a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/awchen55/differentialDispersion/tree/f8a8bb8c2923cc74902ae1263528c10d17981ea2" target="_blank">f8a8bb8</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomawchen55differentialDispersiontreef8a8bb8c2923cc74902ae1263528c10d17981ea2targetblankf8a8bb8a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/awchen55/differentialDispersion/tree/f8a8bb8c2923cc74902ae1263528c10d17981ea2" target="_blank">f8a8bb8</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    .ipynb_checkpoints/
+    Ignored:    analysis/cell_count_metrics_by_cell_type/
+    Ignored:    analysis/scran_size_factors_debugging.nb.html
+    Ignored:    analysis/sim500_analysis.nb.html
+    Ignored:    analysis/simulation_cardiomyocytes_analysis.nb.html
+    Ignored:    analysis/simulation_power_analysis.nb.html
+    Ignored:    code/.ipynb_checkpoints/
+    Ignored:    data/.ipynb_checkpoints/
+    Ignored:    data/hybrid_lines_scran_normalized_data/
+    Ignored:    output/.ipynb_checkpoints/
+
+Untracked files:
+    Untracked:  analysis/.ipynb_checkpoints/
+    Untracked:  analysis/MoM_analysis.ipynb
+    Untracked:  analysis/MoM_custom_equations_analysis.ipynb
+    Untracked:  analysis/MoM_human_chimp_analysis.ipynb
+    Untracked:  analysis/cell_annotations.Rmd
+    Untracked:  analysis/differential_dispersion_lowess_method.ipynb
+    Untracked:  analysis/first_memento_analysis_hybrid_data_notes.ipynb
+    Untracked:  analysis/fitting_ash_hybrid_data.Rmd
+    Untracked:  analysis/h5Seurat.h5seurat
+    Untracked:  analysis/hybrid_data_prep_for_memento.Rmd
+    Untracked:  analysis/memento_hybrid_lines_cell_type_analysis.ipynb
+    Untracked:  analysis/power_analysis.ipynb
+    Untracked:  analysis/scran_size_factors_debugging.Rmd
+    Untracked:  analysis/sharing_dv_genes_in_cis.Rmd
+    Untracked:  analysis/sim500_analysis.Rmd
+    Untracked:  analysis/sim_1UMI_1000cells_no_effect.h5Seurat
+    Untracked:  analysis/simulation_analysis.ipynb
+    Untracked:  analysis/simulation_cardiomyocytes_analysis.Rmd
+    Untracked:  analysis/simulation_for_MoM.Rmd
+    Untracked:  analysis/simulation_framework.Rmd
+    Untracked:  analysis/simulation_normal_distribution.Rmd
+    Untracked:  code/QTL_power_analysis_null.R
+    Untracked:  code/create_seurat_for_crossfit_hybrid.R
+    Untracked:  code/cv_bootstrapping_method/
+    Untracked:  code/hybrid_unsupervised_clustering.R
+    Untracked:  code/mash_hybrid_cis.R
+    Untracked:  code/memento_runs/
+    Untracked:  data/MoM_data/
+    Untracked:  data/hybrid_data_MoM_results/
+    Untracked:  data/hybrid_data_de_genes/
+    Untracked:  data/hybrid_lines_cpm_normalized/
+    Untracked:  data/hybrid_lines_log_cpm_regressed_out_data/
+    Untracked:  data/hybrid_lines_raw_data/
+    Untracked:  data/simulations/
+    Untracked:  output/qual_exam_figures/
+
+Unstaged changes:
+    Modified:   .Rprofile
+    Modified:   analysis/differential_dispersion_hybrid_line.Rmd
+    Modified:   analysis/differential_dispersion_hybrid_line_cpm_analysis.Rmd
+    Modified:   analysis/negative_binomial_dispersion_estimation.Rmd
+    Modified:   analysis/simulation_null_analysis.Rmd
+    Modified:   analysis/simulation_power_analysis.Rmd
+    Modified:   code/QTL_power_analysis.R
+    Deleted:    code/step1_calculate_cell_count_metrics_lowess_method.py
+    Deleted:    code/step1_calculate_metrics_single_cell_type.py
+    Deleted:    code/step1_simulations.py
+    Deleted:    code/step2_lowess_calculations_single_cell_type.py
+    Deleted:    code/step2_residual_calculations_lowess_values.py
+    Deleted:    code/step2_simulations.py
+    Deleted:    code/step3_bootstrapping_cell_types_lowess_method.py
+    Deleted:    code/step3_bootstrapping_procedure_single_cell_type.py
+    Deleted:    code/step3_simulations.py
+    Deleted:    data/chimp_ASE_subset.csv
+    Deleted:    data/human_ASE_subset.csv
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="run-mash" class="section level1">
+<h1><strong>Run mash</strong></h1>
+<p>We want to assess the sharing of DV genes in cis. We first ran
+memento for DV analysis to yield effect sizes and standard errors. We
+then used these effect sizes and standard errors as inputs for mash.
+Additionally, to compare a larger number of genes across conditions, we
+set the effect sizes to 0 and standard errors to <span
+class="math inline">\(10^{16}\)</span> for genes that were tested in one
+condition but not in another condition.</p>
+<pre class="r"><code>library(mashr)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+library(tidyr)</code></pre>
+<pre class="r"><code>data_path = &quot;/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/&quot;
+
+betahat &lt;- read.csv(paste0(data_path, &quot;betahat_zeros.csv&quot;), row.names = 1)
+sehat &lt;- read.csv(paste0(data_path, &quot;sehat_inf.csv&quot;), row.names = 1)
+
+betahat_matrix &lt;- as.matrix(betahat)
+sehat_matrix   &lt;- as.matrix(sehat)
+
+data_mash &lt;- mash_set_data(betahat_matrix, sehat_matrix)
+m.1by1 = mash_1by1(data_mash)
+strong = get_significant_results(m.1by1,0.05)
+
+
+U.pca = cov_pca(data_mash,5,subset=strong)
+U.ed = cov_ed(data_mash, U.pca, subset=strong)
+# Combine covariance structures
+Ulist = c(U.ed, U.pca)
+m.ed_zeros = mash(data_mash, Ulist = Ulist)
+
+#saveRDS(m.ed_zeros, file = paste0(data_path ,&quot;hybrid_crossfilt_mash_results_zeros.rds&quot;))</code></pre>
+</div>
+<div id="plots" class="section level1">
+<h1><strong>Plots</strong></h1>
+<div id="total-dv-genes" class="section level2">
+<h2><strong><em>Total DV Genes</em></strong></h2>
+<p>We first assess the number of significant DV genes within each cell
+type. We note DV genes that exhibit lower variability with respect to
+each species.</p>
+<pre class="r"><code>data_path = &quot;/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/&quot;
+lfsr_thresh=0.05
+betahat &lt;- read.csv(paste0(data_path, &quot;betahat_zeros.csv&quot;), row.names = 1)
+sehat &lt;- read.csv(paste0(data_path, &quot;sehat_inf.csv&quot;), row.names = 1)
+m.ed_zeros &lt;- readRDS(paste0(data_path ,&quot;hybrid_crossfilt_mash_results_zeros.rds&quot;))
+
+genes_higher_variability_chimps &lt;- list()
+genes_higher_variability_humans &lt;- list()
+for (cell_type in colnames(betahat)) {
+  genes_higher_variability_humans[[cell_type]] &lt;- rownames(betahat[betahat[[cell_type]] &gt; 0, ])
+  genes_higher_variability_chimps[[cell_type]] &lt;- rownames(betahat[betahat[[cell_type]] &lt; 0, ])
+}
+num_genesc &lt;- c()
+num_genesh &lt;- c()
+dv_total &lt;-c()
+for (i in 1:15){
+  sig_i=list(names(get_significant_results(m.ed_zeros,thresh=lfsr_thresh,conditions = i)))
+  overlap_chimp &lt;- intersect(sig_i[[1]], genes_higher_variability_chimps[[i]])
+  overlap_human &lt;- intersect(sig_i[[1]], genes_higher_variability_humans[[i]])
+  num_genesc &lt;- c(num_genesc, length(overlap_chimp))
+  num_genesh &lt;- c(num_genesh, length(overlap_human))
+  dv_total &lt;-c(dv_total,length(sig_i[[1]]))
+}
+
+# num_genesc
+# num_genesh
+# dv_total</code></pre>
+<pre class="r"><code>dv_gene_totals &lt;- cbind(num_genesh,num_genesc)
+colnames(dv_gene_totals) &lt;- c(&#39;human&#39;,&#39;chimpanzee&#39;)
+rownames(dv_gene_totals) &lt;- colnames(betahat)
+#dv_gene_totals
+data_df &lt;- melt(dv_gene_totals, varnames = c(&quot;Cell_Type&quot;, &quot;Species&quot;), value.name = &quot;DV_Genes&quot;)
+
+# Plot the bar graph with data labels
+p1 &lt;- ggplot(data_df, aes(x = Cell_Type, y = DV_Genes, fill = Species)) +
+  geom_bar(stat = &quot;identity&quot;, position = position_dodge(width = 0.8), width = 0.6) +
+  geom_text(aes(label = DV_Genes), 
+            position = position_dodge(width = 0.8), 
+            vjust = -0.5, 
+            size = 2) +
+  labs(title = &quot;DV Genes with Lower Variability&quot;,
+       x = &quot;&quot;,
+       y = &quot;# DV Genes (LFSR &lt; 0.05)&quot;) +
+  theme_minimal() +
+  theme(
+         plot.title = element_text(size = 10, face = &#39;bold&#39;, hjust = 0.5),
+      panel.grid = element_blank(),
+      axis.line = element_line(color = &quot;black&quot;, size = 0.4),
+      panel.border = element_rect(color = &quot;black&quot;, fill = NA, size = 0.8),
+      axis.title.x = element_text(size = 8),
+      axis.title.y = element_text(size = 8),
+      axis.text.x = element_text(angle = 90, hjust = 1, size=8),
+      axis.text.y = element_text(size = 8),
+      legend.position = c(0.98, 0.95),    # Position in the top-right corner inside the plot
+      legend.justification = c(&quot;right&quot;, &quot;top&quot;),
+      legend.title = element_blank(),    # Remove the legend title
+      legend.background = element_rect(fill = &quot;white&quot;, color = NA, size = 0.2),
+      legend.text = element_text(size = 7),
+      legend.key.size = unit(0.3, &quot;cm&quot;)
+      )
+p1</code></pre>
+<p><img src="figure/sharing_dv_genes_in_cis.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="shared-vs-unique-genes" class="section level2">
+<h2><strong><em>Shared vs Unique Genes</em></strong></h2>
+<p>Next we assess pairwise sharing of DV genes across cell types. For
+every cell type combination we check sharing by seeing if DV genes share
+the same sign and if the ratio of their effect sizes across two
+conditions are within a factor of 0.5.</p>
+<pre class="r"><code>n_conditions = 15
+shared_genes_list &lt;- list()
+lfsr_thresh=0.05
+factor = 0.5
+
+all_shared_genes &lt;-c()
+for (i in 1:(n_conditions - 1)) {
+  for (j in (i + 1):n_conditions) {
+    sig_i=get_significant_results(m.ed_zeros,thresh=lfsr_thresh,conditions = i)
+    sig_j=get_significant_results(m.ed_zeros,thresh=lfsr_thresh,conditions = j)
+    a=union(sig_i,sig_j)
+    ratio = get_pm(m.ed_zeros)[a,i]/get_pm(m.ed_zeros)[a,j]##divide effect sizes
+    
+    overlap_genes &lt;- names(ratio[(ratio&gt;factor &amp; ratio&lt;(1/factor))==TRUE])
+    
+    pair_name &lt;- paste0(&#39;celltype&#39;, i-1,&quot;_vs_&quot;,&#39;celltype&#39;,j-1)
+    shared_genes_list[[pair_name]] &lt;- overlap_genes
+    
+    all_shared_genes &lt;- c(all_shared_genes, overlap_genes)
+  }
+}</code></pre>
+<pre class="r"><code>unique_shared_genes &lt;- unique(all_shared_genes)
+length(get_significant_results(m.ed_zeros,thresh=lfsr_thresh))</code></pre>
+<pre><code>[1] 5663</code></pre>
+<pre class="r"><code>length(unique_shared_genes)</code></pre>
+<pre><code>[1] 5449</code></pre>
+<pre class="r"><code>shared_genes_all &lt;- c(names(get_significant_results(m.ed_zeros,thresh=lfsr_thresh)),unique_shared_genes)
+length(unique(shared_genes_all))</code></pre>
+<pre><code>[1] 5663</code></pre>
+<pre class="r"><code>data_df &lt;- data.frame(
+  Condition = c(&quot;Unique&quot;, &quot;Shared&quot;),
+  Value = c(length(unique(shared_genes_all)) - length(unique_shared_genes), length(unique_shared_genes))
+)
+
+# Plot the bar graph
+p2 &lt;- ggplot(data_df, aes(x = Condition, y = Value, fill = Condition)) +
+  geom_bar(stat = &quot;identity&quot;, width = 0.6) +
+  geom_text(aes(label = Value), vjust = -0.5, size = 3) +
+  scale_fill_manual(values = c(&quot;Shared&quot; = &quot;forestgreen&quot;, &quot;Unique&quot; = &quot;royalblue&quot;)) +
+  labs(
+    title = &quot;Shared vs Unique DV Genes&quot;,
+    x = &quot;&quot;,
+    y = &quot;# DV Genes&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 10, face = &#39;bold&#39;, hjust = 0.5),
+    axis.text.x = element_text(size = 8),
+    axis.text.y = element_text(size = 8),
+    axis.title.y = element_text(size = 8),
+    panel.grid = element_blank(),
+      axis.line = element_line(color = &quot;black&quot;, size = 0.4),
+      panel.border = element_rect(color = &quot;black&quot;, fill = NA, size = 0.8),
+    legend.position = &quot;none&quot;  # Hide the legend since labels are clear
+  )
+p2</code></pre>
+<p><img src="figure/sharing_dv_genes_in_cis.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="types-of-dv-genes" class="section level2">
+<h2><strong><em>Types of DV Genes</em></strong></h2>
+<div id="run-mash-on-de" class="section level3">
+<h3><em>Run mash on DE</em></h3>
+<p>We first run mash on the effect sizes and standard errors of DE
+analysis using memento.</p>
+<pre class="r"><code>data_path = &quot;/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/&quot;
+
+betahat &lt;- read.csv(paste0(data_path, &quot;de_betahat_zeros.csv&quot;), row.names = 1)
+sehat &lt;- read.csv(paste0(data_path, &quot;de_sehat_inf.csv&quot;), row.names = 1)
+
+betahat_matrix &lt;- as.matrix(betahat)
+sehat_matrix   &lt;- as.matrix(sehat)
+
+data_mash &lt;- mash_set_data(betahat_matrix, sehat_matrix)
+m.1by1 = mash_1by1(data_mash)
+strong = get_significant_results(m.1by1,0.05)
+
+
+U.pca = cov_pca(data_mash,5,subset=strong)
+U.ed = cov_ed(data_mash, U.pca, subset=strong)
+# Combine covariance structures
+Ulist = c(U.ed, U.pca)
+m.ed_zeros_de = mash(data_mash, Ulist = Ulist)</code></pre>
+<pre><code> - Computing 15939 x 373 likelihood matrix.
+ - Likelihood calculations took 21.44 seconds.
+ - Fitting model with 373 mixture components.
+ - Model fitting took 12.07 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 4.08 seconds.</code></pre>
+<pre class="r"><code>#saveRDS(m.ed_zeros_de, file = paste0(data_path ,&quot;hybrid_crossfilt_mash_results_zeros_de.rds&quot;))</code></pre>
+</div>
+<div id="categorize-types-of-dv-genes" class="section level3">
+<h3><em>Categorize Types of DV genes</em></h3>
+<p>We categorize DV genes into three types: DV genes that are only DV,
+DV genes that are also DE with the same sign, or DV/DE genes with
+opposite signs.</p>
+<pre class="r"><code>betahat_dv &lt;- read.csv(paste0(data_path, &quot;betahat_zeros.csv&quot;), row.names = 1)
+betahat_de &lt;- read.csv(paste0(data_path, &quot;de_betahat_zeros.csv&quot;), row.names = 1)
+
+genes_lower_variability_chimps &lt;- list()
+genes_lower_variability_humans &lt;- list()
+cell_types &lt;- colnames(betahat)
+dv_only_h &lt;- c()
+dv_de_same_h &lt;- c()
+dv_de_opp_h &lt;- c()
+h_values &lt;- c()
+dv_only_c &lt;- c()
+dv_de_same_c &lt;- c()
+dv_de_opp_c &lt;- c()
+c_values &lt;- c()
+for (i in 1:length(cell_types) ){
+  cell_type = cell_types[i]
+  # get signs of dv
+  genes_lower_variability_h_dv &lt;- rownames(betahat_dv[betahat_dv[[cell_type]] &gt; 0, ])
+  genes_lower_variability_c_dv &lt;- rownames(betahat_dv[betahat_dv[[cell_type]] &lt; 0, ])
+  
+  # get signs of de
+  genes_lower_expression_h &lt;- rownames(betahat_de[betahat_de[[cell_type]] &gt; 0, ])
+  genes_lower_expression_c &lt;- rownames(betahat_de[betahat_de[[cell_type]] &lt; 0, ])
+  
+  # sig dv and de
+  sig_de &lt;- names(get_significant_results(m.ed_zeros_de,thresh=0.05, conditions = i))
+  sig_dv &lt;- names(get_significant_results(m.ed_zeros,thresh=0.05, conditions = i))
+  
+  # get signs of sig dv and de
+  dv_low_h &lt;- intersect(sig_dv,genes_lower_variability_h_dv)
+  dv_low_c &lt;- intersect(sig_dv,genes_lower_variability_c_dv)
+  de_low_h &lt;- intersect(sig_de,genes_lower_expression_h)
+  de_low_c &lt;- intersect(sig_de,genes_lower_expression_c)
+  
+  # categorize dv/de genes
+  dv_de_same_sign_h &lt;- intersect(dv_low_h,de_low_h)
+  dv_de_opp_sign_h &lt;- intersect(dv_low_h,de_low_c)
+  
+  dv_de_same_sign_c &lt;- intersect(dv_low_c,de_low_c)
+  dv_de_opp_sign_c &lt;- intersect(dv_low_c,de_low_h)
+  
+  
+  # count dv genes for humans low var
+  dv_de_same_h &lt;- c(dv_de_same_h,length(dv_de_same_sign_h))
+  dv_de_opp_h &lt;- c(dv_de_opp_h,length(dv_de_opp_sign_h))
+  dv_only_h &lt;- c(dv_only_h,length(dv_low_h) - length(dv_de_same_sign_h) - length(dv_de_opp_sign_h))
+  h_values &lt;- c(h_values,length(dv_de_same_sign_h),length(dv_de_opp_sign_h),length(dv_low_h) - length(dv_de_same_sign_h) - length(dv_de_opp_sign_h))
+  # count dv genes for chimps low var
+  dv_de_same_c &lt;- c(dv_de_same_c,length(dv_de_same_sign_c))
+  dv_de_opp_c &lt;- c(dv_de_opp_c,length(dv_de_opp_sign_c))
+  dv_only_c &lt;- c(dv_only_c,length(dv_low_c) - length(dv_de_same_sign_c) - length(dv_de_opp_sign_c))
+  c_values &lt;- c(c_values,length(dv_de_same_sign_c),length(dv_de_opp_sign_c),length(dv_low_c) - length(dv_de_same_sign_c) - length(dv_de_opp_sign_c))
+}</code></pre>
+<pre class="r"><code># Data setup
+cell_types &lt;- paste0(&#39;celltype&#39;, 0:14)
+
+# Combine into a data frame
+data &lt;- data.frame(
+  CellType = rep(cell_types, each = 3),
+  Category = rep(c(&#39;DE/DV Same Signs&#39;, &#39;DE/DV Opposite Signs&#39;,&#39;DV Only&#39;), times = 15),
+  Value = h_values
+)
+
+# Convert to percentage within each cell type
+data &lt;- data %&gt;%
+  group_by(CellType) %&gt;%
+  mutate(Percentage = Value / sum(Value) * 100)
+
+# Ensure the order of cell types is preserved numerically
+data$CellType &lt;- factor(data$CellType, levels = paste0(&#39;celltype&#39;, 0:14))
+
+# Plot
+p3 &lt;- ggplot(data, aes(x = CellType, y = Percentage, fill = Category)) +
+  geom_bar(stat = &#39;identity&#39;) +
+  scale_fill_manual(values = c(&#39;blue3&#39;, &#39;orange2&#39;, &#39;purple2&#39;)) +
+  labs(
+    title = &#39;Low Variability in Humans&#39;,
+    y = &#39;% of DV Genes&#39;,
+    x = &#39;&#39;
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 10, face = &#39;bold&#39;, hjust = 0.5),
+    axis.text.x = element_text(size = 8, angle = 90, hjust = 1),
+    axis.text.y = element_text(size = 8),
+    axis.title.y = element_text(size = 8),
+    panel.grid = element_blank(),
+    #legend.position = &quot;none&quot;  # Hide the legend since labels are clear
+  )
+p3</code></pre>
+<p><img src="figure/sharing_dv_genes_in_cis.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Data setup
+cell_types &lt;- paste0(&#39;celltype&#39;, 0:14)
+
+# Combine into a data frame
+data &lt;- data.frame(
+  CellType = rep(cell_types, each = 3),
+  Category = rep(c(&#39;DE/DV Same Signs&#39;, &#39;DE/DV Opposite Signs&#39;,&#39;DV Only&#39;), times = 15),
+  Value = c_values
+)
+
+# Convert to percentage within each cell type
+data &lt;- data %&gt;%
+  group_by(CellType) %&gt;%
+  mutate(Percentage = Value / sum(Value) * 100)
+
+# Ensure the order of cell types is preserved numerically
+data$CellType &lt;- factor(data$CellType, levels = paste0(&#39;celltype&#39;, 0:14))
+
+# Plot
+p4 &lt;- ggplot(data, aes(x = CellType, y = Percentage, fill = Category)) +
+  geom_bar(stat = &#39;identity&#39;) +
+  scale_fill_manual(values = c(&#39;blue3&#39;, &#39;orange2&#39;, &#39;purple2&#39;)) +
+  labs(
+    title = &#39;Low Variability in Chimpanzees&#39;,
+    y = &#39;% of DV Genes&#39;,
+    x = &#39;&#39;
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 10, face = &#39;bold&#39;, hjust = 0.5),
+    axis.text.x = element_text(size = 8, angle = 90, hjust = 1),
+    axis.text.y = element_text(size = 8),
+    axis.title.y = element_text(size = 8),
+    panel.grid = element_blank(),
+    #legend.position = &quot;none&quot;  # Hide the legend since labels are clear
+  )
+p4</code></pre>
+<p><img src="figure/sharing_dv_genes_in_cis.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.0 (2022-04-22)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /software/openblas-0.3.13-el7-x86_64/lib/libopenblas_haswellp-r0.3.13.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8 LC_NUMERIC=C         LC_TIME=C           
+ [4] LC_COLLATE=C         LC_MONETARY=C        LC_MESSAGES=C       
+ [7] LC_PAPER=C           LC_NAME=C            LC_ADDRESS=C        
+[10] LC_TELEPHONE=C       LC_MEASUREMENT=C     LC_IDENTIFICATION=C 
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] tidyr_1.2.0    dplyr_1.0.9    reshape2_1.4.4 ggplot2_3.3.6  mashr_0.2.79  
+[6] ashr_2.2-54   
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.12      invgamma_1.1     mvtnorm_1.1-3    lattice_0.20-45 
+ [5] assertthat_0.2.1 rprojroot_2.0.3  digest_0.6.29    utf8_1.2.2      
+ [9] truncnorm_1.0-8  R6_2.5.1         plyr_1.8.7       evaluate_0.15   
+[13] highr_0.9        pillar_1.7.0     rlang_1.0.2      rstudioapi_0.13 
+[17] irlba_2.3.5      jquerylib_0.1.4  Matrix_1.5-3     rmarkdown_2.14  
+[21] labeling_0.4.2   stringr_1.4.0    munsell_0.5.0    mixsqp_0.3-48   
+[25] compiler_4.2.0   httpuv_1.6.5     xfun_0.30        pkgconfig_2.0.3 
+[29] SQUAREM_2021.1   htmltools_0.5.2  tidyselect_1.1.2 tibble_3.1.7    
+[33] workflowr_1.7.0  fansi_1.0.3      crayon_1.5.1     withr_2.5.0     
+[37] later_1.3.0      grid_4.2.0       jsonlite_1.8.0   gtable_0.3.0    
+[41] lifecycle_1.0.1  DBI_1.1.2        git2r_0.30.1     magrittr_2.0.3  
+[45] scales_1.2.0     cli_3.3.0        stringi_1.7.6    farver_2.1.0    
+[49] fs_1.5.2         promises_1.2.0.1 bslib_0.3.1      ellipsis_0.3.2  
+[53] vctrs_0.4.1      generics_0.1.2   rmeta_3.0        tools_4.2.0     
+[57] glue_1.6.2       purrr_0.3.4      abind_1.4-5      fastmap_1.1.0   
+[61] yaml_2.3.5       colorspace_2.0-3 knitr_1.39       sass_0.4.1      </code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

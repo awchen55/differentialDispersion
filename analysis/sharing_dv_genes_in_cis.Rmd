@@ -1,0 +1,582 @@
+---
+title: "Sharing of DV Genes in cis"
+output: html_document
+date: '2025-05-06'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# **Run mash**
+
+We want to assess the sharing of DV genes in cis. We first ran memento for DV analysis to yield effect sizes and standard errors. We then used these effect sizes and standard errors as inputs for mash. Additionally, to compare a larger number of genes across conditions, we set the effect sizes to 0 and standard errors to $10^{16}$ for genes that were tested in one condition but not in another condition.
+
+```{r, warning =FALSE, message=FALSE}
+library(mashr)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+library(tidyr)
+```
+
+
+```{r, eval=FALSE, include=FALSE}
+data_path = "/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/"
+
+betahat <- read.csv(paste0(data_path, "betahat.csv"), row.names = 1)
+sehat <- read.csv(paste0(data_path, "sehat.csv"), row.names = 1)
+```
+
+
+
+
+```{r, eval=FALSE, include=FALSE}
+U.pca = cov_pca(data_mash,5,subset=strong)
+print(names(U.pca))
+U.ed = cov_ed(data_mash, U.pca, subset=strong)
+```
+
+```{r, eval=FALSE, include=FALSE}
+m.ed = mash(data, U.ed)
+print(get_loglik(m.ed),digits = 10)
+
+```
+
+
+
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE, include=FALSE}
+data_path = "/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/"
+
+betahat <- read.csv(paste0(data_path, "betahat_ones.csv"), row.names = 1)
+sehat <- read.csv(paste0(data_path, "sehat_inf.csv"), row.names = 1)
+
+betahat_matrix <- as.matrix(betahat)
+sehat_matrix   <- as.matrix(sehat)
+
+data_mash <- mash_set_data(betahat_matrix, sehat_matrix)
+m.1by1 = mash_1by1(data_mash)
+strong = get_significant_results(m.1by1,0.05)
+
+
+U.pca = cov_pca(data_mash,5,subset=strong)
+U.ed = cov_ed(data_mash, U.pca, subset=strong)
+# Combine covariance structures
+Ulist = c(U.ed, U.pca)
+m.ed_ones = mash(data_mash, Ulist = Ulist)
+
+saveRDS(m.ed_ones, file = paste0(data_path ,"hybrid_crossfilt_mash_results_ones.rds"))
+```
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE, include=FALSE}
+data_path = "/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/"
+
+betahat <- read.csv(paste0(data_path, "betahat_no_nan.csv"), row.names = 1)
+sehat <- read.csv(paste0(data_path, "sehat_no_nan.csv"), row.names = 1)
+
+betahat_matrix <- as.matrix(betahat)
+sehat_matrix   <- as.matrix(sehat)
+
+data_mash <- mash_set_data(betahat_matrix, sehat_matrix)
+m.1by1 = mash_1by1(data_mash)
+strong = get_significant_results(m.1by1,0.05)
+
+
+U.pca = cov_pca(data_mash,5,subset=strong)
+U.ed = cov_ed(data_mash, U.pca, subset=strong)
+# Combine covariance structures
+Ulist = c(U.ed, U.pca)
+m.ed_no_nan = mash(data_mash, Ulist = Ulist)
+
+saveRDS(m.ed_no_nan, file = paste0(data_path ,"hybrid_crossfilt_mash_results_no_nan.rds"))
+```
+
+```{r, eval=FALSE, include=FALSE}
+length(get_significant_results(m.ed_no_nan,conditions=1))
+sig_genes <- get_significant_results(m.ed_no_nan,conditions=1)
+lfsr_thresh=0.05
+i=1
+j=2
+factor = 0.5
+sig_i=get_significant_results(m.ed_no_nan,thresh=lfsr_thresh,conditions = i)
+sig_j=get_significant_results(m.ed_no_nan,thresh=lfsr_thresh,conditions = j)
+a=union(sig_i,sig_j)
+ratio = get_pm(m.ed_no_nan)[a,i]/get_pm(m.ed_no_nan)[a,j]##divide effect sizes
+
+length(ratio[(ratio>factor & ratio<(1/factor))==TRUE])
+#S[i,j]=mean(ratio>factor & ratio<(1/factor))
+# for(i in length(get_significant_results(m.ed_no_nan,conditions=1)){
+#   print(i)
+# }
+```
+
+
+
+```{r, eval=FALSE, include=FALSE}
+n_conditions = 15
+shared_genes_list <- list()
+lfsr_thresh=0.05
+factor = 0.5
+
+all_shared_genes <-c()
+for (i in 1:(n_conditions - 1)) {
+  for (j in (i + 1):n_conditions) {
+    sig_i=get_significant_results(m.ed_no_nan,thresh=lfsr_thresh,conditions = i)
+    sig_j=get_significant_results(m.ed_no_nan,thresh=lfsr_thresh,conditions = j)
+    a=union(sig_i,sig_j)
+    ratio = get_pm(m.ed_no_nan)[a,i]/get_pm(m.ed_no_nan)[a,j]##divide effect sizes
+    
+    overlap_genes <- names(ratio[(ratio>factor & ratio<(1/factor))==TRUE])
+    
+    pair_name <- paste0('celltype', i-1,"_vs_",'celltype',j-1)
+    shared_genes_list[[pair_name]] <- overlap_genes
+    
+    all_shared_genes <- c(all_shared_genes, overlap_genes)
+  }
+}
+
+```
+
+```{r, eval=FALSE, include=FALSE}
+unique_shared_genes <- unique(all_shared_genes)
+length(get_significant_results(m.ed_no_nan,thresh=lfsr_thresh))
+length(unique_shared_genes)
+shared_genes_all <- c(names(get_significant_results(m.ed_no_nan,thresh=lfsr_thresh)),unique_shared_genes)
+length(unique(shared_genes_all))
+```
+
+
+
+```{r, eval=FALSE, include=FALSE}
+# pvalue test
+pvalues_ones <- read.csv(paste0(data_path, "pvalues_ones.csv"), row.names = 1)
+betahat_zeros <- read.csv(paste0(data_path, "betahat_zeros.csv"), row.names = 1)
+#zSE = abs(betahat_zeros/ qnorm(pvalues_ones/2))
+zSE <- c()
+for(i in 1:15){
+  zSEi <- abs(betahat_zeros[[i]]/ qnorm(pvalues_ones[[i]]/2))
+  zSE <- cbind(zSE,zSEi)
+}
+zSE[is.na(zSE)] <- 1e16
+rownames(zSE) <- rownames(betahat_zeros)
+colnames(zSE) <- colnames(betahat_zeros)
+#zSE
+zSE[7527,2] = sehat[7527,2]
+betahat_matrix <- as.matrix(betahat_zeros)
+sehat_matrix   <- as.matrix(zSE)
+
+data_mash <- mash_set_data(betahat_matrix, sehat_matrix)
+m.1by1 = mash_1by1(data_mash)
+strong = get_significant_results(m.1by1,0.05)
+
+
+U.pca = cov_pca(data_mash,5,subset=strong)
+U.ed = cov_ed(data_mash, U.pca, subset=strong)
+# Combine covariance structures
+Ulist = c(U.ed, U.pca)
+m.ed_zSE = mash(data_mash, Ulist = Ulist)
+
+saveRDS(m.ed_zSE, file = paste0(data_path ,"hybrid_crossfilt_mash_results_zeros_zSE.rds"))
+```
+
+
+```{r, eval=FALSE}
+data_path = "/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/"
+
+betahat <- read.csv(paste0(data_path, "betahat_zeros.csv"), row.names = 1)
+sehat <- read.csv(paste0(data_path, "sehat_inf.csv"), row.names = 1)
+
+betahat_matrix <- as.matrix(betahat)
+sehat_matrix   <- as.matrix(sehat)
+
+data_mash <- mash_set_data(betahat_matrix, sehat_matrix)
+m.1by1 = mash_1by1(data_mash)
+strong = get_significant_results(m.1by1,0.05)
+
+
+U.pca = cov_pca(data_mash,5,subset=strong)
+U.ed = cov_ed(data_mash, U.pca, subset=strong)
+# Combine covariance structures
+Ulist = c(U.ed, U.pca)
+m.ed_zeros = mash(data_mash, Ulist = Ulist)
+
+#saveRDS(m.ed_zeros, file = paste0(data_path ,"hybrid_crossfilt_mash_results_zeros.rds"))
+
+```
+
+
+```{r, eval=FALSE, include=FALSE}
+# Beta with ones
+data_path = "/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/"
+
+betahat <- read.csv(paste0(data_path, "betahat_ones.csv"), row.names = 1)
+sehat <- read.csv(paste0(data_path, "sehat_inf.csv"), row.names = 1)
+
+betahat_matrix <- as.matrix(betahat)
+sehat_matrix   <- as.matrix(sehat)
+
+data_mash <- mash_set_data(betahat_matrix, sehat_matrix)
+m.1by1 = mash_1by1(data_mash)
+strong = get_significant_results(m.1by1,0.05)
+
+
+U.pca = cov_pca(data_mash,5,subset=strong)
+U.ed = cov_ed(data_mash, U.pca, subset=strong)
+# Combine covariance structures
+Ulist = c(U.ed, U.pca)
+m.ed_ones = mash(data_mash, Ulist = Ulist)
+
+saveRDS(m.ed_ones, file = paste0(data_path ,"hybrid_crossfilt_mash_results_ones.rds"))
+
+```
+
+
+
+```{r, eval=FALSE, include=FALSE}
+n_conditions = 15
+shared_genes_list <- list()
+lfsr_thresh=0.05
+factor = 0.5
+
+all_shared_genes <-c()
+for (i in 1:(n_conditions - 1)) {
+  for (j in (i + 1):n_conditions) {
+    # get significant genes for each condition
+    sig_i=get_significant_results(m.ed_ones,thresh=lfsr_thresh,conditions = i)
+    sig_j=get_significant_results(m.ed_ones,thresh=lfsr_thresh,conditions = j)
+    a=union(sig_i,sig_j)
+    
+    # get ratio of effect sizes
+    ratio = get_pm(m.ed_ones)[a,i]/get_pm(m.ed_ones)[a,j]##divide effect sizes
+    
+    # determine if ratio falls within factor
+    overlap_genes <- names(ratio[(ratio>factor & ratio<(1/factor))==TRUE])
+    
+    # create list of shared genes for each pairwise combo
+    pair_name <- paste0('celltype', i-1,"_vs_",'celltype',j-1)
+    shared_genes_list[[pair_name]] <- overlap_genes
+    
+    # list of all shared genes
+    all_shared_genes <- c(all_shared_genes, overlap_genes)
+  }
+}
+
+```
+
+```{r, eval=FALSE, include=FALSE}
+unique_shared_genes <- unique(all_shared_genes)
+length(get_significant_results(m.ed_ones,thresh=lfsr_thresh))
+length(unique_shared_genes)
+shared_genes_all <- c(names(get_significant_results(m.ed_ones,thresh=lfsr_thresh)),unique_shared_genes)
+length(unique(shared_genes_all))
+```
+
+# **Plots**
+## ***Total DV Genes***
+We first assess the number of significant DV genes within each cell type. We note DV genes that exhibit lower variability with respect to each species. 
+```{r}
+data_path = "/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/"
+lfsr_thresh=0.05
+betahat <- read.csv(paste0(data_path, "betahat_zeros.csv"), row.names = 1)
+sehat <- read.csv(paste0(data_path, "sehat_inf.csv"), row.names = 1)
+m.ed_zeros <- readRDS(paste0(data_path ,"hybrid_crossfilt_mash_results_zeros.rds"))
+
+genes_higher_variability_chimps <- list()
+genes_higher_variability_humans <- list()
+for (cell_type in colnames(betahat)) {
+  genes_higher_variability_humans[[cell_type]] <- rownames(betahat[betahat[[cell_type]] > 0, ])
+  genes_higher_variability_chimps[[cell_type]] <- rownames(betahat[betahat[[cell_type]] < 0, ])
+}
+num_genesc <- c()
+num_genesh <- c()
+dv_total <-c()
+for (i in 1:15){
+  sig_i=list(names(get_significant_results(m.ed_zeros,thresh=lfsr_thresh,conditions = i)))
+  overlap_chimp <- intersect(sig_i[[1]], genes_higher_variability_chimps[[i]])
+  overlap_human <- intersect(sig_i[[1]], genes_higher_variability_humans[[i]])
+  num_genesc <- c(num_genesc, length(overlap_chimp))
+  num_genesh <- c(num_genesh, length(overlap_human))
+  dv_total <-c(dv_total,length(sig_i[[1]]))
+}
+
+# num_genesc
+# num_genesh
+# dv_total
+```
+
+```{r}
+dv_gene_totals <- cbind(num_genesh,num_genesc)
+colnames(dv_gene_totals) <- c('human','chimpanzee')
+rownames(dv_gene_totals) <- colnames(betahat)
+#dv_gene_totals
+data_df <- melt(dv_gene_totals, varnames = c("Cell_Type", "Species"), value.name = "DV_Genes")
+
+# Plot the bar graph with data labels
+p1 <- ggplot(data_df, aes(x = Cell_Type, y = DV_Genes, fill = Species)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.6) +
+  geom_text(aes(label = DV_Genes), 
+            position = position_dodge(width = 0.8), 
+            vjust = -0.5, 
+            size = 2) +
+  labs(title = "DV Genes with Lower Variability",
+       x = "",
+       y = "# DV Genes (LFSR < 0.05)") +
+  theme_minimal() +
+  theme(
+         plot.title = element_text(size = 10, face = 'bold', hjust = 0.5),
+      panel.grid = element_blank(),
+      axis.line = element_line(color = "black", size = 0.4),
+      panel.border = element_rect(color = "black", fill = NA, size = 0.8),
+      axis.title.x = element_text(size = 8),
+      axis.title.y = element_text(size = 8),
+      axis.text.x = element_text(angle = 90, hjust = 1, size=8),
+      axis.text.y = element_text(size = 8),
+      legend.position = c(0.98, 0.95),    # Position in the top-right corner inside the plot
+      legend.justification = c("right", "top"),
+      legend.title = element_blank(),    # Remove the legend title
+      legend.background = element_rect(fill = "white", color = NA, size = 0.2),
+      legend.text = element_text(size = 7),
+      legend.key.size = unit(0.3, "cm")
+      )
+p1
+```
+
+## ***Shared vs Unique Genes***
+Next we assess pairwise sharing of DV genes across cell types. For every cell type combination we check sharing by seeing if DV genes share the same sign and if the ratio of their effect sizes across two conditions are within a factor of 0.5.
+```{r}
+n_conditions = 15
+shared_genes_list <- list()
+lfsr_thresh=0.05
+factor = 0.5
+
+all_shared_genes <-c()
+for (i in 1:(n_conditions - 1)) {
+  for (j in (i + 1):n_conditions) {
+    sig_i=get_significant_results(m.ed_zeros,thresh=lfsr_thresh,conditions = i)
+    sig_j=get_significant_results(m.ed_zeros,thresh=lfsr_thresh,conditions = j)
+    a=union(sig_i,sig_j)
+    ratio = get_pm(m.ed_zeros)[a,i]/get_pm(m.ed_zeros)[a,j]##divide effect sizes
+    
+    overlap_genes <- names(ratio[(ratio>factor & ratio<(1/factor))==TRUE])
+    
+    pair_name <- paste0('celltype', i-1,"_vs_",'celltype',j-1)
+    shared_genes_list[[pair_name]] <- overlap_genes
+    
+    all_shared_genes <- c(all_shared_genes, overlap_genes)
+  }
+}
+
+```
+
+```{r}
+unique_shared_genes <- unique(all_shared_genes)
+length(get_significant_results(m.ed_zeros,thresh=lfsr_thresh))
+length(unique_shared_genes)
+shared_genes_all <- c(names(get_significant_results(m.ed_zeros,thresh=lfsr_thresh)),unique_shared_genes)
+length(unique(shared_genes_all))
+```
+```{r}
+data_df <- data.frame(
+  Condition = c("Unique", "Shared"),
+  Value = c(length(unique(shared_genes_all)) - length(unique_shared_genes), length(unique_shared_genes))
+)
+
+# Plot the bar graph
+p2 <- ggplot(data_df, aes(x = Condition, y = Value, fill = Condition)) +
+  geom_bar(stat = "identity", width = 0.6) +
+  geom_text(aes(label = Value), vjust = -0.5, size = 3) +
+  scale_fill_manual(values = c("Shared" = "forestgreen", "Unique" = "royalblue")) +
+  labs(
+    title = "Shared vs Unique DV Genes",
+    x = "",
+    y = "# DV Genes"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 10, face = 'bold', hjust = 0.5),
+    axis.text.x = element_text(size = 8),
+    axis.text.y = element_text(size = 8),
+    axis.title.y = element_text(size = 8),
+    panel.grid = element_blank(),
+      axis.line = element_line(color = "black", size = 0.4),
+      panel.border = element_rect(color = "black", fill = NA, size = 0.8),
+    legend.position = "none"  # Hide the legend since labels are clear
+  )
+p2
+```
+
+## ***Types of DV Genes***
+
+### *Run mash on DE*
+We first run mash on the effect sizes and standard errors of DE analysis using memento. 
+```{r}
+data_path = "/project2/gilad/awchen55/differentialDispersion/data/hybrid_data_MoM_results/hybrid_line_crossfilt_sharing/"
+
+betahat <- read.csv(paste0(data_path, "de_betahat_zeros.csv"), row.names = 1)
+sehat <- read.csv(paste0(data_path, "de_sehat_inf.csv"), row.names = 1)
+
+betahat_matrix <- as.matrix(betahat)
+sehat_matrix   <- as.matrix(sehat)
+
+data_mash <- mash_set_data(betahat_matrix, sehat_matrix)
+m.1by1 = mash_1by1(data_mash)
+strong = get_significant_results(m.1by1,0.05)
+
+
+U.pca = cov_pca(data_mash,5,subset=strong)
+U.ed = cov_ed(data_mash, U.pca, subset=strong)
+# Combine covariance structures
+Ulist = c(U.ed, U.pca)
+m.ed_zeros_de = mash(data_mash, Ulist = Ulist)
+
+#saveRDS(m.ed_zeros_de, file = paste0(data_path ,"hybrid_crossfilt_mash_results_zeros_de.rds"))
+```
+
+### *Categorize Types of DV genes*
+We categorize DV genes into three types: DV genes that are only DV, DV genes that are also DE with the same sign, or DV/DE genes with opposite signs.
+```{r}
+
+betahat_dv <- read.csv(paste0(data_path, "betahat_zeros.csv"), row.names = 1)
+betahat_de <- read.csv(paste0(data_path, "de_betahat_zeros.csv"), row.names = 1)
+
+genes_lower_variability_chimps <- list()
+genes_lower_variability_humans <- list()
+cell_types <- colnames(betahat)
+dv_only_h <- c()
+dv_de_same_h <- c()
+dv_de_opp_h <- c()
+h_values <- c()
+dv_only_c <- c()
+dv_de_same_c <- c()
+dv_de_opp_c <- c()
+c_values <- c()
+for (i in 1:length(cell_types) ){
+  cell_type = cell_types[i]
+  # get signs of dv
+  genes_lower_variability_h_dv <- rownames(betahat_dv[betahat_dv[[cell_type]] > 0, ])
+  genes_lower_variability_c_dv <- rownames(betahat_dv[betahat_dv[[cell_type]] < 0, ])
+  
+  # get signs of de
+  genes_lower_expression_h <- rownames(betahat_de[betahat_de[[cell_type]] > 0, ])
+  genes_lower_expression_c <- rownames(betahat_de[betahat_de[[cell_type]] < 0, ])
+  
+  # sig dv and de
+  sig_de <- names(get_significant_results(m.ed_zeros_de,thresh=0.05, conditions = i))
+  sig_dv <- names(get_significant_results(m.ed_zeros,thresh=0.05, conditions = i))
+  
+  # get signs of sig dv and de
+  dv_low_h <- intersect(sig_dv,genes_lower_variability_h_dv)
+  dv_low_c <- intersect(sig_dv,genes_lower_variability_c_dv)
+  de_low_h <- intersect(sig_de,genes_lower_expression_h)
+  de_low_c <- intersect(sig_de,genes_lower_expression_c)
+  
+  # categorize dv/de genes
+  dv_de_same_sign_h <- intersect(dv_low_h,de_low_h)
+  dv_de_opp_sign_h <- intersect(dv_low_h,de_low_c)
+  
+  dv_de_same_sign_c <- intersect(dv_low_c,de_low_c)
+  dv_de_opp_sign_c <- intersect(dv_low_c,de_low_h)
+  
+  
+  # count dv genes for humans low var
+  dv_de_same_h <- c(dv_de_same_h,length(dv_de_same_sign_h))
+  dv_de_opp_h <- c(dv_de_opp_h,length(dv_de_opp_sign_h))
+  dv_only_h <- c(dv_only_h,length(dv_low_h) - length(dv_de_same_sign_h) - length(dv_de_opp_sign_h))
+  h_values <- c(h_values,length(dv_de_same_sign_h),length(dv_de_opp_sign_h),length(dv_low_h) - length(dv_de_same_sign_h) - length(dv_de_opp_sign_h))
+  # count dv genes for chimps low var
+  dv_de_same_c <- c(dv_de_same_c,length(dv_de_same_sign_c))
+  dv_de_opp_c <- c(dv_de_opp_c,length(dv_de_opp_sign_c))
+  dv_only_c <- c(dv_only_c,length(dv_low_c) - length(dv_de_same_sign_c) - length(dv_de_opp_sign_c))
+  c_values <- c(c_values,length(dv_de_same_sign_c),length(dv_de_opp_sign_c),length(dv_low_c) - length(dv_de_same_sign_c) - length(dv_de_opp_sign_c))
+}
+
+```
+
+```{r}
+
+# Data setup
+cell_types <- paste0('celltype', 0:14)
+
+# Combine into a data frame
+data <- data.frame(
+  CellType = rep(cell_types, each = 3),
+  Category = rep(c('DE/DV Same Signs', 'DE/DV Opposite Signs','DV Only'), times = 15),
+  Value = h_values
+)
+
+# Convert to percentage within each cell type
+data <- data %>%
+  group_by(CellType) %>%
+  mutate(Percentage = Value / sum(Value) * 100)
+
+# Ensure the order of cell types is preserved numerically
+data$CellType <- factor(data$CellType, levels = paste0('celltype', 0:14))
+
+# Plot
+p3 <- ggplot(data, aes(x = CellType, y = Percentage, fill = Category)) +
+  geom_bar(stat = 'identity') +
+  scale_fill_manual(values = c('blue3', 'orange2', 'purple2')) +
+  labs(
+    title = 'Low Variability in Humans',
+    y = '% of DV Genes',
+    x = ''
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 10, face = 'bold', hjust = 0.5),
+    axis.text.x = element_text(size = 8, angle = 90, hjust = 1),
+    axis.text.y = element_text(size = 8),
+    axis.title.y = element_text(size = 8),
+    panel.grid = element_blank(),
+    #legend.position = "none"  # Hide the legend since labels are clear
+  )
+p3
+```
+
+```{r}
+# Data setup
+cell_types <- paste0('celltype', 0:14)
+
+# Combine into a data frame
+data <- data.frame(
+  CellType = rep(cell_types, each = 3),
+  Category = rep(c('DE/DV Same Signs', 'DE/DV Opposite Signs','DV Only'), times = 15),
+  Value = c_values
+)
+
+# Convert to percentage within each cell type
+data <- data %>%
+  group_by(CellType) %>%
+  mutate(Percentage = Value / sum(Value) * 100)
+
+# Ensure the order of cell types is preserved numerically
+data$CellType <- factor(data$CellType, levels = paste0('celltype', 0:14))
+
+# Plot
+p4 <- ggplot(data, aes(x = CellType, y = Percentage, fill = Category)) +
+  geom_bar(stat = 'identity') +
+  scale_fill_manual(values = c('blue3', 'orange2', 'purple2')) +
+  labs(
+    title = 'Low Variability in Chimpanzees',
+    y = '% of DV Genes',
+    x = ''
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 10, face = 'bold', hjust = 0.5),
+    axis.text.x = element_text(size = 8, angle = 90, hjust = 1),
+    axis.text.y = element_text(size = 8),
+    axis.title.y = element_text(size = 8),
+    panel.grid = element_blank(),
+    #legend.position = "none"  # Hide the legend since labels are clear
+  )
+p4
+```
+
+
+
+
+
+

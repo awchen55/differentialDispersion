@@ -36,3 +36,5 @@ The goal of this project is to develop a way to compare variance across differen
 ## **Human-Chimp Hybrid Data Set**
 
 > Click on this [link](differential_dispersion_hybrid_line_cpm_analysis.html) to find initial dispersion comparisons using the LOWESS method.
+
+> [DV Genes in *cis*](sharing_dv_genes_in_cis.html)
